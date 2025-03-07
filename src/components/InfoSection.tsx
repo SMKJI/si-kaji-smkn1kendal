@@ -8,17 +8,17 @@ const InfoSection = () => {
     { 
       icon: Users, 
       title: 'Siswa', 
-      description: 'Memudahkan akses berbagai layanan seperti perizinan, pengajuan kegiatan, dan monitoring prestasi.'
+      description: 'Akses layanan perizinan, pengajuan kegiatan, pemantauan prestasi dan pelanggaran, serta layanan BK secara digital.'
     },
     { 
       icon: GraduationCap, 
       title: 'Guru & Wali Kelas', 
-      description: 'Memberikan akses data siswa yang komprehensif untuk mendukung proses bimbingan dan pembelajaran.'
+      description: 'Pengelolaan data siswa, pencatatan pelanggaran dan prestasi, persetujuan izin, dan administrasi perwalian digital.'
     },
     { 
       icon: Shield, 
       title: 'Orang Tua', 
-      description: 'Menyediakan transparansi dan pemantauan kegiatan anak di sekolah secara real-time.'
+      description: 'Pemantauan kehadiran, prestasi, dan pelanggaran anak. Menerima notifikasi otomatis untuk ketidakhadiran dan pelanggaran.'
     }
   ];
 
@@ -31,10 +31,10 @@ const InfoSection = () => {
       
       <div className="container mx-auto px-4">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Informasi Si-Kaji</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Tentang Si-Kaji</h2>
           <p className="text-muted-foreground text-lg">
-            Si-Kaji adalah sistem terintegrasi yang dirancang untuk mengelola berbagai aspek kesiswaan
-            di SMKN 1 Kendal secara efisien, transparan, dan akuntabel.
+            Si-Kaji adalah sistem informasi kesiswaan yang mengintegrasikan administrasi, pencatatan, dan pelaporan 
+            seluruh aktivitas terkait kesiswaan di SMKN 1 Kendal untuk meningkatkan efisiensi dan transparansi.
           </p>
         </div>
 
@@ -59,10 +59,10 @@ const InfoSection = () => {
         <div className="bg-white rounded-xl p-8 shadow-sm border">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <div>
-              <h3 className="text-2xl font-bold mb-4">Mengapa Si-Kaji?</h3>
+              <h3 className="text-2xl font-bold mb-4">Kegunaan Sistem</h3>
               <p className="text-muted-foreground mb-6">
-                Si-Kaji dirancang untuk menjawab kebutuhan pengelolaan data kesiswaan yang terintegrasi,
-                efisien, dan dapat diakses oleh berbagai pemangku kepentingan di lingkungan sekolah.
+                Si-Kaji mengintegrasikan berbagai aspek pengelolaan kesiswaan dalam satu platform untuk mengurangi administrasi manual
+                dan meningkatkan akurasi data serta transparansi informasi.
               </p>
               
               <ul className="space-y-4">
@@ -71,8 +71,8 @@ const InfoSection = () => {
                     <span className="h-2.5 w-2.5 rounded-full bg-primary"></span>
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    <span className="font-medium text-foreground">Efisiensi Administrasi</span> - 
-                    Mengurangi beban kerja administratif bagi guru dan staf sekolah.
+                    <span className="font-medium text-foreground">Digitalisasi Administrasi</span> - 
+                    Mengurangi penggunaan kertas dan meningkatkan kecepatan proses layanan kesiswaan.
                   </p>
                 </li>
                 <li className="flex items-start">
@@ -80,8 +80,8 @@ const InfoSection = () => {
                     <span className="h-2.5 w-2.5 rounded-full bg-primary"></span>
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    <span className="font-medium text-foreground">Transparansi</span> - 
-                    Memberikan akses informasi yang jelas dan real-time kepada semua pemangku kepentingan.
+                    <span className="font-medium text-foreground">Pemantauan Real-time</span> - 
+                    Data kehadiran, prestasi, dan pelanggaran diperbarui secara realtime dengan notifikasi otomatis.
                   </p>
                 </li>
                 <li className="flex items-start">
@@ -89,37 +89,37 @@ const InfoSection = () => {
                     <span className="h-2.5 w-2.5 rounded-full bg-primary"></span>
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    <span className="font-medium text-foreground">Pendidikan Karakter</span> - 
-                    Menumbuhkan rasa tanggung jawab dan disiplin siswa melalui sistem yang terstruktur.
+                    <span className="font-medium text-foreground">Pengarsipan Digital</span> - 
+                    Penyimpanan dan penelusuran data historis siswa sepanjang masa pendidikan di SMKN 1 Kendal.
                   </p>
                 </li>
               </ul>
             </div>
             
             <div>
-              <h3 className="text-2xl font-bold mb-4">Peran Pengguna</h3>
+              <h3 className="text-2xl font-bold mb-4">Pengguna Sistem</h3>
               <div className="space-y-6">
                 <div className="p-4 rounded-lg bg-secondary/70 border border-border/50">
-                  <h4 className="font-medium mb-2">Admin & Manajemen Sekolah</h4>
+                  <h4 className="font-medium mb-2">Admin & Manajemen</h4>
                   <p className="text-sm text-muted-foreground">
-                    Meliputi Kepala Sekolah, Waka Kesiswaan, serta staff administrasi
-                    yang bertanggung jawab atas pengaturan dan pengawasan sistem.
+                    Kepala Sekolah, Waka Kesiswaan, dan Satgas TPPK mengelola kebijakan, mengawasi aktivitas, 
+                    dan mengambil keputusan berdasarkan data terpadu.
                   </p>
                 </div>
                 
                 <div className="p-4 rounded-lg bg-secondary/70 border border-border/50">
                   <h4 className="font-medium mb-2">Guru & Wali Kelas</h4>
                   <p className="text-sm text-muted-foreground">
-                    Mengakses informasi siswa, memasukkan data nilai, pelanggaran, dan prestasi, 
-                    serta berkomunikasi dengan orang tua melalui platform.
+                    Mengelola administrasi kelas, mencatat prestasi dan pelanggaran, memantau perkembangan siswa,
+                    dan memproses perizinan digital.
                   </p>
                 </div>
                 
                 <div className="p-4 rounded-lg bg-secondary/70 border border-border/50">
                   <h4 className="font-medium mb-2">Siswa & Orang Tua</h4>
                   <p className="text-sm text-muted-foreground">
-                    Mengakses informasi akademik, kehadiran, dan aktivitas sekolah,
-                    serta melakukan pengajuan izin dan permohonan layanan.
+                    Mengakses layanan perizinan, konsultasi, pengajuan kegiatan, pemantauan kehadiran,
+                    prestasi, dan pelanggaran secara transparan.
                   </p>
                 </div>
               </div>

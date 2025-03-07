@@ -17,7 +17,7 @@ const Hero = () => {
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto text-center">
           <div className="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6 animate-fade-in">
-            <span>Sistem Informasi Kesiswaan SMKJI</span>
+            <span>Sistem Informasi Kesiswaan</span>
           </div>
           
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 animate-fade-in-up">
@@ -26,19 +26,19 @@ const Hero = () => {
           </h1>
           
           <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto animate-fade-in-up animation-delay-200">
-            Sistem terintegrasi untuk mengelola berbagai aspek kesiswaan dengan mudah, 
-            transparan, dan akuntabel.
+            Pengelolaan data kesiswaan terintegrasi meliputi kehadiran, prestasi, pelanggaran, 
+            perizinan, dan kegiatan siswa SMKN 1 Kendal secara digital.
           </p>
           
           <div className="flex flex-col sm:flex-row justify-center gap-4 animate-fade-in-up animation-delay-400">
             <Link to="/login">
               <Button size="lg" className="w-full sm:w-auto">
-                Masuk ke Sistem <ArrowRight size={16} className="ml-2" />
+                Akses Sistem <ArrowRight size={16} className="ml-2" />
               </Button>
             </Link>
             <a href="#informasi">
               <Button size="lg" variant="outline" className="w-full sm:w-auto">
-                Pelajari Selengkapnya
+                Informasi Sistem
               </Button>
             </a>
           </div>
