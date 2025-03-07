@@ -36,7 +36,23 @@ const Hero = () => {
       </div>
 
       <div className="container mx-auto px-4">
-        {/* Complaint Buttons - Added Above the Main Content */}
+        <div className="max-w-4xl mx-auto text-center mb-12">
+          <div className="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6 animate-fade-in">
+            <span>Sistem Informasi Kesiswaan</span>
+          </div>
+          
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 animate-fade-in-up">
+            <span className="block">Si-Kaji</span>
+            <span className="block text-primary">SMKN 1 Kendal</span>
+          </h1>
+          
+          <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto animate-fade-in-up animation-delay-200">
+            Pengelolaan data kesiswaan terintegrasi meliputi kehadiran, prestasi, pelanggaran, 
+            perizinan, dan kegiatan siswa SMKN 1 Kendal secara digital.
+          </p>
+        </div>
+        
+        {/* Complaint Buttons - Now placed after the main title and description */}
         <div className="max-w-4xl mx-auto mb-12 flex flex-col sm:flex-row justify-center gap-4 animate-fade-in">
           <Button 
             onClick={handleComplaint}
@@ -60,20 +76,6 @@ const Hero = () => {
         </div>
         
         <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6 animate-fade-in">
-            <span>Sistem Informasi Kesiswaan</span>
-          </div>
-          
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 animate-fade-in-up">
-            <span className="block">Si-Kaji</span>
-            <span className="block text-primary">SMKN 1 Kendal</span>
-          </h1>
-          
-          <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto animate-fade-in-up animation-delay-200">
-            Pengelolaan data kesiswaan terintegrasi meliputi kehadiran, prestasi, pelanggaran, 
-            perizinan, dan kegiatan siswa SMKN 1 Kendal secara digital.
-          </p>
-          
           <div className="flex flex-col sm:flex-row justify-center gap-4 animate-fade-in-up animation-delay-400">
             <Link to="/login">
               <Button size="lg" className="w-full sm:w-auto">
