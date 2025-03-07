@@ -1,9 +1,9 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, MessageCirclePlus, Search } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { MessageCirclePlus } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Textarea } from '@/components/ui/textarea';
 
 const Hero = () => {
   const { toast } = useToast();
@@ -52,41 +52,35 @@ const Hero = () => {
           </p>
         </div>
         
-        {/* Complaint Buttons - Now placed after the main title and description */}
-        <div className="max-w-4xl mx-auto mb-12 flex flex-col sm:flex-row justify-center gap-4 animate-fade-in">
-          <Button 
-            onClick={handleComplaint}
-            size="lg" 
-            className="group relative overflow-hidden bg-gradient-to-br from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white shadow-lg transition-all duration-300 hover:shadow-xl"
-          >
-            <div className="absolute inset-0 w-full h-full bg-black/10 transition-opacity opacity-0 group-hover:opacity-100"></div>
-            <MessageCirclePlus className="mr-2 h-5 w-5" />
-            <span>Buat Pengaduan</span>
-          </Button>
-          
-          <Button 
-            onClick={handleTrackTicket}
-            size="lg" 
-            variant="outline" 
-            className="group relative overflow-hidden border-2 border-primary/20 hover:border-primary/40 shadow-sm transition-all duration-300 hover:shadow-md"
-          >
-            <Search className="mr-2 h-5 w-5 text-primary" />
-            <span>Lacak Pengaduan</span>
-          </Button>
-        </div>
-        
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="flex flex-col sm:flex-row justify-center gap-4 animate-fade-in-up animation-delay-400">
-            <Link to="/login">
-              <Button size="lg" className="w-full sm:w-auto">
-                Akses Sistem <ArrowRight size={16} className="ml-2" />
+        {/* Complaint Buttons and Tracking Text Area */}
+        <div className="max-w-4xl mx-auto mb-12 animate-fade-in">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Left side - Complaint Button */}
+            <div className="flex justify-center">
+              <Button 
+                onClick={handleComplaint}
+                size="lg" 
+                className="group relative overflow-hidden bg-gradient-to-br from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white shadow-lg transition-all duration-300 hover:shadow-xl w-full"
+              >
+                <div className="absolute inset-0 w-full h-full bg-black/10 transition-opacity opacity-0 group-hover:opacity-100"></div>
+                <MessageCirclePlus className="mr-2 h-5 w-5" />
+                <span>Buat Pengaduan</span>
               </Button>
-            </Link>
-            <a href="#informasi">
-              <Button size="lg" variant="outline" className="w-full sm:w-auto">
-                Informasi Sistem
+            </div>
+            
+            {/* Right side - Track Ticket Text Area */}
+            <div className="flex flex-col space-y-3">
+              <Textarea 
+                placeholder="Masukkan kode tiket pengaduan Anda di sini..." 
+                className="min-h-[80px] resize-none"
+              />
+              <Button 
+                onClick={handleTrackTicket}
+                className="w-full"
+              >
+                Lacak Pengaduan
               </Button>
-            </a>
+            </div>
           </div>
         </div>
       </div>
