@@ -1,12 +1,13 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { MessageCirclePlus } from 'lucide-react';
+import { ArrowRight, MessageCircle, Search } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent } from '@/components/ui/card';
 
 const Hero = () => {
   const { toast } = useToast();
+  const [ticketCode, setTicketCode] = useState('');
 
   const handleTrackTicket = () => {
     // This is a placeholder - would be connected to actual tracking functionality
@@ -52,35 +53,67 @@ const Hero = () => {
           </p>
         </div>
         
-        {/* Complaint Buttons and Tracking Text Area */}
-        <div className="max-w-4xl mx-auto mb-12 animate-fade-in">
+        {/* Complaint and Tracking Cards */}
+        <div className="max-w-6xl mx-auto mb-12">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Left side - Complaint Button */}
-            <div className="flex justify-center">
-              <Button 
-                onClick={handleComplaint}
-                size="lg" 
-                className="group relative overflow-hidden bg-gradient-to-br from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white shadow-lg transition-all duration-300 hover:shadow-xl w-full"
-              >
-                <div className="absolute inset-0 w-full h-full bg-black/10 transition-opacity opacity-0 group-hover:opacity-100"></div>
-                <MessageCirclePlus className="mr-2 h-5 w-5" />
-                <span>Buat Pengaduan</span>
-              </Button>
-            </div>
+            {/* Left side - Complaint Card */}
+            <Card className="border shadow-sm">
+              <CardContent className="p-6">
+                <div className="flex items-start mb-5">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-full bg-red-100 mr-3">
+                    <MessageCircle className="h-6 w-6 text-red-500" />
+                  </div>
+                  <h3 className="text-2xl font-semibold">Buat Pengaduan Baru</h3>
+                </div>
+                
+                <p className="text-muted-foreground mb-6">
+                  Laporkan masalah akademik, fasilitas, atau hal penting lainnya. Identitas pelapor 
+                  dilindungi dan laporan akan ditangani oleh tim yang berwenang.
+                </p>
+                
+                <Button 
+                  onClick={handleComplaint}
+                  size="lg" 
+                  className="w-full bg-red-600 hover:bg-red-700 text-white font-medium transition-colors"
+                >
+                  Buat Pengaduan
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </CardContent>
+            </Card>
             
-            {/* Right side - Track Ticket Text Area */}
-            <div className="flex flex-col space-y-3">
-              <Textarea 
-                placeholder="Masukkan kode tiket pengaduan Anda di sini..." 
-                className="min-h-[80px] resize-none"
-              />
-              <Button 
-                onClick={handleTrackTicket}
-                className="w-full"
-              >
-                Lacak Pengaduan
-              </Button>
-            </div>
+            {/* Right side - Track Ticket Card */}
+            <Card className="border shadow-sm">
+              <CardContent className="p-6">
+                <div className="flex items-start mb-5">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 mr-3">
+                    <Search className="h-6 w-6 text-blue-500" />
+                  </div>
+                  <h3 className="text-2xl font-semibold">Lacak Status Pengaduan</h3>
+                </div>
+                
+                <p className="text-muted-foreground mb-6">
+                  Pantau perkembangan pengaduan yang telah disampaikan melalui kode tiket yang diberikan 
+                  saat pengaduan dibuat.
+                </p>
+                
+                <div className="flex flex-col md:flex-row gap-3">
+                  <input
+                    type="text"
+                    placeholder="Masukkan kode tiket..."
+                    className="flex-1 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    value={ticketCode}
+                    onChange={(e) => setTicketCode(e.target.value)}
+                  />
+                  <Button 
+                    onClick={handleTrackTicket}
+                    className="bg-blue-500 hover:bg-blue-600 text-white md:w-auto"
+                  >
+                    Lacak
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
