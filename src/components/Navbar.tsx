@@ -47,11 +47,18 @@ const Navbar = () => {
       }`}
     >
       <div className="container mx-auto px-4 flex items-center justify-between">
-        <div className="flex items-center space-x-2">
-          <span className="text-primary font-semibold text-2xl">Si-Kaji</span>
-          <span className="text-muted-foreground text-sm hidden md:inline-block">
-            SMKN 1 Kendal
-          </span>
+        <div className="flex items-center space-x-3">
+          <img 
+            src="/lovable-uploads/0a3a3f77-6e29-472b-9596-b9b4a52df4b0.png" 
+            alt="SMKN 1 Kendal Logo" 
+            className="h-10 w-10 md:h-12 md:w-12 object-contain" 
+          />
+          <div className="flex flex-col">
+            <span className="text-primary font-semibold text-lg md:text-2xl leading-tight">Si-Kaji</span>
+            <span className="text-muted-foreground text-xs md:text-sm">
+              SMKN 1 Kendal
+            </span>
+          </div>
         </div>
 
         {/* Desktop Menu */}
@@ -97,8 +104,13 @@ const Navbar = () => {
         <div className="md:hidden fixed inset-0 z-40 bg-background">
           <div className="h-full flex flex-col p-6">
             <div className="flex justify-between items-center mb-8">
-              <div className="flex items-center">
-                <span className="text-primary font-semibold text-2xl">
+              <div className="flex items-center space-x-3">
+                <img 
+                  src="/lovable-uploads/0a3a3f77-6e29-472b-9596-b9b4a52df4b0.png" 
+                  alt="SMKN 1 Kendal Logo" 
+                  className="h-10 w-10" 
+                />
+                <span className="text-primary font-semibold text-xl">
                   Si-Kaji
                 </span>
               </div>
