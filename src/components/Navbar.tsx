@@ -80,12 +80,7 @@ const Navbar = () => {
 
         <div className="hidden md:block">
           <Link to="/login">
-            <Button variant="outline" className="mr-2">
-              Masuk
-            </Button>
-          </Link>
-          <Link to="/register">
-            <Button>Daftar</Button>
+            <Button>Masuk</Button>
           </Link>
         </div>
 
@@ -142,12 +137,7 @@ const Navbar = () => {
 
             <div className="mt-auto flex flex-col space-y-4 pt-6">
               <Link to="/login" onClick={closeMobileMenu}>
-                <Button variant="outline" className="w-full">
-                  Masuk
-                </Button>
-              </Link>
-              <Link to="/register" onClick={closeMobileMenu}>
-                <Button className="w-full">Daftar</Button>
+                <Button className="w-full">Masuk</Button>
               </Link>
             </div>
           </div>
