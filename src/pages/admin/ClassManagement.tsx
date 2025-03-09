@@ -75,11 +75,15 @@ const ClassManagement = () => {
           <CardHeader className="pb-2">
             <CardTitle className="text-lg font-medium">Daftar Kelas</CardTitle>
             <div className="mt-4 mb-2">
-              <Input 
-                placeholder="Cari kelas..." 
-                className="max-w-sm" 
-                icon={<Search className="h-4 w-4" />}
-              />
+              <div className="relative max-w-sm">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <Search className="h-4 w-4 text-gray-500" />
+                </div>
+                <Input 
+                  placeholder="Cari kelas..." 
+                  className="pl-10"
+                />
+              </div>
             </div>
           </CardHeader>
           <CardContent>
