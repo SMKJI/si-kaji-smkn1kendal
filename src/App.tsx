@@ -7,11 +7,11 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
-import Admin from "./pages/Admin";
-import UserManagement from "./pages/admin/UserManagement";
-import ClassManagement from "./pages/admin/ClassManagement";
-import SystemConfig from "./pages/admin/SystemConfig";
-import AuditLog from "./pages/admin/AuditLog";
+import Admin from "./pages/admin";
+import UserManagement from "./pages/admin/users";
+import ClassManagement from "./pages/admin/classes";
+import SystemConfig from "./pages/admin/config";
+import AuditLog from "./pages/admin/audit";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();

@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 
-const SystemConfig = () => {
+const ConfigPage = () => {
   const { toast } = useToast();
 
   const handleSaveConfig = () => {
@@ -311,4 +311,4 @@ const SystemConfig = () => {
   );
 };
 
-export default SystemConfig;
+export default ConfigPage;

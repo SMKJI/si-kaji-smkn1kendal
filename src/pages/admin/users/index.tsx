@@ -1,14 +1,14 @@
 
 import React, { useState } from 'react';
-import { LayoutDashboard, Plus, Search, Filter, Edit, Trash2, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { ArrowLeft, Plus, Search, Filter, Edit, Trash2 } from 'lucide-react';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 
-const UserManagement = () => {
+const UsersPage = () => {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -159,4 +159,4 @@ const UserManagement = () => {
   );
 };
 
-export default UserManagement;
+export default UsersPage;

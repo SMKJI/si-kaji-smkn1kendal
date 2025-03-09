@@ -5,15 +5,17 @@ import {
   Pencil, 
   Trash2, 
   Search, 
-  Download 
+  Download,
+  ArrowLeft 
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 
-const ClassManagement = () => {
+const ClassesPage = () => {
   const { toast } = useToast();
   
   // Mock class data
@@ -58,6 +60,10 @@ const ClassManagement = () => {
       <div className="space-y-6">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
+            <Link to="/admin" className="text-muted-foreground hover:text-primary inline-flex items-center mb-2">
+              <ArrowLeft className="h-4 w-4 mr-1" />
+              <span className="text-sm">Kembali ke Dashboard</span>
+            </Link>
             <h1 className="text-2xl font-bold">Manajemen Kelas</h1>
             <p className="text-muted-foreground">Kelola data kelas, jurusan, dan wali kelas</p>
           </div>
@@ -137,4 +143,4 @@ const ClassManagement = () => {
   );
 };
 
-export default ClassManagement;
+export default ClassesPage;

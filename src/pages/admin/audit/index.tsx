@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 
-const AuditLog = () => {
+const AuditPage = () => {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -232,4 +232,4 @@ const AuditLog = () => {
   );
 };
 
-export default AuditLog;
+export default AuditPage;
