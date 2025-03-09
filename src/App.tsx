@@ -11,6 +11,10 @@ import LoginPage from "@/pages/auth/login";
 import NotFoundPage from "@/pages/not-found";
 import StudentManagementPage from "@/pages/student";
 import StudentProfilePage from "@/pages/student/[id]";
+import ClassManagementPage from "@/pages/class";
+import ClassDetailPage from "@/pages/class/[id]";
+import TeacherManagementPage from "@/pages/teacher";
+import TeacherProfilePage from "@/pages/teacher/[id]";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +29,10 @@ const App = () => (
           <Route path="/login" element={<LoginPage />} />
           <Route path="/student" element={<StudentManagementPage />} />
           <Route path="/student/:id" element={<StudentProfilePage />} />
+          <Route path="/class" element={<ClassManagementPage />} />
+          <Route path="/class/:id" element={<ClassDetailPage />} />
+          <Route path="/teacher" element={<TeacherManagementPage />} />
+          <Route path="/teacher/:id" element={<TeacherProfilePage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
