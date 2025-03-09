@@ -5,8 +5,8 @@ import {
   LayoutDashboard, 
   Users, 
   Settings, 
-  FileText, 
-  ArrowUpRight,
+  FileText,
+  BookOpen,
   ChevronRight
 } from 'lucide-react';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
@@ -23,6 +23,12 @@ const Admin = () => {
       description: 'Kelola akun, role, dan hak akses pengguna sistem', 
       icon: Users, 
       link: '/admin/users'
+    },
+    { 
+      title: 'Manajemen Kelas', 
+      description: 'Kelola data kelas, jurusan, dan wali kelas', 
+      icon: BookOpen, 
+      link: '/admin/classes'
     },
     { 
       title: 'Konfigurasi Sistem', 

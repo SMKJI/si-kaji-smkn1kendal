@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
 import UserManagement from "./pages/admin/UserManagement";
+import ClassManagement from "./pages/admin/ClassManagement";
 import SystemConfig from "./pages/admin/SystemConfig";
 import AuditLog from "./pages/admin/AuditLog";
 import NotFound from "./pages/NotFound";
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin/users" element={<UserManagement />} />
+          <Route path="/admin/classes" element={<ClassManagement />} />
           <Route path="/admin/config" element={<SystemConfig />} />
           <Route path="/admin/audit" element={<AuditLog />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

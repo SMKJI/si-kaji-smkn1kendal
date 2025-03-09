@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
   Users,
@@ -12,6 +12,8 @@ import {
   X,
   ChevronRight,
   ChevronLeft,
+  BookOpen,
+  FileText,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -24,13 +26,15 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { toast } = useToast();
+  const location = useLocation();
 
   const navItems = [
     { label: 'Dashboard', icon: LayoutDashboard, href: '/dashboard' },
-    { label: 'Data Siswa', icon: Users, href: '#' },
-    { label: 'Pengaduan', icon: Bell, href: '#' },
-    { label: 'Pelanggaran', icon: ClipboardList, href: '#' },
-    { label: 'Pengaturan', icon: Settings, href: '#' },
+    { label: 'Admin Panel', icon: Settings, href: '/admin' },
+    { label: 'Pengguna', icon: Users, href: '/admin/users' },
+    { label: 'Kelas', icon: BookOpen, href: '/admin/classes' },
+    { label: 'Pengaturan', icon: Settings, href: '/admin/config' },
+    { label: 'Audit Log', icon: FileText, href: '/admin/audit' },
   ];
 
   const toggleSidebar = () => {
@@ -119,7 +123,9 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                 <li key={item.label}>
                   <Link
                     to={item.href}
-                    className="flex items-center py-2 px-3 text-sm rounded-md transition-colors hover:bg-muted space-x-3"
+                    className={`flex items-center py-2 px-3 text-sm rounded-md transition-colors hover:bg-muted space-x-3 ${
+                      location.pathname === item.href ? 'bg-muted text-primary font-medium' : ''
+                    }`}
                   >
                     <item.icon size={20} />
                     {!sidebarCollapsed && <span>{item.label}</span>}
@@ -140,7 +146,9 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                     <li key={item.label}>
                       <Link
                         to={item.href}
-                        className="flex items-center py-3 px-4 text-base rounded-md transition-colors hover:bg-muted space-x-3"
+                        className={`flex items-center py-3 px-4 text-base rounded-md transition-colors hover:bg-muted space-x-3 ${
+                          location.pathname === item.href ? 'bg-muted text-primary font-medium' : ''
+                        }`}
                         onClick={toggleMobileMenu}
                       >
                         <item.icon className="h-5 w-5" />
