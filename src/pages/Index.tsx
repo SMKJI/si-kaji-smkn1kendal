@@ -1,11 +1,11 @@
 
 import React, { useEffect } from 'react';
-import PageTransition from '@/components/PageTransition';
-import Navbar from '@/components/Navbar';
-import Hero from '@/components/Hero';
-import Features from '@/components/Features';
-import InfoSection from '@/components/InfoSection';
-import Footer from '@/components/Footer';
+import PageTransition from '@/components/layout/PageTransition';
+import Navbar from '@/components/layout/Navbar';
+import Hero from '@/components/home/Hero';
+import Features from '@/components/home/Features';
+import InfoSection from '@/components/home/InfoSection';
+import Footer from '@/components/layout/Footer';
 
 const Index = () => {
   useEffect(() => {
