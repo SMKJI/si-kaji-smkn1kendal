@@ -15,6 +15,8 @@ import ClassManagementPage from "@/pages/class";
 import ClassDetailPage from "@/pages/class/[id]";
 import TeacherManagementPage from "@/pages/teacher";
 import TeacherProfilePage from "@/pages/teacher/[id]";
+import ComplaintPage from "@/pages/complaint";
+import TicketStatusPage from "@/pages/complaint/ticket";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +35,8 @@ const App = () => (
           <Route path="/class/:id" element={<ClassDetailPage />} />
           <Route path="/teacher" element={<TeacherManagementPage />} />
           <Route path="/teacher/:id" element={<TeacherProfilePage />} />
+          <Route path="/complaint" element={<ComplaintPage />} />
+          <Route path="/complaint/ticket" element={<TicketStatusPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

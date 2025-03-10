@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, MessageCircle, Search } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -7,24 +8,20 @@ import { Card, CardContent } from '@/components/ui/card';
 
 const Hero = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [ticketCode, setTicketCode] = useState('');
 
   const handleTrackTicket = () => {
-    // This is a placeholder - would be connected to actual tracking functionality
-    toast({
-      title: "Fitur Pelacakan Tiket",
-      description: "Silakan masukkan kode tiket pengaduan Anda untuk melacak status.",
-      duration: 5000,
-    });
-  };
-
-  const handleComplaint = () => {
-    // This is a placeholder - would be connected to actual complaint form
-    toast({
-      title: "Fitur Pengaduan",
-      description: "Formulir pengaduan akan segera tersedia.",
-      duration: 5000,
-    });
+    if (!ticketCode) {
+      toast({
+        title: "Input Diperlukan",
+        description: "Silakan masukkan kode tiket untuk melacak status pengaduan.",
+        duration: 5000,
+      });
+      return;
+    }
+    
+    navigate('/complaint/ticket', { state: { ticketNumber: ticketCode } });
   };
 
   return (
@@ -72,7 +69,7 @@ const Hero = () => {
                 </p>
                 
                 <Button 
-                  onClick={handleComplaint}
+                  onClick={() => navigate('/complaint')}
                   size="lg" 
                   className="w-full bg-red-600 hover:bg-red-700 text-white font-medium transition-colors text-sm md:text-base py-2 h-auto"
                 >
