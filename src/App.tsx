@@ -25,6 +25,9 @@ import ParentComplaintPage from "@/pages/parent-complaint";
 import ParentPortalPage from "@/pages/parent-portal";
 import CounselingPage from "@/pages/counseling";
 import PermissionPage from "@/pages/permission";
+import StudentDataPage from "@/pages/student-data";
+import PermissionRequestPage from "@/pages/permission-request";
+import StudentActivitiesPage from "@/pages/student-activities";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +43,7 @@ const App = () => (
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/student" element={<StudentManagementPage />} />
           <Route path="/student/:id" element={<StudentProfilePage />} />
+          <Route path="/student-data" element={<StudentDataPage />} />
           <Route path="/class" element={<ClassManagementPage />} />
           <Route path="/class/:id" element={<ClassDetailPage />} />
           <Route path="/teacher" element={<TeacherManagementPage />} />
@@ -53,6 +57,8 @@ const App = () => (
           <Route path="/parent-portal" element={<ParentPortalPage />} />
           <Route path="/counseling" element={<CounselingPage />} />
           <Route path="/permission" element={<PermissionPage />} />
+          <Route path="/permission-request" element={<PermissionRequestPage />} />
+          <Route path="/student-activities" element={<StudentActivitiesPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
