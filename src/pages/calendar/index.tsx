@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import PageTransition from '@/components/layout/PageTransition';
 import Navbar from '@/components/layout/Navbar';
@@ -195,10 +194,8 @@ const CalendarPage = () => {
                           booked: events.map(event => parse(event.date, 'yyyy-MM-dd', new Date())),
                         }}
                         components={{
-                          // Fix for TypeScript error - Use correct pattern without 'day' property
                           DayContent: ({ date: dayDate }) => {
                             const dateString = format(dayDate, 'yyyy-MM-dd');
-                            const dayEvents = events.filter(event => event.date === dateString);
                             return (
                               <div className={`w-full h-full flex flex-col items-center justify-center rounded-md ${isToday(dayDate) ? 'bg-primary text-primary-foreground' : ''}`}>
                                 <span>{format(dayDate, 'd')}</span>
