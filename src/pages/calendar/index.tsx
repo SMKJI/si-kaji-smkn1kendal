@@ -75,6 +75,37 @@ const CalendarPage = () => {
       return dateA.getTime() - dateB.getTime();
     });
 
+  // Function to render events dots for each day
+  const renderEventDots = (dateStr: string, events: typeof upcomingEvents) => {
+    const dayEvents = events.filter(event => event.date === dateStr);
+    
+    if (dayEvents.length === 0) return null;
+    
+    return (
+      <div className="flex gap-0.5 mt-1">
+        {dayEvents.length <= 3 ? (
+          dayEvents.map((event, i) => (
+            <div
+              key={i}
+              className={`w-1.5 h-1.5 rounded-full ${
+                event.type === 'exam' ? 'bg-red-500' : 
+                event.type === 'meeting' ? 'bg-blue-500' : 
+                event.type === 'holiday' ? 'bg-green-500' : 
+                'bg-yellow-500'
+              }`}
+            ></div>
+          ))
+        ) : (
+          <>
+            <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
+            <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
+            <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
+          </>
+        )}
+      </div>
+    );
+  };
+
   return (
     <PageTransition>
       <div className="min-h-screen flex flex-col">
@@ -160,36 +191,18 @@ const CalendarPage = () => {
                         modifiersClassNames={{
                           today: 'bg-primary text-primary-foreground',
                         }}
+                        modifiers={{
+                          booked: events.map(event => parse(event.date, 'yyyy-MM-dd', new Date())),
+                        }}
                         components={{
-                          Day: ({ day, ...props }) => {
-                            const dateString = format(day, 'yyyy-MM-dd');
+                          // Fix for TypeScript error - Use correct pattern without 'day' property
+                          DayContent: ({ date: dayDate }) => {
+                            const dateString = format(dayDate, 'yyyy-MM-dd');
                             const dayEvents = events.filter(event => event.date === dateString);
                             return (
-                              <div {...props}>
-                                <div className={`w-full h-full flex flex-col items-center justify-center rounded-md ${isToday(day) ? 'bg-primary text-primary-foreground' : ''}`}>
-                                  <span>{format(day, 'd')}</span>
-                                  {dayEvents.length > 0 && (
-                                    <div className="flex gap-0.5 mt-1">
-                                      {dayEvents.length <= 3 ? (
-                                        dayEvents.map((event, i) => (
-                                          <div
-                                            key={i}
-                                            className={`w-1.5 h-1.5 rounded-full ${event.type === 'exam' ? 'bg-red-500' : 
-                                                        event.type === 'meeting' ? 'bg-blue-500' : 
-                                                        event.type === 'holiday' ? 'bg-green-500' : 
-                                                        'bg-yellow-500'}`}
-                                          ></div>
-                                        ))
-                                      ) : (
-                                        <>
-                                          <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
-                                          <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
-                                          <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
-                                        </>
-                                      )}
-                                    </div>
-                                  )}
-                                </div>
+                              <div className={`w-full h-full flex flex-col items-center justify-center rounded-md ${isToday(dayDate) ? 'bg-primary text-primary-foreground' : ''}`}>
+                                <span>{format(dayDate, 'd')}</span>
+                                {renderEventDots(dateString, events)}
                               </div>
                             );
                           },
