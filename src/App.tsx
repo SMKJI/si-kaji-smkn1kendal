@@ -28,6 +28,9 @@ import PermissionPage from "@/pages/permission";
 import StudentDataPage from "@/pages/student-data";
 import PermissionRequestPage from "@/pages/permission-request";
 import StudentActivitiesPage from "@/pages/student-activities";
+import SchedulePage from "@/pages/schedule";
+import FacilityManagementPage from "@/pages/facility";
+import AnnouncementPage from "@/pages/announcement";
 
 const queryClient = new QueryClient();
 
@@ -59,6 +62,9 @@ const App = () => (
           <Route path="/permission" element={<PermissionPage />} />
           <Route path="/permission-request" element={<PermissionRequestPage />} />
           <Route path="/student-activities" element={<StudentActivitiesPage />} />
+          <Route path="/schedule" element={<SchedulePage />} />
+          <Route path="/facility" element={<FacilityManagementPage />} />
+          <Route path="/announcement" element={<AnnouncementPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
