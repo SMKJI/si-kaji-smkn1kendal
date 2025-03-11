@@ -17,6 +17,10 @@ import TeacherManagementPage from "@/pages/teacher";
 import TeacherProfilePage from "@/pages/teacher/[id]";
 import ComplaintPage from "@/pages/complaint";
 import TicketStatusPage from "@/pages/complaint/ticket";
+import DashboardPage from "@/pages/dashboard";
+import AttendancePage from "@/pages/attendance";
+import AcademicReportPage from "@/pages/academic-report";
+import CalendarPage from "@/pages/calendar";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +33,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/student" element={<StudentManagementPage />} />
           <Route path="/student/:id" element={<StudentProfilePage />} />
           <Route path="/class" element={<ClassManagementPage />} />
@@ -37,6 +42,9 @@ const App = () => (
           <Route path="/teacher/:id" element={<TeacherProfilePage />} />
           <Route path="/complaint" element={<ComplaintPage />} />
           <Route path="/complaint/ticket" element={<TicketStatusPage />} />
+          <Route path="/attendance" element={<AttendancePage />} />
+          <Route path="/academic-report" element={<AcademicReportPage />} />
+          <Route path="/calendar" element={<CalendarPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
