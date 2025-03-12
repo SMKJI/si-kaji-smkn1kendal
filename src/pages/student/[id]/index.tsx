@@ -60,7 +60,7 @@ const StudentProfilePage = () => {
       <PageTransition>
         <div className="min-h-screen flex flex-col">
           <Navbar />
-          <main className="flex-grow container mx-auto px-4 py-6">
+          <main className="flex-grow container mx-auto px-4 pt-28 pb-6">
             <div className="flex items-center justify-center h-full">
               <p>Loading student data...</p>
             </div>
@@ -75,7 +75,7 @@ const StudentProfilePage = () => {
     <PageTransition>
       <div className="min-h-screen flex flex-col">
         <Navbar />
-        <main className="flex-grow container mx-auto px-4 py-6">
+        <main className="flex-grow container mx-auto px-4 pt-28 pb-6">
           <Button 
             variant="ghost" 
             className="mb-4 flex items-center gap-2"

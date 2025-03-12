@@ -56,7 +56,7 @@ const TeacherProfilePage = () => {
       <PageTransition>
         <div className="min-h-screen flex flex-col">
           <Navbar />
-          <main className="flex-grow container mx-auto px-4 py-6">
+          <main className="flex-grow container mx-auto px-4 pt-28 pb-6">
             <p>Guru tidak ditemukan</p>
           </main>
           <Footer />
@@ -69,7 +69,7 @@ const TeacherProfilePage = () => {
     <PageTransition>
       <div className="min-h-screen flex flex-col">
         <Navbar />
-        <main className="flex-grow container mx-auto px-4 py-6">
+        <main className="flex-grow container mx-auto px-4 pt-28 pb-6">
           <div className="flex flex-col gap-6">
             <div className="flex items-center gap-2 mb-2">
               <Link to="/teacher">
