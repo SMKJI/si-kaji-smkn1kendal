@@ -19,17 +19,13 @@ import ComplaintPage from "@/pages/complaint";
 import TicketStatusPage from "@/pages/complaint/ticket";
 import DashboardPage from "@/pages/dashboard";
 import AttendancePage from "@/pages/attendance";
-import AcademicReportPage from "@/pages/academic-report";
 import CalendarPage from "@/pages/calendar";
 import ParentComplaintPage from "@/pages/parent-complaint";
 import ParentPortalPage from "@/pages/parent-portal";
 import CounselingPage from "@/pages/counseling";
 import PermissionPage from "@/pages/permission";
 import StudentDataPage from "@/pages/student-data";
-import PermissionRequestPage from "@/pages/permission-request";
 import StudentActivitiesPage from "@/pages/student-activities";
-import SchedulePage from "@/pages/schedule";
-import FacilityManagementPage from "@/pages/facility";
 import AnnouncementPage from "@/pages/announcement";
 
 const queryClient = new QueryClient();
@@ -54,16 +50,12 @@ const App = () => (
           <Route path="/complaint" element={<ComplaintPage />} />
           <Route path="/complaint/ticket" element={<TicketStatusPage />} />
           <Route path="/attendance" element={<AttendancePage />} />
-          <Route path="/academic-report" element={<AcademicReportPage />} />
           <Route path="/calendar" element={<CalendarPage />} />
           <Route path="/parent-complaint" element={<ParentComplaintPage />} />
           <Route path="/parent-portal" element={<ParentPortalPage />} />
           <Route path="/counseling" element={<CounselingPage />} />
           <Route path="/permission" element={<PermissionPage />} />
-          <Route path="/permission-request" element={<PermissionRequestPage />} />
           <Route path="/student-activities" element={<StudentActivitiesPage />} />
-          <Route path="/schedule" element={<SchedulePage />} />
-          <Route path="/facility" element={<FacilityManagementPage />} />
           <Route path="/announcement" element={<AnnouncementPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFoundPage />} />
