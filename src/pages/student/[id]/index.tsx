@@ -1,18 +1,33 @@
+
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import PageTransition from '@/components/layout/PageTransition';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ArrowLeft, Award, BookOpen, Calendar, User } from 'lucide-react';
+import { ArrowLeft, Award, BookOpen, Calendar, User, FileText, Shield, PlusCircle } from 'lucide-react';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { toast } from 'sonner';
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { useForm } from "react-hook-form";
 
 const StudentProfilePage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [student, setStudent] = useState(null);
+  const [disciplineRecords, setDisciplineRecords] = useState([
+    { id: 1, date: '05 Januari 2023', type: 'Pelanggaran Ringan', description: 'Terlambat masuk kelas', points: -5 },
+    { id: 2, date: '20 Februari 2023', type: 'Pelanggaran Sedang', description: 'Tidak mengerjakan tugas', points: -10 },
+    { id: 3, date: '15 Maret 2023', type: 'Penghargaan', description: 'Menjadi petugas upacara', points: 15 }
+  ]);
   
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -53,6 +68,105 @@ const StudentProfilePage = () => {
     
     setStudent(dummyStudent);
   }, [id]);
+
+  // Achievement form schema
+  const achievementFormSchema = z.object({
+    title: z.string().min(5, {
+      message: "Judul prestasi minimal 5 karakter",
+    }),
+    competitionLevel: z.string({
+      required_error: "Pilih tingkat kompetisi",
+    }),
+    year: z.string().min(4, {
+      message: "Tahun harus valid",
+    }),
+    description: z.string().min(10, {
+      message: "Deskripsi minimal 10 karakter",
+    }),
+  });
+
+  const achievementForm = useForm<z.infer<typeof achievementFormSchema>>({
+    resolver: zodResolver(achievementFormSchema),
+    defaultValues: {
+      title: "",
+      year: new Date().getFullYear().toString(),
+      description: "",
+    },
+  });
+
+  function submitAchievement(values: z.infer<typeof achievementFormSchema>) {
+    console.log(values);
+    toast.success("Prestasi berhasil diajukan!", {
+      description: "Pengajuan prestasi akan diverifikasi oleh admin",
+    });
+    
+    // Add achievement to the student's achievements
+    if (student) {
+      const newAchievement = {
+        id: student.achievements.length + 1,
+        title: values.title,
+        year: values.year,
+      };
+      
+      setStudent({
+        ...student,
+        achievements: [...student.achievements, newAchievement]
+      });
+    }
+    
+    achievementForm.reset();
+  }
+
+  // Discipline record form schema
+  const disciplineFormSchema = z.object({
+    type: z.string({
+      required_error: "Pilih jenis catatan",
+    }),
+    description: z.string().min(5, {
+      message: "Deskripsi minimal 5 karakter",
+    }),
+    date: z.string().min(6, {
+      message: "Masukkan tanggal kejadian",
+    }),
+  });
+
+  const disciplineForm = useForm<z.infer<typeof disciplineFormSchema>>({
+    resolver: zodResolver(disciplineFormSchema),
+    defaultValues: {
+      description: "",
+      date: new Date().toISOString().split('T')[0],
+    },
+  });
+
+  function submitDisciplineRecord(values: z.infer<typeof disciplineFormSchema>) {
+    console.log(values);
+    
+    // Calculate points based on type
+    let points = 0;
+    if (values.type === "pelanggaran_ringan") points = -5;
+    else if (values.type === "pelanggaran_sedang") points = -10;
+    else if (values.type === "pelanggaran_berat") points = -20;
+    else if (values.type === "penghargaan") points = 15;
+    
+    // Add new discipline record
+    const newRecord = {
+      id: disciplineRecords.length + 1,
+      date: values.date,
+      type: values.type === "pelanggaran_ringan" ? "Pelanggaran Ringan" :
+            values.type === "pelanggaran_sedang" ? "Pelanggaran Sedang" :
+            values.type === "pelanggaran_berat" ? "Pelanggaran Berat" : "Penghargaan",
+      description: values.description,
+      points: points
+    };
+    
+    setDisciplineRecords([...disciplineRecords, newRecord]);
+    
+    toast.success("Catatan kedisiplinan berhasil ditambahkan!", {
+      description: "Data akan ditinjau oleh Guru BK",
+    });
+    
+    disciplineForm.reset();
+  }
 
   if (!student) {
     return (
@@ -112,11 +226,12 @@ const StudentProfilePage = () => {
             
             <div className="lg:col-span-3">
               <Tabs defaultValue="personal" className="w-full">
-                <TabsList className="w-full mb-6 grid grid-cols-2 md:grid-cols-4">
+                <TabsList className="w-full mb-6 grid grid-cols-2 md:grid-cols-5">
                   <TabsTrigger value="personal">Data Pribadi</TabsTrigger>
                   <TabsTrigger value="achievements">Prestasi</TabsTrigger>
                   <TabsTrigger value="extracurricular">Ekstrakurikuler</TabsTrigger>
                   <TabsTrigger value="attendance">Kehadiran</TabsTrigger>
+                  <TabsTrigger value="discipline">Kedisiplinan</TabsTrigger>
                 </TabsList>
                 
                 <TabsContent value="personal">
@@ -184,10 +299,115 @@ const StudentProfilePage = () => {
                 <TabsContent value="achievements">
                   <Card>
                     <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <Award size={20} />
-                        Prestasi Akademik & Non-Akademik
-                      </CardTitle>
+                      <div className="flex justify-between items-center">
+                        <CardTitle className="flex items-center gap-2">
+                          <Award size={20} />
+                          Prestasi Akademik & Non-Akademik
+                        </CardTitle>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button className="flex items-center gap-2">
+                              <PlusCircle size={16} />
+                              Ajukan Prestasi
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <DialogHeader>
+                              <DialogTitle>Ajukan Prestasi Baru</DialogTitle>
+                              <DialogDescription>
+                                Isi formulir berikut untuk mengajukan prestasi baru. Prestasi akan diverifikasi oleh admin.
+                              </DialogDescription>
+                            </DialogHeader>
+                            <Form {...achievementForm}>
+                              <form onSubmit={achievementForm.handleSubmit(submitAchievement)} className="space-y-4">
+                                <FormField
+                                  control={achievementForm.control}
+                                  name="title"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel>Judul Prestasi</FormLabel>
+                                      <FormControl>
+                                        <Input placeholder="Contoh: Juara 1 Lomba Web Design" {...field} />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                                
+                                <FormField
+                                  control={achievementForm.control}
+                                  name="competitionLevel"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel>Tingkat Kompetisi</FormLabel>
+                                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <FormControl>
+                                          <SelectTrigger>
+                                            <SelectValue placeholder="Pilih tingkat kompetisi" />
+                                          </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                          <SelectItem value="school">Tingkat Sekolah</SelectItem>
+                                          <SelectItem value="subdistrict">Tingkat Kecamatan</SelectItem>
+                                          <SelectItem value="district">Tingkat Kabupaten/Kota</SelectItem>
+                                          <SelectItem value="province">Tingkat Provinsi</SelectItem>
+                                          <SelectItem value="national">Tingkat Nasional</SelectItem>
+                                          <SelectItem value="international">Tingkat Internasional</SelectItem>
+                                        </SelectContent>
+                                      </Select>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                                
+                                <FormField
+                                  control={achievementForm.control}
+                                  name="year"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel>Tahun</FormLabel>
+                                      <FormControl>
+                                        <Input placeholder="Contoh: 2023" {...field} />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                                
+                                <FormField
+                                  control={achievementForm.control}
+                                  name="description"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel>Deskripsi Prestasi</FormLabel>
+                                      <FormControl>
+                                        <Textarea 
+                                          placeholder="Jelaskan detail prestasi yang diraih" 
+                                          className="min-h-[100px]"
+                                          {...field} 
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                                
+                                <div className="space-y-2">
+                                  <FormLabel>Unggah Bukti Prestasi</FormLabel>
+                                  <Input type="file" />
+                                  <FormDescription>
+                                    Format PDF/JPG, maksimal 5MB
+                                  </FormDescription>
+                                </div>
+                                
+                                <DialogFooter>
+                                  <Button type="submit">Ajukan Prestasi</Button>
+                                </DialogFooter>
+                              </form>
+                            </Form>
+                          </DialogContent>
+                        </Dialog>
+                      </div>
                     </CardHeader>
                     <CardContent>
                       {student.achievements.length > 0 ? (
@@ -272,6 +492,132 @@ const StudentProfilePage = () => {
                           <p className="text-2xl font-bold text-red-600">{student.attendance.absent}%</p>
                         </div>
                       </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="discipline">
+                  <Card>
+                    <CardHeader>
+                      <div className="flex justify-between items-center">
+                        <CardTitle className="flex items-center gap-2">
+                          <Shield size={20} />
+                          Catatan Kedisiplinan
+                        </CardTitle>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button className="flex items-center gap-2">
+                              <PlusCircle size={16} />
+                              Tambah Catatan
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <DialogHeader>
+                              <DialogTitle>Tambah Catatan Kedisiplinan</DialogTitle>
+                              <DialogDescription>
+                                Isi formulir berikut untuk menambahkan catatan kedisiplinan baru.
+                              </DialogDescription>
+                            </DialogHeader>
+                            <Form {...disciplineForm}>
+                              <form onSubmit={disciplineForm.handleSubmit(submitDisciplineRecord)} className="space-y-4">
+                                <FormField
+                                  control={disciplineForm.control}
+                                  name="type"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel>Jenis Catatan</FormLabel>
+                                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <FormControl>
+                                          <SelectTrigger>
+                                            <SelectValue placeholder="Pilih jenis catatan" />
+                                          </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                          <SelectItem value="pelanggaran_ringan">Pelanggaran Ringan (-5 poin)</SelectItem>
+                                          <SelectItem value="pelanggaran_sedang">Pelanggaran Sedang (-10 poin)</SelectItem>
+                                          <SelectItem value="pelanggaran_berat">Pelanggaran Berat (-20 poin)</SelectItem>
+                                          <SelectItem value="penghargaan">Penghargaan (+15 poin)</SelectItem>
+                                        </SelectContent>
+                                      </Select>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                                
+                                <FormField
+                                  control={disciplineForm.control}
+                                  name="date"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel>Tanggal Kejadian</FormLabel>
+                                      <FormControl>
+                                        <Input type="date" {...field} />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                                
+                                <FormField
+                                  control={disciplineForm.control}
+                                  name="description"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel>Deskripsi</FormLabel>
+                                      <FormControl>
+                                        <Textarea 
+                                          placeholder="Jelaskan detail kejadian" 
+                                          className="min-h-[100px]"
+                                          {...field} 
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                                
+                                <DialogFooter>
+                                  <Button type="submit">Simpan Catatan</Button>
+                                </DialogFooter>
+                              </form>
+                            </Form>
+                          </DialogContent>
+                        </Dialog>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      {disciplineRecords.length > 0 ? (
+                        <div className="space-y-4">
+                          {disciplineRecords.map((record) => (
+                            <div key={record.id} className="border-b pb-4 last:border-0">
+                              <div className="flex justify-between items-start">
+                                <div>
+                                  <h3 className="font-medium">{record.type}</h3>
+                                  <p className="text-sm">{record.description}</p>
+                                  <p className="text-xs text-muted-foreground mt-1">Tanggal: {record.date}</p>
+                                </div>
+                                <div className={`px-3 py-1 rounded-full text-sm ${
+                                  record.points > 0 
+                                    ? 'bg-green-100 text-green-800' 
+                                    : 'bg-red-100 text-red-800'
+                                }`}>
+                                  {record.points > 0 ? '+' : ''}{record.points} poin
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                          <div className="pt-4 border-t">
+                            <div className="flex justify-between items-center">
+                              <span className="font-medium">Total Poin</span>
+                              <span className="font-bold text-lg">
+                                {disciplineRecords.reduce((total, record) => total + record.points, 0)} poin
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <p className="text-muted-foreground">Belum ada catatan kedisiplinan.</p>
+                      )}
                     </CardContent>
                   </Card>
                 </TabsContent>

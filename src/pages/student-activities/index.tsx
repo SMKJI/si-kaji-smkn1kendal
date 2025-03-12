@@ -13,7 +13,8 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
-import { CalendarPlus, Search, Filter, Clock, ClipboardList, CalendarCheck, FileText, Users, Calendar, CheckCircle2, XCircle, FileImage, Clipboard, ListChecks, Upload } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
+import { CalendarPlus, Search, Filter, Clock, FileText, Calendar, CheckCircle2, XCircle, FileImage, Clipboard, ListChecks, Upload, Plus } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -27,9 +28,10 @@ const StudentActivitiesPage = () => {
   }, []);
 
   const [filter, setFilter] = useState('all');
+  const [needFacility, setNeedFacility] = useState(false);
 
   // Sample activities data
-  const activities = [
+  const [activities, setActivities] = useState([
     {
       id: 'ACT001',
       title: 'Pekan Olahraga dan Seni',
@@ -39,7 +41,8 @@ const StudentActivitiesPage = () => {
       location: 'Lapangan SMKN 1 Kendal',
       description: 'Kegiatan tahunan yang meliputi berbagai cabang olahraga dan pentas seni siswa.',
       pic: 'Andi Saputra (XII RPL 1)',
-      type: 'Eksternal'
+      type: 'Eksternal',
+      hasReport: true
     },
     {
       id: 'ACT002',
@@ -50,7 +53,8 @@ const StudentActivitiesPage = () => {
       location: 'Lab Komputer 2',
       description: 'Workshop pemrograman web dasar menggunakan HTML, CSS, dan JavaScript untuk siswa RPL.',
       pic: 'Deni Wijaya (XII RPL 2)',
-      type: 'Internal'
+      type: 'Internal',
+      hasReport: false
     },
     {
       id: 'ACT003',
@@ -61,7 +65,8 @@ const StudentActivitiesPage = () => {
       location: 'PT Telkom Kendal',
       description: 'Kunjungan industri untuk mengenal lebih dekat dunia kerja di bidang IT.',
       pic: 'Budi Santoso (Guru)',
-      type: 'Eksternal'
+      type: 'Eksternal',
+      hasReport: false
     },
     {
       id: 'ACT004',
@@ -72,43 +77,13 @@ const StudentActivitiesPage = () => {
       location: 'Ruang OSIS',
       description: 'Rapat koordinasi persiapan perayaan HUT SMKN 1 Kendal ke-25.',
       pic: 'Cindy Permata (XII RPL 2)',
-      type: 'Internal'
+      type: 'Internal',
+      hasReport: false
     },
-  ];
-
-  // Sample facility requests data
-  const facilityRequests = [
-    {
-      id: 'FAC001',
-      activity: 'Workshop Pemrograman Web',
-      facility: 'Lab Komputer 2',
-      date: '25 Oktober 2023',
-      time: '09:00 - 12:00',
-      status: 'Disetujui',
-      approved_by: 'Tono Wijaya, S.T.'
-    },
-    {
-      id: 'FAC002',
-      activity: 'Latihan Drama Pentas Seni',
-      facility: 'Aula Sekolah',
-      date: '18 Oktober 2023',
-      time: '14:00 - 16:00',
-      status: 'Pending',
-      approved_by: '-'
-    },
-    {
-      id: 'FAC003',
-      activity: 'Rapat OSIS',
-      facility: 'Ruang OSIS',
-      date: '10 November 2023',
-      time: '13:00 - 15:00',
-      status: 'Ditolak',
-      approved_by: 'Ani Suryani, S.Pd.'
-    },
-  ];
+  ]);
 
   // Sample activity reports data
-  const activityReports = [
+  const [activityReports, setActivityReports] = useState([
     {
       id: 'REP001',
       activity: 'Kunjungan Industri PT XYZ',
@@ -125,10 +100,10 @@ const StudentActivitiesPage = () => {
       status: 'Reviewed',
       documents: ['laporan_lomba.pdf', 'sertifikat.pdf']
     },
-  ];
+  ]);
 
   // Sample activity submissions
-  const activitySubmissions = [
+  const [activitySubmissions, setActivitySubmissions] = useState([
     {
       id: 'SUB001',
       title: 'Pelatihan Leadership untuk OSIS',
@@ -156,8 +131,9 @@ const StudentActivitiesPage = () => {
       type: 'Kompetisi',
       target: 'Seluruh Siswa'
     }
-  ];
+  ]);
 
+  // Form schema for activity submission
   const formSchema = z.object({
     title: z.string().min(5, {
       message: "Judul kegiatan minimal 5 karakter",
@@ -177,6 +153,19 @@ const StudentActivitiesPage = () => {
     description: z.string().min(10, {
       message: "Deskripsi kegiatan minimal 10 karakter",
     }),
+    needFacility: z.boolean().optional(),
+    facility: z.string().optional(),
+    facilityDate: z.string().optional(),
+    facilityTime: z.string().optional(),
+  }).refine(data => {
+    // If needFacility is true, then facility, facilityDate, and facilityTime are required
+    if (data.needFacility) {
+      return !!data.facility && !!data.facilityDate && !!data.facilityTime;
+    }
+    return true;
+  }, {
+    message: "Semua data fasilitas harus diisi jika membutuhkan fasilitas",
+    path: ["facility"],
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -187,14 +176,102 @@ const StudentActivitiesPage = () => {
       location: "",
       date: "",
       description: "",
+      needFacility: false,
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+    
+    // Create a new activity
+    const newActivity = {
+      id: `ACT${String(activities.length + 1).padStart(3, '0')}`,
+      title: values.title,
+      organizer: values.organizer,
+      date: values.date,
+      status: 'Pending',
+      location: values.location,
+      description: values.description,
+      pic: 'Anda (Siswa)',
+      type: values.type,
+      hasReport: false
+    };
+    
+    setActivities([newActivity, ...activities]);
+    
+    // If facility is needed, add facility request
+    if (values.needFacility && values.facility) {
+      // Logic to add facility request
+      console.log("Facility requested:", values.facility, values.facilityDate, values.facilityTime);
+    }
+    
     toast.success("Kegiatan berhasil diajukan!", {
       description: "Ajuan kegiatan Anda akan segera diproses",
     });
+    
+    form.reset();
+  }
+
+  // Form schema for activity report
+  const reportFormSchema = z.object({
+    activityId: z.string({
+      required_error: "Pilih kegiatan yang akan dilaporkan",
+    }),
+    summary: z.string().min(10, {
+      message: "Ringkasan kegiatan minimal 10 karakter",
+    }),
+    attendees: z.string().min(1, {
+      message: "Jumlah peserta harus diisi",
+    }),
+    outcomes: z.string().min(10, {
+      message: "Hasil kegiatan minimal 10 karakter",
+    }),
+    challenges: z.string().min(5, {
+      message: "Kendala minimal 5 karakter",
+    }),
+  });
+
+  const reportForm = useForm<z.infer<typeof reportFormSchema>>({
+    resolver: zodResolver(reportFormSchema),
+    defaultValues: {
+      summary: "",
+      attendees: "",
+      outcomes: "",
+      challenges: "",
+    },
+  });
+
+  function submitReport(values: z.infer<typeof reportFormSchema>) {
+    console.log(values);
+    
+    // Find the activity
+    const activity = activities.find(act => act.id === values.activityId);
+    
+    if (activity) {
+      // Create new report
+      const newReport = {
+        id: `REP${String(activityReports.length + 1).padStart(3, '0')}`,
+        activity: activity.title,
+        date: new Date().toISOString().split('T')[0],
+        submitted_by: 'Anda (Siswa)',
+        status: 'Submitted',
+        documents: ['laporan_new.pdf']
+      };
+      
+      setActivityReports([newReport, ...activityReports]);
+      
+      // Update activity's hasReport status
+      const updatedActivities = activities.map(act => 
+        act.id === values.activityId ? { ...act, hasReport: true } : act
+      );
+      setActivities(updatedActivities);
+      
+      toast.success("Laporan kegiatan berhasil dikirim!", {
+        description: "Laporan Anda akan ditinjau oleh admin",
+      });
+      
+      reportForm.reset();
+    }
   }
 
   const filteredActivities = filter === 'all' 
@@ -256,10 +333,6 @@ const StudentActivitiesPage = () => {
                                     <span className="flex items-center gap-1">
                                       <Calendar size={12} />
                                       {format(new Date(submission.date), 'dd MMMM yyyy')}
-                                    </span>
-                                    <span className="flex items-center gap-1">
-                                      <Users size={12} />
-                                      Target: {submission.target}
                                     </span>
                                     <span className="flex items-center gap-1">
                                       <Clipboard size={12} />
@@ -416,6 +489,93 @@ const StudentActivitiesPage = () => {
                             </FormItem>
                           )}
                         />
+
+                        <FormField
+                          control={form.control}
+                          name="needFacility"
+                          render={({ field }) => (
+                            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value}
+                                  onCheckedChange={(checked) => {
+                                    field.onChange(checked);
+                                    setNeedFacility(checked as boolean);
+                                  }}
+                                />
+                              </FormControl>
+                              <div className="space-y-1 leading-none">
+                                <FormLabel>
+                                  Butuh Peminjaman Fasilitas
+                                </FormLabel>
+                                <FormDescription>
+                                  Centang jika kegiatan Anda membutuhkan peminjaman fasilitas sekolah
+                                </FormDescription>
+                              </div>
+                            </FormItem>
+                          )}
+                        />
+                        
+                        {needFacility && (
+                          <div className="border rounded-md p-4 space-y-4">
+                            <h3 className="font-medium">Detail Peminjaman Fasilitas</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <FormField
+                                control={form.control}
+                                name="facility"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>Fasilitas yang Dipinjam</FormLabel>
+                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                      <FormControl>
+                                        <SelectTrigger>
+                                          <SelectValue placeholder="Pilih fasilitas" />
+                                        </SelectTrigger>
+                                      </FormControl>
+                                      <SelectContent>
+                                        <SelectItem value="aula">Aula Sekolah</SelectItem>
+                                        <SelectItem value="lab_komputer">Laboratorium Komputer</SelectItem>
+                                        <SelectItem value="lapangan">Lapangan Olahraga</SelectItem>
+                                        <SelectItem value="perpustakaan">Ruang Perpustakaan</SelectItem>
+                                        <SelectItem value="kelas">Ruang Kelas</SelectItem>
+                                        <SelectItem value="multimedia">Ruang Multimedia</SelectItem>
+                                      </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                              
+                              <FormField
+                                control={form.control}
+                                name="facilityDate"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>Tanggal Penggunaan</FormLabel>
+                                    <FormControl>
+                                      <Input type="date" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                              
+                              <FormField
+                                control={form.control}
+                                name="facilityTime"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>Waktu Penggunaan</FormLabel>
+                                    <FormControl>
+                                      <Input placeholder="Contoh: 08:00 - 12:00" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
+                          </div>
+                        )}
                         
                         <DialogFooter>
                           <Button type="submit" className="flex items-center gap-2">
@@ -431,9 +591,8 @@ const StudentActivitiesPage = () => {
             </div>
 
             <Tabs defaultValue="activities" className="mt-4">
-              <TabsList className="grid w-full grid-cols-3 mb-4">
+              <TabsList className="grid w-full grid-cols-2 mb-4">
                 <TabsTrigger value="activities">Daftar Kegiatan</TabsTrigger>
-                <TabsTrigger value="facilities">Peminjaman Fasilitas</TabsTrigger>
                 <TabsTrigger value="reports">Laporan Kegiatan</TabsTrigger>
               </TabsList>
               
@@ -503,8 +662,128 @@ const StudentActivitiesPage = () => {
                                 <p className="text-sm">{activity.description}</p>
                               </div>
                             </div>
-                            <div className="flex justify-end mt-4">
+                            <div className="flex justify-between items-center mt-4">
                               <Button variant="outline" size="sm">Lihat Detail</Button>
+                              {activity.status === 'Disetujui' && !activity.hasReport && (
+                                <Dialog>
+                                  <DialogTrigger asChild>
+                                    <Button size="sm" className="flex items-center gap-1">
+                                      <Plus size={16} />
+                                      Buat Laporan
+                                    </Button>
+                                  </DialogTrigger>
+                                  <DialogContent>
+                                    <DialogHeader>
+                                      <DialogTitle>Buat Laporan Kegiatan</DialogTitle>
+                                      <DialogDescription>
+                                        Isi formulir berikut untuk melaporkan hasil kegiatan yang telah dilaksanakan
+                                      </DialogDescription>
+                                    </DialogHeader>
+                                    <Form {...reportForm}>
+                                      <form onSubmit={reportForm.handleSubmit(submitReport)} className="space-y-4">
+                                        <FormField
+                                          control={reportForm.control}
+                                          name="activityId"
+                                          render={({ field }) => (
+                                            <FormItem>
+                                              <FormLabel>Kegiatan</FormLabel>
+                                              <FormControl>
+                                                <Input 
+                                                  value={activity.title} 
+                                                  disabled
+                                                  className="bg-muted"
+                                                />
+                                              </FormControl>
+                                              <input type="hidden" {...field} value={activity.id} />
+                                              <FormMessage />
+                                            </FormItem>
+                                          )}
+                                        />
+                                        
+                                        <FormField
+                                          control={reportForm.control}
+                                          name="summary"
+                                          render={({ field }) => (
+                                            <FormItem>
+                                              <FormLabel>Ringkasan Kegiatan</FormLabel>
+                                              <FormControl>
+                                                <Textarea
+                                                  placeholder="Jelaskan ringkasan kegiatan yang telah dilaksanakan"
+                                                  className="min-h-[100px]"
+                                                  {...field}
+                                                />
+                                              </FormControl>
+                                              <FormMessage />
+                                            </FormItem>
+                                          )}
+                                        />
+                                        
+                                        <FormField
+                                          control={reportForm.control}
+                                          name="attendees"
+                                          render={({ field }) => (
+                                            <FormItem>
+                                              <FormLabel>Jumlah Peserta</FormLabel>
+                                              <FormControl>
+                                                <Input type="number" {...field} />
+                                              </FormControl>
+                                              <FormMessage />
+                                            </FormItem>
+                                          )}
+                                        />
+                                        
+                                        <FormField
+                                          control={reportForm.control}
+                                          name="outcomes"
+                                          render={({ field }) => (
+                                            <FormItem>
+                                              <FormLabel>Hasil Kegiatan</FormLabel>
+                                              <FormControl>
+                                                <Textarea
+                                                  placeholder="Jelaskan hasil atau capaian dari kegiatan"
+                                                  className="min-h-[100px]"
+                                                  {...field}
+                                                />
+                                              </FormControl>
+                                              <FormMessage />
+                                            </FormItem>
+                                          )}
+                                        />
+                                        
+                                        <FormField
+                                          control={reportForm.control}
+                                          name="challenges"
+                                          render={({ field }) => (
+                                            <FormItem>
+                                              <FormLabel>Kendala dan Solusi</FormLabel>
+                                              <FormControl>
+                                                <Textarea
+                                                  placeholder="Jelaskan kendala yang dihadapi dan solusi yang diterapkan"
+                                                  className="min-h-[100px]"
+                                                  {...field}
+                                                />
+                                              </FormControl>
+                                              <FormMessage />
+                                            </FormItem>
+                                          )}
+                                        />
+                                        
+                                        <div className="space-y-2">
+                                          <FormLabel>Unggah Dokumentasi</FormLabel>
+                                          <Input type="file" multiple />
+                                          <FormDescription>
+                                            Format JPG/PNG/PDF, maksimal 10MB (bisa memilih beberapa file)
+                                          </FormDescription>
+                                        </div>
+                                        
+                                        <DialogFooter>
+                                          <Button type="submit">Kirim Laporan</Button>
+                                        </DialogFooter>
+                                      </form>
+                                    </Form>
+                                  </DialogContent>
+                                </Dialog>
+                              )}
                             </div>
                           </CardContent>
                         </Card>
@@ -514,52 +793,13 @@ const StudentActivitiesPage = () => {
                 </Card>
               </TabsContent>
               
-              <TabsContent value="facilities">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Peminjaman Fasilitas</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="overflow-x-auto">
-                      <table className="w-full border-collapse">
-                        <thead>
-                          <tr className="border-b">
-                            <th className="py-3 px-4 text-left font-medium">ID</th>
-                            <th className="py-3 px-4 text-left font-medium">Kegiatan</th>
-                            <th className="py-3 px-4 text-left font-medium">Fasilitas</th>
-                            <th className="py-3 px-4 text-left font-medium">Tanggal</th>
-                            <th className="py-3 px-4 text-left font-medium">Waktu</th>
-                            <th className="py-3 px-4 text-center font-medium">Status</th>
-                            <th className="py-3 px-4 text-right font-medium">Disetujui Oleh</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {facilityRequests.map((request) => (
-                            <tr key={request.id} className="border-b hover:bg-muted/50">
-                              <td className="py-3 px-4">{request.id}</td>
-                              <td className="py-3 px-4">{request.activity}</td>
-                              <td className="py-3 px-4">{request.facility}</td>
-                              <td className="py-3 px-4">{request.date}</td>
-                              <td className="py-3 px-4">{request.time}</td>
-                              <td className="py-3 px-4 text-center">
-                                <span className={`px-2 py-1 rounded text-xs ${getStatusColor(request.status)}`}>
-                                  {request.status}
-                                </span>
-                              </td>
-                              <td className="py-3 px-4 text-right">{request.approved_by}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-              
               <TabsContent value="reports">
                 <Card>
                   <CardHeader>
                     <CardTitle>Laporan Kegiatan</CardTitle>
+                    <CardDescription>
+                      Daftar laporan kegiatan yang telah disubmit
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="overflow-x-auto">
