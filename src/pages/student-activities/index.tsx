@@ -1,855 +1,603 @@
 
 import React, { useEffect, useState } from 'react';
-import PageTransition from '@/components/layout/PageTransition';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Link } from 'react-router-dom';
+import DashboardLayout from '@/layouts/DashboardLayout';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
-import { CalendarPlus, Search, Filter, Clock, FileText, Calendar, CheckCircle2, XCircle, FileImage, Clipboard, ListChecks, Upload, Plus } from 'lucide-react';
-import { format } from 'date-fns';
-import { toast } from 'sonner';
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { useForm } from "react-hook-form";
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { Badge } from '@/components/ui/badge';
+import { Search, Plus, FileText, Calendar, MapPin, Clock, Users, Check, X, Loader2, PlusCircle } from 'lucide-react';
 
 const StudentActivitiesPage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title = 'Administrasi Kegiatan Siswa - Si-Kaji';
+    document.title = 'Kegiatan Siswa - Si-Kaji';
   }, []);
 
-  const [filter, setFilter] = useState('all');
-  const [needFacility, setNeedFacility] = useState(false);
+  const [activeTab, setActiveTab] = useState("activities");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showReportForm, setShowReportForm] = useState(false);
+  const [selectedActivity, setSelectedActivity] = useState<number | null>(null);
 
-  // Sample activities data
-  const [activities, setActivities] = useState([
-    {
-      id: 'ACT001',
-      title: 'Pekan Olahraga dan Seni',
-      organizer: 'OSIS',
-      date: '15-20 Oktober 2023',
-      status: 'Disetujui',
-      location: 'Lapangan SMKN 1 Kendal',
-      description: 'Kegiatan tahunan yang meliputi berbagai cabang olahraga dan pentas seni siswa.',
-      pic: 'Andi Saputra (XII RPL 1)',
-      type: 'Eksternal',
+  // Sample upcoming activities
+  const upcomingActivities = [
+    { 
+      id: 1, 
+      title: 'Lomba Debat Bahasa Inggris',
+      date: '12 Agustus 2023',
+      location: 'Aula Sekolah',
+      time: '09:00 - 12:00',
+      status: 'approved', 
+      participants: 12,
+      facilities: ['Meja', 'Kursi', 'Sound System']
+    },
+    { 
+      id: 2, 
+      title: 'Pelatihan Kewirausahaan',
+      date: '15 Agustus 2023',
+      location: 'Ruang Multimedia',
+      time: '13:00 - 15:00',
+      status: 'pending', 
+      participants: 30,
+      facilities: ['Proyektor', 'Laptop']
+    },
+    { 
+      id: 3, 
+      title: 'Pertandingan Futsal',
+      date: '20 Agustus 2023',
+      location: 'Lapangan Olahraga',
+      time: '14:00 - 17:00',
+      status: 'rejected', 
+      participants: 20,
+      facilities: ['Bola', 'Seragam', 'P3K']
+    },
+  ];
+
+  // Sample past activities
+  const pastActivities = [
+    { 
+      id: 4, 
+      title: 'Workshop Robotika',
+      date: '10 Juli 2023',
+      location: 'Lab Komputer',
+      time: '09:00 - 12:00',
+      status: 'completed',
+      participants: 15,
+      facilities: ['Komputer', 'Alat Robotik'],
       hasReport: true
     },
-    {
-      id: 'ACT002',
-      title: 'Workshop Pemrograman Web',
-      organizer: 'Ekstrakurikuler Coding',
-      date: '25 Oktober 2023',
-      status: 'Pending',
-      location: 'Lab Komputer 2',
-      description: 'Workshop pemrograman web dasar menggunakan HTML, CSS, dan JavaScript untuk siswa RPL.',
-      pic: 'Deni Wijaya (XII RPL 2)',
-      type: 'Internal',
+    { 
+      id: 5, 
+      title: 'Webinar Kesehatan Mental',
+      date: '5 Juli 2023',
+      location: 'Online via Zoom',
+      time: '13:00 - 15:00',
+      status: 'completed',
+      participants: 50,
+      facilities: ['Laptop', 'Webcam'],
       hasReport: false
     },
-    {
-      id: 'ACT003',
-      title: 'Kunjungan Industri PT Telkom',
-      organizer: 'Jurusan RPL',
-      date: '5 November 2023',
-      status: 'Disetujui',
-      location: 'PT Telkom Kendal',
-      description: 'Kunjungan industri untuk mengenal lebih dekat dunia kerja di bidang IT.',
-      pic: 'Budi Santoso (Guru)',
-      type: 'Eksternal',
-      hasReport: false
-    },
-    {
-      id: 'ACT004',
-      title: 'Rapat Persiapan HUT Sekolah',
-      organizer: 'OSIS',
-      date: '10 November 2023',
-      status: 'Ditolak',
-      location: 'Ruang OSIS',
-      description: 'Rapat koordinasi persiapan perayaan HUT SMKN 1 Kendal ke-25.',
-      pic: 'Cindy Permata (XII RPL 2)',
-      type: 'Internal',
-      hasReport: false
-    },
-  ]);
+  ];
 
-  // Sample activity reports data
-  const [activityReports, setActivityReports] = useState([
-    {
-      id: 'REP001',
-      activity: 'Kunjungan Industri PT XYZ',
-      date: '15 September 2023',
-      submitted_by: 'Budi Santoso (Guru)',
-      status: 'Submitted',
-      documents: ['laporan_kegiatan.pdf', 'foto_kegiatan.zip']
-    },
-    {
-      id: 'REP002',
-      activity: 'Lomba Debat Bahasa Inggris',
-      date: '28 September 2023',
-      submitted_by: 'Ani Suryani, S.Pd.',
-      status: 'Reviewed',
-      documents: ['laporan_lomba.pdf', 'sertifikat.pdf']
-    },
-  ]);
+  const handleSubmitActivity = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    // Simulate API call
+    setTimeout(() => {
+      setIsSubmitting(false);
+      // Reset form
+      const form = e.target as HTMLFormElement;
+      form.reset();
+      // Show success message
+      alert('Kegiatan berhasil diajukan! Menunggu persetujuan.');
+    }, 1500);
+  };
 
-  // Sample activity submissions
-  const [activitySubmissions, setActivitySubmissions] = useState([
-    {
-      id: 'SUB001',
-      title: 'Pelatihan Leadership untuk OSIS',
-      submitter: 'Andi Saputra',
-      date: '2023-10-12',
-      status: 'Pending',
-      type: 'Workshop',
-      target: 'Pengurus OSIS'
-    },
-    {
-      id: 'SUB002',
-      title: 'Webinar Karir di Bidang IT',
-      submitter: 'Budi Santoso',
-      date: '2023-10-05',
-      status: 'Disetujui',
-      type: 'Webinar',
-      target: 'Kelas XII RPL'
-    },
-    {
-      id: 'SUB003',
-      title: 'Kompetisi Desain Grafis',
-      submitter: 'Cindy Permata',
-      date: '2023-09-28',
-      status: 'Ditolak',
-      type: 'Kompetisi',
-      target: 'Seluruh Siswa'
+  const handleSubmitReport = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    // Simulate API call
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setShowReportForm(false);
+      setSelectedActivity(null);
+      // Show success message
+      alert('Laporan kegiatan berhasil dikirim!');
+    }, 1500);
+  };
+
+  const getStatusBadge = (status: string) => {
+    switch(status) {
+      case 'approved':
+        return <Badge className="bg-green-500">Disetujui</Badge>;
+      case 'pending':
+        return <Badge className="bg-yellow-500">Menunggu</Badge>;
+      case 'rejected':
+        return <Badge className="bg-red-500">Ditolak</Badge>;
+      case 'completed':
+        return <Badge className="bg-blue-500">Selesai</Badge>;
+      default:
+        return <Badge>Unknown</Badge>;
     }
-  ]);
-
-  // Form schema for activity submission
-  const formSchema = z.object({
-    title: z.string().min(5, {
-      message: "Judul kegiatan minimal 5 karakter",
-    }),
-    type: z.string({
-      required_error: "Pilih jenis kegiatan",
-    }),
-    organizer: z.string().min(3, {
-      message: "Nama penyelenggara minimal 3 karakter",
-    }),
-    location: z.string().min(3, {
-      message: "Lokasi harus diisi",
-    }),
-    date: z.string().min(3, {
-      message: "Tanggal kegiatan harus diisi",
-    }),
-    description: z.string().min(10, {
-      message: "Deskripsi kegiatan minimal 10 karakter",
-    }),
-    needFacility: z.boolean().optional(),
-    facility: z.string().optional(),
-    facilityDate: z.string().optional(),
-    facilityTime: z.string().optional(),
-  }).refine(data => {
-    // If needFacility is true, then facility, facilityDate, and facilityTime are required
-    if (data.needFacility) {
-      return !!data.facility && !!data.facilityDate && !!data.facilityTime;
-    }
-    return true;
-  }, {
-    message: "Semua data fasilitas harus diisi jika membutuhkan fasilitas",
-    path: ["facility"],
-  });
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      title: "",
-      organizer: "",
-      location: "",
-      date: "",
-      description: "",
-      needFacility: false,
-    },
-  });
-
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    
-    // Create a new activity
-    const newActivity = {
-      id: `ACT${String(activities.length + 1).padStart(3, '0')}`,
-      title: values.title,
-      organizer: values.organizer,
-      date: values.date,
-      status: 'Pending',
-      location: values.location,
-      description: values.description,
-      pic: 'Anda (Siswa)',
-      type: values.type,
-      hasReport: false
-    };
-    
-    setActivities([newActivity, ...activities]);
-    
-    // If facility is needed, add facility request
-    if (values.needFacility && values.facility) {
-      // Logic to add facility request
-      console.log("Facility requested:", values.facility, values.facilityDate, values.facilityTime);
-    }
-    
-    toast.success("Kegiatan berhasil diajukan!", {
-      description: "Ajuan kegiatan Anda akan segera diproses",
-    });
-    
-    form.reset();
-  }
-
-  // Form schema for activity report
-  const reportFormSchema = z.object({
-    activityId: z.string({
-      required_error: "Pilih kegiatan yang akan dilaporkan",
-    }),
-    summary: z.string().min(10, {
-      message: "Ringkasan kegiatan minimal 10 karakter",
-    }),
-    attendees: z.string().min(1, {
-      message: "Jumlah peserta harus diisi",
-    }),
-    outcomes: z.string().min(10, {
-      message: "Hasil kegiatan minimal 10 karakter",
-    }),
-    challenges: z.string().min(5, {
-      message: "Kendala minimal 5 karakter",
-    }),
-  });
-
-  const reportForm = useForm<z.infer<typeof reportFormSchema>>({
-    resolver: zodResolver(reportFormSchema),
-    defaultValues: {
-      summary: "",
-      attendees: "",
-      outcomes: "",
-      challenges: "",
-    },
-  });
-
-  function submitReport(values: z.infer<typeof reportFormSchema>) {
-    console.log(values);
-    
-    // Find the activity
-    const activity = activities.find(act => act.id === values.activityId);
-    
-    if (activity) {
-      // Create new report
-      const newReport = {
-        id: `REP${String(activityReports.length + 1).padStart(3, '0')}`,
-        activity: activity.title,
-        date: new Date().toISOString().split('T')[0],
-        submitted_by: 'Anda (Siswa)',
-        status: 'Submitted',
-        documents: ['laporan_new.pdf']
-      };
-      
-      setActivityReports([newReport, ...activityReports]);
-      
-      // Update activity's hasReport status
-      const updatedActivities = activities.map(act => 
-        act.id === values.activityId ? { ...act, hasReport: true } : act
-      );
-      setActivities(updatedActivities);
-      
-      toast.success("Laporan kegiatan berhasil dikirim!", {
-        description: "Laporan Anda akan ditinjau oleh admin",
-      });
-      
-      reportForm.reset();
-    }
-  }
-
-  const filteredActivities = filter === 'all' 
-    ? activities 
-    : activities.filter(activity => 
-        filter === 'approved' 
-          ? activity.status === 'Disetujui' 
-          : filter === 'pending' 
-            ? activity.status === 'Pending' 
-            : activity.status === 'Ditolak'
-      );
-
-  const getStatusColor = (status: string) => {
-    const statusColors = {
-      'Disetujui': 'bg-green-100 text-green-800',
-      'Pending': 'bg-yellow-100 text-yellow-800',
-      'Ditolak': 'bg-red-100 text-red-800',
-      'Submitted': 'bg-blue-100 text-blue-800',
-      'Reviewed': 'bg-purple-100 text-purple-800',
-    };
-    return statusColors[status as keyof typeof statusColors] || 'bg-gray-100 text-gray-800';
   };
 
   return (
-    <PageTransition>
-      <div className="min-h-screen flex flex-col">
-        <Navbar />
-        <main className="flex-grow container mx-auto px-4 pt-28 pb-6">
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-              <div>
-                <h1 className="text-3xl font-bold">Administrasi Kegiatan Siswa</h1>
-                <p className="text-muted-foreground mt-1">Kelola kegiatan, peminjaman fasilitas, dan laporan kegiatan</p>
-              </div>
-              <div className="flex gap-2">
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button variant="outline" className="flex items-center gap-2">
-                      <ListChecks size={18} />
-                      Monitoring Ajuan
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-3xl">
-                    <DialogHeader>
-                      <DialogTitle>Monitoring Ajuan Kegiatan</DialogTitle>
-                      <DialogDescription>
-                        Lihat status pengajuan kegiatan yang telah Anda kirimkan
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className="overflow-y-auto max-h-[60vh]">
-                      <div className="space-y-4">
-                        {activitySubmissions.map((submission) => (
-                          <Card key={submission.id} className="overflow-hidden">
-                            <CardContent className="p-4">
-                              <div className="flex flex-col md:flex-row justify-between gap-2">
-                                <div>
-                                  <h3 className="font-semibold">{submission.title}</h3>
-                                  <div className="flex flex-col md:flex-row text-xs text-muted-foreground gap-2 md:gap-4 mt-1">
-                                    <span className="flex items-center gap-1">
-                                      <Calendar size={12} />
-                                      {format(new Date(submission.date), 'dd MMMM yyyy')}
-                                    </span>
-                                    <span className="flex items-center gap-1">
-                                      <Clipboard size={12} />
-                                      Jenis: {submission.type}
-                                    </span>
-                                  </div>
-                                </div>
-                                <div className="flex items-center">
-                                  <Badge className={getStatusColor(submission.status)}>
-                                    {submission.status}
-                                  </Badge>
-                                </div>
-                              </div>
-                              
-                              <div className="mt-3 pt-3 border-t">
-                                <div className="flex justify-between text-xs">
-                                  <span>ID: {submission.id}</span>
-                                  <span>Diajukan oleh: {submission.submitter}</span>
-                                </div>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        ))}
-                      </div>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-                
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button className="flex items-center gap-2">
-                      <CalendarPlus size={18} />
-                      Ajukan Kegiatan
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-3xl">
-                    <DialogHeader>
-                      <DialogTitle>Ajukan Kegiatan Baru</DialogTitle>
-                      <DialogDescription>
-                        Isi formulir berikut untuk mengajukan kegiatan baru
-                      </DialogDescription>
-                    </DialogHeader>
-                    <Form {...form}>
-                      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <FormField
-                            control={form.control}
-                            name="title"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Judul Kegiatan</FormLabel>
-                                <FormControl>
-                                  <Input placeholder="Masukkan judul kegiatan" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          
-                          <FormField
-                            control={form.control}
-                            name="type"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Jenis Kegiatan</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                  <FormControl>
-                                    <SelectTrigger>
-                                      <SelectValue placeholder="Pilih jenis kegiatan" />
-                                    </SelectTrigger>
-                                  </FormControl>
-                                  <SelectContent>
-                                    <SelectItem value="workshop">Workshop</SelectItem>
-                                    <SelectItem value="competition">Kompetisi</SelectItem>
-                                    <SelectItem value="exhibition">Pameran</SelectItem>
-                                    <SelectItem value="community_service">Bakti Sosial</SelectItem>
-                                    <SelectItem value="seminar">Seminar</SelectItem>
-                                    <SelectItem value="other">Lainnya</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          
-                          <FormField
-                            control={form.control}
-                            name="organizer"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Penyelenggara</FormLabel>
-                                <FormControl>
-                                  <Input placeholder="Nama penyelenggara kegiatan" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          
-                          <FormField
-                            control={form.control}
-                            name="location"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Lokasi</FormLabel>
-                                <FormControl>
-                                  <Input placeholder="Lokasi kegiatan" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          
-                          <FormField
-                            control={form.control}
-                            name="date"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Tanggal Kegiatan</FormLabel>
-                                <FormControl>
-                                  <Input placeholder="Format: DD/MM/YYYY atau periode" {...field} />
-                                </FormControl>
-                                <FormDescription>
-                                  Contoh: 25/11/2023 atau 25-30 November 2023
-                                </FormDescription>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          
-                          <div className="space-y-2">
-                            <FormLabel>Unggah Proposal</FormLabel>
-                            <Input type="file" />
-                            <FormDescription>
-                              Format PDF, maksimal 5MB
-                            </FormDescription>
-                          </div>
-                        </div>
-                        
-                        <FormField
-                          control={form.control}
-                          name="description"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Deskripsi Kegiatan</FormLabel>
-                              <FormControl>
-                                <Textarea
-                                  placeholder="Jelaskan rincian kegiatan, tujuan, dan target peserta"
-                                  className="min-h-[100px]"
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="needFacility"
-                          render={({ field }) => (
-                            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-                              <FormControl>
-                                <Checkbox
-                                  checked={field.value}
-                                  onCheckedChange={(checked) => {
-                                    field.onChange(checked);
-                                    setNeedFacility(checked as boolean);
-                                  }}
-                                />
-                              </FormControl>
-                              <div className="space-y-1 leading-none">
-                                <FormLabel>
-                                  Butuh Peminjaman Fasilitas
-                                </FormLabel>
-                                <FormDescription>
-                                  Centang jika kegiatan Anda membutuhkan peminjaman fasilitas sekolah
-                                </FormDescription>
-                              </div>
-                            </FormItem>
-                          )}
-                        />
-                        
-                        {needFacility && (
-                          <div className="border rounded-md p-4 space-y-4">
-                            <h3 className="font-medium">Detail Peminjaman Fasilitas</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <FormField
-                                control={form.control}
-                                name="facility"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel>Fasilitas yang Dipinjam</FormLabel>
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                      <FormControl>
-                                        <SelectTrigger>
-                                          <SelectValue placeholder="Pilih fasilitas" />
-                                        </SelectTrigger>
-                                      </FormControl>
-                                      <SelectContent>
-                                        <SelectItem value="aula">Aula Sekolah</SelectItem>
-                                        <SelectItem value="lab_komputer">Laboratorium Komputer</SelectItem>
-                                        <SelectItem value="lapangan">Lapangan Olahraga</SelectItem>
-                                        <SelectItem value="perpustakaan">Ruang Perpustakaan</SelectItem>
-                                        <SelectItem value="kelas">Ruang Kelas</SelectItem>
-                                        <SelectItem value="multimedia">Ruang Multimedia</SelectItem>
-                                      </SelectContent>
-                                    </Select>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                              
-                              <FormField
-                                control={form.control}
-                                name="facilityDate"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel>Tanggal Penggunaan</FormLabel>
-                                    <FormControl>
-                                      <Input type="date" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                              
-                              <FormField
-                                control={form.control}
-                                name="facilityTime"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel>Waktu Penggunaan</FormLabel>
-                                    <FormControl>
-                                      <Input placeholder="Contoh: 08:00 - 12:00" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                            </div>
-                          </div>
-                        )}
-                        
-                        <DialogFooter>
-                          <Button type="submit" className="flex items-center gap-2">
-                            <Upload size={16} />
-                            Ajukan Kegiatan
-                          </Button>
-                        </DialogFooter>
-                      </form>
-                    </Form>
-                  </DialogContent>
-                </Dialog>
-              </div>
+    <DashboardLayout 
+      title="Kegiatan Siswa" 
+      description="Ajukan dan kelola kegiatan siswa" 
+      showBackButton
+      backTo="/dashboard"
+    >
+      <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full mt-4">
+        <TabsList className="grid w-full grid-cols-3 mb-6">
+          <TabsTrigger value="activities">Kegiatan</TabsTrigger>
+          <TabsTrigger value="new">Ajukan Kegiatan</TabsTrigger>
+          <TabsTrigger value="reports">Laporan Kegiatan</TabsTrigger>
+        </TabsList>
+        
+        {/* Activities List Tab */}
+        <TabsContent value="activities" className="space-y-4">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-2">
+            <h2 className="text-xl font-semibold">Daftar Kegiatan yang Akan Datang</h2>
+            <div className="relative w-full md:w-64">
+              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input placeholder="Cari kegiatan..." className="pl-8" />
             </div>
-
-            <Tabs defaultValue="activities" className="mt-4">
-              <TabsList className="grid w-full grid-cols-2 mb-4">
-                <TabsTrigger value="activities">Daftar Kegiatan</TabsTrigger>
-                <TabsTrigger value="reports">Laporan Kegiatan</TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="activities">
-                <Card>
-                  <CardHeader className="pb-3">
-                    <div className="flex flex-col md:flex-row justify-between gap-4">
-                      <div className="relative w-full md:w-96">
-                        <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                        <Input
-                          placeholder="Cari kegiatan..."
-                          className="pl-10"
-                        />
-                      </div>
-                      <div className="flex gap-2">
-                        <Select
-                          defaultValue="all"
-                          onValueChange={(value) => setFilter(value)}
-                        >
-                          <SelectTrigger className="w-40">
-                            <SelectValue placeholder="Filter" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="all">Semua Status</SelectItem>
-                            <SelectItem value="approved">Disetujui</SelectItem>
-                            <SelectItem value="pending">Pending</SelectItem>
-                            <SelectItem value="rejected">Ditolak</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <Button variant="outline" size="icon">
-                          <Filter className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {filteredActivities.map((activity) => (
-                        <Card key={activity.id} className="overflow-hidden">
-                          <CardHeader className="pb-2">
-                            <div className="flex justify-between items-start">
-                              <div>
-                                <CardTitle className="flex gap-2 items-center text-xl">
-                                  {activity.title}
-                                </CardTitle>
-                                <CardDescription className="mt-1">
-                                  {activity.organizer} • {activity.date}
-                                </CardDescription>
-                              </div>
-                              <Badge className={getStatusColor(activity.status)}>
-                                {activity.status}
-                              </Badge>
-                            </div>
-                          </CardHeader>
-                          <CardContent className="pb-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <div>
-                                <p className="text-sm font-medium mb-1">Lokasi</p>
-                                <p className="text-sm">{activity.location}</p>
-                              </div>
-                              <div>
-                                <p className="text-sm font-medium mb-1">Penanggung Jawab</p>
-                                <p className="text-sm">{activity.pic}</p>
-                              </div>
-                              <div className="md:col-span-2">
-                                <p className="text-sm font-medium mb-1">Deskripsi</p>
-                                <p className="text-sm">{activity.description}</p>
-                              </div>
-                            </div>
-                            <div className="flex justify-between items-center mt-4">
-                              <Button variant="outline" size="sm">Lihat Detail</Button>
-                              {activity.status === 'Disetujui' && !activity.hasReport && (
-                                <Dialog>
-                                  <DialogTrigger asChild>
-                                    <Button size="sm" className="flex items-center gap-1">
-                                      <Plus size={16} />
-                                      Buat Laporan
-                                    </Button>
-                                  </DialogTrigger>
-                                  <DialogContent>
-                                    <DialogHeader>
-                                      <DialogTitle>Buat Laporan Kegiatan</DialogTitle>
-                                      <DialogDescription>
-                                        Isi formulir berikut untuk melaporkan hasil kegiatan yang telah dilaksanakan
-                                      </DialogDescription>
-                                    </DialogHeader>
-                                    <Form {...reportForm}>
-                                      <form onSubmit={reportForm.handleSubmit(submitReport)} className="space-y-4">
-                                        <FormField
-                                          control={reportForm.control}
-                                          name="activityId"
-                                          render={({ field }) => (
-                                            <FormItem>
-                                              <FormLabel>Kegiatan</FormLabel>
-                                              <FormControl>
-                                                <Input 
-                                                  value={activity.title} 
-                                                  disabled
-                                                  className="bg-muted"
-                                                />
-                                              </FormControl>
-                                              <input type="hidden" {...field} value={activity.id} />
-                                              <FormMessage />
-                                            </FormItem>
-                                          )}
-                                        />
-                                        
-                                        <FormField
-                                          control={reportForm.control}
-                                          name="summary"
-                                          render={({ field }) => (
-                                            <FormItem>
-                                              <FormLabel>Ringkasan Kegiatan</FormLabel>
-                                              <FormControl>
-                                                <Textarea
-                                                  placeholder="Jelaskan ringkasan kegiatan yang telah dilaksanakan"
-                                                  className="min-h-[100px]"
-                                                  {...field}
-                                                />
-                                              </FormControl>
-                                              <FormMessage />
-                                            </FormItem>
-                                          )}
-                                        />
-                                        
-                                        <FormField
-                                          control={reportForm.control}
-                                          name="attendees"
-                                          render={({ field }) => (
-                                            <FormItem>
-                                              <FormLabel>Jumlah Peserta</FormLabel>
-                                              <FormControl>
-                                                <Input type="number" {...field} />
-                                              </FormControl>
-                                              <FormMessage />
-                                            </FormItem>
-                                          )}
-                                        />
-                                        
-                                        <FormField
-                                          control={reportForm.control}
-                                          name="outcomes"
-                                          render={({ field }) => (
-                                            <FormItem>
-                                              <FormLabel>Hasil Kegiatan</FormLabel>
-                                              <FormControl>
-                                                <Textarea
-                                                  placeholder="Jelaskan hasil atau capaian dari kegiatan"
-                                                  className="min-h-[100px]"
-                                                  {...field}
-                                                />
-                                              </FormControl>
-                                              <FormMessage />
-                                            </FormItem>
-                                          )}
-                                        />
-                                        
-                                        <FormField
-                                          control={reportForm.control}
-                                          name="challenges"
-                                          render={({ field }) => (
-                                            <FormItem>
-                                              <FormLabel>Kendala dan Solusi</FormLabel>
-                                              <FormControl>
-                                                <Textarea
-                                                  placeholder="Jelaskan kendala yang dihadapi dan solusi yang diterapkan"
-                                                  className="min-h-[100px]"
-                                                  {...field}
-                                                />
-                                              </FormControl>
-                                              <FormMessage />
-                                            </FormItem>
-                                          )}
-                                        />
-                                        
-                                        <div className="space-y-2">
-                                          <FormLabel>Unggah Dokumentasi</FormLabel>
-                                          <Input type="file" multiple />
-                                          <FormDescription>
-                                            Format JPG/PNG/PDF, maksimal 10MB (bisa memilih beberapa file)
-                                          </FormDescription>
-                                        </div>
-                                        
-                                        <DialogFooter>
-                                          <Button type="submit">Kirim Laporan</Button>
-                                        </DialogFooter>
-                                      </form>
-                                    </Form>
-                                  </DialogContent>
-                                </Dialog>
-                              )}
-                            </div>
-                          </CardContent>
-                        </Card>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {upcomingActivities.map((activity) => (
+              <Card key={activity.id} className="h-full">
+                <CardHeader className="pb-2">
+                  <div className="flex justify-between items-start">
+                    <CardTitle className="text-lg">{activity.title}</CardTitle>
+                    {getStatusBadge(activity.status)}
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <Calendar className="mr-2 h-4 w-4" />
+                    <span>{activity.date}</span>
+                  </div>
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <MapPin className="mr-2 h-4 w-4" />
+                    <span>{activity.location}</span>
+                  </div>
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <Clock className="mr-2 h-4 w-4" />
+                    <span>{activity.time}</span>
+                  </div>
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <Users className="mr-2 h-4 w-4" />
+                    <span>{activity.participants} Peserta</span>
+                  </div>
+                  
+                  <div className="mt-2">
+                    <p className="text-sm font-medium mb-1">Fasilitas:</p>
+                    <div className="flex flex-wrap gap-1">
+                      {activity.facilities.map((facility, index) => (
+                        <Badge key={index} variant="outline" className="bg-primary/10 text-primary border-primary/20">
+                          {facility}
+                        </Badge>
                       ))}
                     </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-              
-              <TabsContent value="reports">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Laporan Kegiatan</CardTitle>
-                    <CardDescription>
-                      Daftar laporan kegiatan yang telah disubmit
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="overflow-x-auto">
-                      <table className="w-full border-collapse">
-                        <thead>
-                          <tr className="border-b">
-                            <th className="py-3 px-4 text-left font-medium">ID</th>
-                            <th className="py-3 px-4 text-left font-medium">Kegiatan</th>
-                            <th className="py-3 px-4 text-left font-medium">Tanggal</th>
-                            <th className="py-3 px-4 text-left font-medium">Diajukan Oleh</th>
-                            <th className="py-3 px-4 text-center font-medium">Status</th>
-                            <th className="py-3 px-4 text-right font-medium">Dokumen</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {activityReports.map((report) => (
-                            <tr key={report.id} className="border-b hover:bg-muted/50">
-                              <td className="py-3 px-4">{report.id}</td>
-                              <td className="py-3 px-4">{report.activity}</td>
-                              <td className="py-3 px-4">{report.date}</td>
-                              <td className="py-3 px-4">{report.submitted_by}</td>
-                              <td className="py-3 px-4 text-center">
-                                <span className={`px-2 py-1 rounded text-xs ${getStatusColor(report.status)}`}>
-                                  {report.status}
-                                </span>
-                              </td>
-                              <td className="py-3 px-4 text-right">
-                                <div className="flex justify-end gap-2">
-                                  {report.documents.map((doc, idx) => (
-                                    <Button key={idx} variant="ghost" size="sm" className="h-8 gap-1">
-                                      <FileText className="h-3 w-3" />
-                                      {doc.split('.')[1]}
-                                    </Button>
-                                  ))}
-                                </div>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            </Tabs>
+                  </div>
+                  
+                  {activity.status === 'approved' && (
+                    <Button 
+                      variant="outline" 
+                      className="w-full mt-2"
+                      onClick={() => {
+                        setShowReportForm(true);
+                        setSelectedActivity(activity.id);
+                        setActiveTab("reports");
+                      }}
+                    >
+                      <FileText className="mr-2 h-4 w-4" />
+                      Buat Laporan
+                    </Button>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
           </div>
-        </main>
-        <Footer />
-      </div>
-    </PageTransition>
+          
+          <Separator className="my-6" />
+          
+          <h2 className="text-xl font-semibold mt-6 mb-4">Kegiatan Sebelumnya</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {pastActivities.map((activity) => (
+              <Card key={activity.id} className="h-full">
+                <CardHeader className="pb-2">
+                  <div className="flex justify-between items-start">
+                    <CardTitle className="text-lg">{activity.title}</CardTitle>
+                    {getStatusBadge(activity.status)}
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <Calendar className="mr-2 h-4 w-4" />
+                    <span>{activity.date}</span>
+                  </div>
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <MapPin className="mr-2 h-4 w-4" />
+                    <span>{activity.location}</span>
+                  </div>
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <Clock className="mr-2 h-4 w-4" />
+                    <span>{activity.time}</span>
+                  </div>
+                  
+                  <div className="flex items-start mt-2">
+                    <FileText className="h-4 w-4 text-muted-foreground mt-0.5 mr-2" />
+                    <span className="text-sm">
+                      {activity.hasReport 
+                        ? <span className="text-green-600 flex items-center"><Check size={16} className="mr-1" /> Laporan telah dibuat</span>
+                        : <span className="text-red-600 flex items-center"><X size={16} className="mr-1" /> Belum ada laporan</span>
+                      }
+                    </span>
+                  </div>
+                  
+                  {!activity.hasReport && (
+                    <Button 
+                      variant="outline" 
+                      className="w-full mt-2"
+                      onClick={() => {
+                        setShowReportForm(true);
+                        setSelectedActivity(activity.id);
+                        setActiveTab("reports");
+                      }}
+                    >
+                      <PlusCircle className="mr-2 h-4 w-4" />
+                      Buat Laporan
+                    </Button>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+        
+        {/* Activity Submission Tab */}
+        <TabsContent value="new">
+          <Card>
+            <CardHeader>
+              <CardTitle>Formulir Pengajuan Kegiatan</CardTitle>
+              <CardDescription>
+                Lengkapi informasi berikut untuk mengajukan kegiatan baru. Pengajuan akan diproses oleh pihak sekolah.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmitActivity} className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="activity-title">Nama Kegiatan</Label>
+                    <Input id="activity-title" placeholder="Masukkan nama kegiatan" required />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="activity-type">Jenis Kegiatan</Label>
+                    <Select required>
+                      <SelectTrigger id="activity-type">
+                        <SelectValue placeholder="Pilih jenis kegiatan" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="academic">Akademik</SelectItem>
+                        <SelectItem value="sports">Olahraga</SelectItem>
+                        <SelectItem value="arts">Seni dan Budaya</SelectItem>
+                        <SelectItem value="social">Sosial</SelectItem>
+                        <SelectItem value="other">Lainnya</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="activity-date">Tanggal Kegiatan</Label>
+                    <Input type="date" id="activity-date" required />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="activity-time">Waktu Kegiatan</Label>
+                    <div className="grid grid-cols-2 gap-2">
+                      <Input type="time" id="activity-time-start" required />
+                      <Input type="time" id="activity-time-end" required />
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="activity-location">Lokasi</Label>
+                    <Input id="activity-location" placeholder="Masukkan lokasi kegiatan" required />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="activity-participants">Jumlah Peserta</Label>
+                    <Input type="number" id="activity-participants" placeholder="Masukkan jumlah peserta" required />
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="activity-description">Deskripsi Kegiatan</Label>
+                  <Textarea id="activity-description" placeholder="Jelaskan secara detail tentang kegiatan ini" rows={4} required />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label>Peminjaman Fasilitas</Label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+                    <div className="flex items-center space-x-2">
+                      <input type="checkbox" id="facility-projector" className="rounded border-gray-300 text-primary focus:ring-primary" />
+                      <label htmlFor="facility-projector" className="text-sm">Proyektor</label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <input type="checkbox" id="facility-sound" className="rounded border-gray-300 text-primary focus:ring-primary" />
+                      <label htmlFor="facility-sound" className="text-sm">Sound System</label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <input type="checkbox" id="facility-chairs" className="rounded border-gray-300 text-primary focus:ring-primary" />
+                      <label htmlFor="facility-chairs" className="text-sm">Kursi</label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <input type="checkbox" id="facility-tables" className="rounded border-gray-300 text-primary focus:ring-primary" />
+                      <label htmlFor="facility-tables" className="text-sm">Meja</label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <input type="checkbox" id="facility-laptop" className="rounded border-gray-300 text-primary focus:ring-primary" />
+                      <label htmlFor="facility-laptop" className="text-sm">Laptop</label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <input type="checkbox" id="facility-mic" className="rounded border-gray-300 text-primary focus:ring-primary" />
+                      <label htmlFor="facility-mic" className="text-sm">Mikrofon</label>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="facility-others">Fasilitas Lainnya</Label>
+                  <Input id="facility-others" placeholder="Sebutkan fasilitas lain yang dibutuhkan" />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="activity-budget">Anggaran (jika ada)</Label>
+                  <Input id="activity-budget" placeholder="Masukkan perkiraan anggaran yang dibutuhkan" />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="activity-pic">Penanggung Jawab</Label>
+                  <Input id="activity-pic" placeholder="Nama penanggung jawab kegiatan" required />
+                </div>
+                
+                <Button type="submit" className="w-full" disabled={isSubmitting}>
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Memproses...
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="mr-2 h-4 w-4" />
+                      Ajukan Kegiatan
+                    </>
+                  )}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        {/* Activity Reports Tab */}
+        <TabsContent value="reports">
+          {showReportForm ? (
+            <Card>
+              <CardHeader>
+                <CardTitle>Buat Laporan Kegiatan</CardTitle>
+                <CardDescription>
+                  Buat laporan kegiatan yang telah dilaksanakan sebagai dokumentasi dan evaluasi.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleSubmitReport} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="report-activity">Kegiatan</Label>
+                    <Select defaultValue={selectedActivity?.toString()} required>
+                      <SelectTrigger id="report-activity">
+                        <SelectValue placeholder="Pilih kegiatan" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {[...upcomingActivities, ...pastActivities]
+                          .filter(a => a.status === 'approved' || a.status === 'completed')
+                          .map(activity => (
+                            <SelectItem key={activity.id} value={activity.id.toString()}>
+                              {activity.title} ({activity.date})
+                            </SelectItem>
+                          ))
+                        }
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="report-summary">Ringkasan Kegiatan</Label>
+                    <Textarea 
+                      id="report-summary" 
+                      placeholder="Jelaskan ringkasan pelaksanaan kegiatan" 
+                      rows={3} 
+                      required 
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="report-outcomes">Hasil dan Pencapaian</Label>
+                    <Textarea 
+                      id="report-outcomes" 
+                      placeholder="Jelaskan hasil dan pencapaian kegiatan" 
+                      rows={3} 
+                      required 
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="report-problems">Kendala dan Solusi</Label>
+                    <Textarea 
+                      id="report-problems" 
+                      placeholder="Jelaskan kendala yang dihadapi dan solusi yang diambil" 
+                      rows={3} 
+                      required 
+                    />
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="report-participants">Jumlah Peserta Aktual</Label>
+                      <Input type="number" id="report-participants" required />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="report-budget">Realisasi Anggaran</Label>
+                      <Input id="report-budget" placeholder="Masukkan realisasi anggaran" />
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="report-photo">Dokumentasi Foto</Label>
+                    <Input type="file" id="report-photo" accept="image/*" multiple />
+                    <p className="text-xs text-muted-foreground mt-1">Upload foto kegiatan (maks. 5 foto)</p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="report-attachments">Lampiran</Label>
+                    <Input type="file" id="report-attachments" />
+                    <p className="text-xs text-muted-foreground mt-1">Upload dokumen pendukung jika ada (PDF/DOC)</p>
+                  </div>
+                  
+                  <div className="flex justify-end gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        setShowReportForm(false);
+                        setSelectedActivity(null);
+                      }}
+                    >
+                      Batal
+                    </Button>
+                    <Button type="submit" disabled={isSubmitting}>
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Memproses...
+                        </>
+                      ) : (
+                        "Kirim Laporan"
+                      )}
+                    </Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="space-y-4">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-2">
+                <h2 className="text-xl font-semibold">Laporan Kegiatan</h2>
+                <div className="flex gap-2 w-full md:w-auto">
+                  <div className="relative flex-1 md:w-64">
+                    <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input placeholder="Cari laporan..." className="pl-8" />
+                  </div>
+                  <Button 
+                    variant="outline"
+                    onClick={() => {
+                      setShowReportForm(true);
+                    }}
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Buat Laporan
+                  </Button>
+                </div>
+              </div>
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle>Laporan Kegiatan yang Dibuat</CardTitle>
+                  <CardDescription>Daftar laporan kegiatan yang telah Anda buat</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="rounded-md border">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b bg-muted/50">
+                          <th className="py-3 px-4 text-left font-medium">Kegiatan</th>
+                          <th className="py-3 px-4 text-left font-medium hidden sm:table-cell">Tanggal</th>
+                          <th className="py-3 px-4 text-left font-medium hidden md:table-cell">Pembuat</th>
+                          <th className="py-3 px-4 text-right font-medium">Aksi</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="border-b">
+                          <td className="py-3 px-4">Workshop Robotika</td>
+                          <td className="py-3 px-4 hidden sm:table-cell">10 Juli 2023</td>
+                          <td className="py-3 px-4 hidden md:table-cell">Andi Saputra</td>
+                          <td className="py-3 px-4 text-right">
+                            <Button variant="link" className="h-auto p-0">Lihat Detail</Button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle>Kegiatan yang Belum Dilaporkan</CardTitle>
+                  <CardDescription>Kegiatan yang telah selesai namun belum memiliki laporan</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="rounded-md border">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b bg-muted/50">
+                          <th className="py-3 px-4 text-left font-medium">Kegiatan</th>
+                          <th className="py-3 px-4 text-left font-medium hidden sm:table-cell">Tanggal</th>
+                          <th className="py-3 px-4 text-left font-medium hidden md:table-cell">Status</th>
+                          <th className="py-3 px-4 text-right font-medium">Aksi</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="border-b">
+                          <td className="py-3 px-4">Webinar Kesehatan Mental</td>
+                          <td className="py-3 px-4 hidden sm:table-cell">5 Juli 2023</td>
+                          <td className="py-3 px-4 hidden md:table-cell">
+                            <Badge className="bg-blue-500">Selesai</Badge>
+                          </td>
+                          <td className="py-3 px-4 text-right">
+                            <Button 
+                              variant="link" 
+                              className="h-auto p-0"
+                              onClick={() => {
+                                setShowReportForm(true);
+                                setSelectedActivity(5);
+                              }}
+                            >
+                              Buat Laporan
+                            </Button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+        </TabsContent>
+      </Tabs>
+    </DashboardLayout>
   );
 };
 
