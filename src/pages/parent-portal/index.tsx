@@ -6,7 +6,7 @@ import Footer from '@/components/layout/Footer';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Calendar as CalendarIcon, GraduationCap, BookOpen, Award, Bell, ChevronRight, Clock, FileText, UserCheck, Shield, AlarmCheck } from 'lucide-react';
+import { Calendar as CalendarIcon, GraduationCap, BookOpen, Award, Bell, ChevronRight, Clock, Shield, UserCheck, AlarmCheck } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -57,20 +57,11 @@ const ParentPortalPage = () => {
     { id: 2, title: 'Pertemuan Orang Tua', date: '2023-10-25', type: 'Rapat' }
   ];
 
-  // Sample academic score
-  const academicScores = [
-    { subject: 'Matematika', score: 85, grade: 'B', teacher: 'Dian Pertiwi, M.Pd.' },
-    { subject: 'Bahasa Indonesia', score: 90, grade: 'A', teacher: 'Budi Santoso, S.Pd.' },
-    { subject: 'Pemrograman Dasar', score: 95, grade: 'A', teacher: 'Rudi Hermawan, S.Kom.' },
-    { subject: 'Basis Data', score: 88, grade: 'B', teacher: 'Tono Wijaya, S.T.' },
-    { subject: 'Bahasa Inggris', score: 82, grade: 'B', teacher: 'Ani Suryani, S.Pd.' }
-  ];
-
   return (
     <PageTransition>
       <div className="min-h-screen flex flex-col">
         <Navbar />
-        <main className="flex-grow container mx-auto px-4 py-6">
+        <main className="flex-grow container mx-auto px-4 pt-28 pb-6">
           <div className="flex flex-col gap-6">
             <div>
               <h1 className="text-3xl font-bold">Portal Orang Tua</h1>
@@ -270,58 +261,6 @@ const ParentPortalPage = () => {
                 </CardContent>
               </Card>
             </div>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <FileText className="h-5 w-5 text-primary" />
-                  Perkembangan Akademik
-                </CardTitle>
-                <CardDescription>
-                  Nilai Ujian Tengah Semester Ganjil 2023/2024
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse">
-                    <thead>
-                      <tr className="border-b">
-                        <th className="py-3 px-4 text-left font-medium">Mata Pelajaran</th>
-                        <th className="py-3 px-4 text-center font-medium">Nilai</th>
-                        <th className="py-3 px-4 text-center font-medium">Grade</th>
-                        <th className="py-3 px-4 text-left font-medium">Guru</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {academicScores.map((score, index) => (
-                        <tr key={index} className="border-b hover:bg-muted/50">
-                          <td className="py-3 px-4">{score.subject}</td>
-                          <td className="py-3 px-4 text-center">{score.score}</td>
-                          <td className="py-3 px-4 text-center">
-                            <Badge className={`${
-                              score.grade === 'A' ? 'bg-green-100 text-green-800 hover:bg-green-100' : 
-                              score.grade === 'B' ? 'bg-blue-100 text-blue-800 hover:bg-blue-100' : 
-                              score.grade === 'C' ? 'bg-yellow-100 text-yellow-800 hover:bg-yellow-100' : 
-                              'bg-red-100 text-red-800 hover:bg-red-100'
-                            }`}>
-                              {score.grade}
-                            </Badge>
-                          </td>
-                          <td className="py-3 px-4">{score.teacher}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-                
-                <div className="mt-6 flex justify-end">
-                  <Button className="flex items-center gap-2">
-                    Lihat Laporan Lengkap
-                    <ChevronRight className="h-4 w-4" />
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
           </div>
         </main>
         <Footer />

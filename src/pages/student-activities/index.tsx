@@ -3,14 +3,22 @@ import React, { useEffect, useState } from 'react';
 import PageTransition from '@/components/layout/PageTransition';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { CalendarPlus, Search, Filter, Clock, ClipboardList, CalendarCheck, FileText, Users, Calendar, CheckCircle2, XCircle, FileImage } from 'lucide-react';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
+import { CalendarPlus, Search, Filter, Clock, ClipboardList, CalendarCheck, FileText, Users, Calendar, CheckCircle2, XCircle, FileImage, Clipboard, ListChecks, Upload } from 'lucide-react';
+import { format } from 'date-fns';
 import { toast } from 'sonner';
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { useForm } from "react-hook-form";
 
 const StudentActivitiesPage = () => {
   useEffect(() => {
@@ -119,11 +127,75 @@ const StudentActivitiesPage = () => {
     },
   ];
 
-  const handleNewActivityClick = () => {
-    toast.info('Fitur pengajuan kegiatan baru akan segera hadir', {
-      description: 'Anda akan dapat mengajukan kegiatan baru melalui sistem ini'
+  // Sample activity submissions
+  const activitySubmissions = [
+    {
+      id: 'SUB001',
+      title: 'Pelatihan Leadership untuk OSIS',
+      submitter: 'Andi Saputra',
+      date: '2023-10-12',
+      status: 'Pending',
+      type: 'Workshop',
+      target: 'Pengurus OSIS'
+    },
+    {
+      id: 'SUB002',
+      title: 'Webinar Karir di Bidang IT',
+      submitter: 'Budi Santoso',
+      date: '2023-10-05',
+      status: 'Disetujui',
+      type: 'Webinar',
+      target: 'Kelas XII RPL'
+    },
+    {
+      id: 'SUB003',
+      title: 'Kompetisi Desain Grafis',
+      submitter: 'Cindy Permata',
+      date: '2023-09-28',
+      status: 'Ditolak',
+      type: 'Kompetisi',
+      target: 'Seluruh Siswa'
+    }
+  ];
+
+  const formSchema = z.object({
+    title: z.string().min(5, {
+      message: "Judul kegiatan minimal 5 karakter",
+    }),
+    type: z.string({
+      required_error: "Pilih jenis kegiatan",
+    }),
+    organizer: z.string().min(3, {
+      message: "Nama penyelenggara minimal 3 karakter",
+    }),
+    location: z.string().min(3, {
+      message: "Lokasi harus diisi",
+    }),
+    date: z.string().min(3, {
+      message: "Tanggal kegiatan harus diisi",
+    }),
+    description: z.string().min(10, {
+      message: "Deskripsi kegiatan minimal 10 karakter",
+    }),
+  });
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      title: "",
+      organizer: "",
+      location: "",
+      date: "",
+      description: "",
+    },
+  });
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values);
+    toast.success("Kegiatan berhasil diajukan!", {
+      description: "Ajuan kegiatan Anda akan segera diproses",
     });
-  };
+  }
 
   const filteredActivities = filter === 'all' 
     ? activities 
@@ -135,21 +207,227 @@ const StudentActivitiesPage = () => {
             : activity.status === 'Ditolak'
       );
 
+  const getStatusColor = (status: string) => {
+    const statusColors = {
+      'Disetujui': 'bg-green-100 text-green-800',
+      'Pending': 'bg-yellow-100 text-yellow-800',
+      'Ditolak': 'bg-red-100 text-red-800',
+      'Submitted': 'bg-blue-100 text-blue-800',
+      'Reviewed': 'bg-purple-100 text-purple-800',
+    };
+    return statusColors[status as keyof typeof statusColors] || 'bg-gray-100 text-gray-800';
+  };
+
   return (
     <PageTransition>
       <div className="min-h-screen flex flex-col">
         <Navbar />
-        <main className="flex-grow container mx-auto px-4 py-6">
+        <main className="flex-grow container mx-auto px-4 pt-28 pb-6">
           <div className="flex flex-col gap-6">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div>
                 <h1 className="text-3xl font-bold">Administrasi Kegiatan Siswa</h1>
                 <p className="text-muted-foreground mt-1">Kelola kegiatan, peminjaman fasilitas, dan laporan kegiatan</p>
               </div>
-              <Button onClick={handleNewActivityClick} className="flex items-center gap-2">
-                <CalendarPlus size={18} />
-                Ajukan Kegiatan Baru
-              </Button>
+              <div className="flex gap-2">
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" className="flex items-center gap-2">
+                      <ListChecks size={18} />
+                      Monitoring Ajuan
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-3xl">
+                    <DialogHeader>
+                      <DialogTitle>Monitoring Ajuan Kegiatan</DialogTitle>
+                      <DialogDescription>
+                        Lihat status pengajuan kegiatan yang telah Anda kirimkan
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="overflow-y-auto max-h-[60vh]">
+                      <div className="space-y-4">
+                        {activitySubmissions.map((submission) => (
+                          <Card key={submission.id} className="overflow-hidden">
+                            <CardContent className="p-4">
+                              <div className="flex flex-col md:flex-row justify-between gap-2">
+                                <div>
+                                  <h3 className="font-semibold">{submission.title}</h3>
+                                  <div className="flex flex-col md:flex-row text-xs text-muted-foreground gap-2 md:gap-4 mt-1">
+                                    <span className="flex items-center gap-1">
+                                      <Calendar size={12} />
+                                      {format(new Date(submission.date), 'dd MMMM yyyy')}
+                                    </span>
+                                    <span className="flex items-center gap-1">
+                                      <Users size={12} />
+                                      Target: {submission.target}
+                                    </span>
+                                    <span className="flex items-center gap-1">
+                                      <Clipboard size={12} />
+                                      Jenis: {submission.type}
+                                    </span>
+                                  </div>
+                                </div>
+                                <div className="flex items-center">
+                                  <Badge className={getStatusColor(submission.status)}>
+                                    {submission.status}
+                                  </Badge>
+                                </div>
+                              </div>
+                              
+                              <div className="mt-3 pt-3 border-t">
+                                <div className="flex justify-between text-xs">
+                                  <span>ID: {submission.id}</span>
+                                  <span>Diajukan oleh: {submission.submitter}</span>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+                
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button className="flex items-center gap-2">
+                      <CalendarPlus size={18} />
+                      Ajukan Kegiatan
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-3xl">
+                    <DialogHeader>
+                      <DialogTitle>Ajukan Kegiatan Baru</DialogTitle>
+                      <DialogDescription>
+                        Isi formulir berikut untuk mengajukan kegiatan baru
+                      </DialogDescription>
+                    </DialogHeader>
+                    <Form {...form}>
+                      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <FormField
+                            control={form.control}
+                            name="title"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Judul Kegiatan</FormLabel>
+                                <FormControl>
+                                  <Input placeholder="Masukkan judul kegiatan" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          
+                          <FormField
+                            control={form.control}
+                            name="type"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Jenis Kegiatan</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                  <FormControl>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Pilih jenis kegiatan" />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    <SelectItem value="workshop">Workshop</SelectItem>
+                                    <SelectItem value="competition">Kompetisi</SelectItem>
+                                    <SelectItem value="exhibition">Pameran</SelectItem>
+                                    <SelectItem value="community_service">Bakti Sosial</SelectItem>
+                                    <SelectItem value="seminar">Seminar</SelectItem>
+                                    <SelectItem value="other">Lainnya</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          
+                          <FormField
+                            control={form.control}
+                            name="organizer"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Penyelenggara</FormLabel>
+                                <FormControl>
+                                  <Input placeholder="Nama penyelenggara kegiatan" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          
+                          <FormField
+                            control={form.control}
+                            name="location"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Lokasi</FormLabel>
+                                <FormControl>
+                                  <Input placeholder="Lokasi kegiatan" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          
+                          <FormField
+                            control={form.control}
+                            name="date"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Tanggal Kegiatan</FormLabel>
+                                <FormControl>
+                                  <Input placeholder="Format: DD/MM/YYYY atau periode" {...field} />
+                                </FormControl>
+                                <FormDescription>
+                                  Contoh: 25/11/2023 atau 25-30 November 2023
+                                </FormDescription>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          
+                          <div className="space-y-2">
+                            <FormLabel>Unggah Proposal</FormLabel>
+                            <Input type="file" />
+                            <FormDescription>
+                              Format PDF, maksimal 5MB
+                            </FormDescription>
+                          </div>
+                        </div>
+                        
+                        <FormField
+                          control={form.control}
+                          name="description"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Deskripsi Kegiatan</FormLabel>
+                              <FormControl>
+                                <Textarea
+                                  placeholder="Jelaskan rincian kegiatan, tujuan, dan target peserta"
+                                  className="min-h-[100px]"
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        
+                        <DialogFooter>
+                          <Button type="submit" className="flex items-center gap-2">
+                            <Upload size={16} />
+                            Ajukan Kegiatan
+                          </Button>
+                        </DialogFooter>
+                      </form>
+                    </Form>
+                  </DialogContent>
+                </Dialog>
+              </div>
             </div>
 
             <Tabs defaultValue="activities" className="mt-4">
@@ -162,19 +440,21 @@ const StudentActivitiesPage = () => {
               <TabsContent value="activities">
                 <Card>
                   <CardHeader className="pb-3">
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                      <CardTitle>Kegiatan Terdaftar</CardTitle>
-                      <div className="flex flex-col md:flex-row gap-2">
-                        <div className="relative">
-                          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                          <Input
-                            placeholder="Cari kegiatan..."
-                            className="pl-10 w-full md:w-64"
-                          />
-                        </div>
-                        <Select defaultValue="all" onValueChange={setFilter}>
-                          <SelectTrigger className="w-full md:w-48">
-                            <SelectValue placeholder="Filter Status" />
+                    <div className="flex flex-col md:flex-row justify-between gap-4">
+                      <div className="relative w-full md:w-96">
+                        <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          placeholder="Cari kegiatan..."
+                          className="pl-10"
+                        />
+                      </div>
+                      <div className="flex gap-2">
+                        <Select
+                          defaultValue="all"
+                          onValueChange={(value) => setFilter(value)}
+                        >
+                          <SelectTrigger className="w-40">
+                            <SelectValue placeholder="Filter" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="all">Semua Status</SelectItem>
@@ -183,56 +463,48 @@ const StudentActivitiesPage = () => {
                             <SelectItem value="rejected">Ditolak</SelectItem>
                           </SelectContent>
                         </Select>
+                        <Button variant="outline" size="icon">
+                          <Filter className="h-4 w-4" />
+                        </Button>
                       </div>
                     </div>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
                       {filteredActivities.map((activity) => (
-                        <Card key={activity.id} className="border shadow-sm hover:shadow-md transition-shadow">
-                          <CardContent className="p-4">
-                            <div className="flex flex-col md:flex-row justify-between mb-4">
+                        <Card key={activity.id} className="overflow-hidden">
+                          <CardHeader className="pb-2">
+                            <div className="flex justify-between items-start">
                               <div>
-                                <div className="flex items-center gap-2">
-                                  <h3 className="font-semibold text-lg">{activity.title}</h3>
-                                  <Badge variant={
-                                    activity.status === 'Disetujui' ? 'default' :
-                                    activity.status === 'Pending' ? 'outline' : 'destructive'
-                                  }>
-                                    {activity.status}
-                                  </Badge>
-                                </div>
-                                <p className="text-muted-foreground text-sm">{activity.id} • {activity.organizer}</p>
+                                <CardTitle className="flex gap-2 items-center text-xl">
+                                  {activity.title}
+                                </CardTitle>
+                                <CardDescription className="mt-1">
+                                  {activity.organizer} • {activity.date}
+                                </CardDescription>
                               </div>
-                              <div className="mt-2 md:mt-0 flex items-center gap-2">
-                                <Badge variant="secondary">
-                                  {activity.type}
-                                </Badge>
+                              <Badge className={getStatusColor(activity.status)}>
+                                {activity.status}
+                              </Badge>
+                            </div>
+                          </CardHeader>
+                          <CardContent className="pb-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div>
+                                <p className="text-sm font-medium mb-1">Lokasi</p>
+                                <p className="text-sm">{activity.location}</p>
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium mb-1">Penanggung Jawab</p>
+                                <p className="text-sm">{activity.pic}</p>
+                              </div>
+                              <div className="md:col-span-2">
+                                <p className="text-sm font-medium mb-1">Deskripsi</p>
+                                <p className="text-sm">{activity.description}</p>
                               </div>
                             </div>
-                            
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                              <div className="flex items-center gap-2">
-                                <Calendar className="h-4 w-4 text-muted-foreground" />
-                                <span className="text-sm">{activity.date}</span>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <ClipboardList className="h-4 w-4 text-muted-foreground" />
-                                <span className="text-sm">PIC: {activity.pic}</span>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <FileText className="h-4 w-4 text-muted-foreground" />
-                                <span className="text-sm">Lokasi: {activity.location}</span>
-                              </div>
-                            </div>
-                            
-                            <p className="text-sm mb-4">{activity.description}</p>
-                            
-                            <div className="flex justify-end gap-2">
-                              <Button variant="outline" size="sm">Detail</Button>
-                              {activity.status === 'Disetujui' && (
-                                <Button variant="outline" size="sm">Laporan Kegiatan</Button>
-                              )}
+                            <div className="flex justify-end mt-4">
+                              <Button variant="outline" size="sm">Lihat Detail</Button>
                             </div>
                           </CardContent>
                         </Card>
@@ -244,50 +516,37 @@ const StudentActivitiesPage = () => {
               
               <TabsContent value="facilities">
                 <Card>
-                  <CardHeader className="pb-3">
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                      <CardTitle>Peminjaman Fasilitas</CardTitle>
-                      <Button className="flex items-center gap-2">
-                        <CalendarCheck size={18} />
-                        Ajukan Peminjaman
-                      </Button>
-                    </div>
+                  <CardHeader>
+                    <CardTitle>Peminjaman Fasilitas</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="overflow-x-auto">
-                      <table className="w-full">
+                      <table className="w-full border-collapse">
                         <thead>
                           <tr className="border-b">
-                            <th className="text-left font-medium p-2">ID</th>
-                            <th className="text-left font-medium p-2">Kegiatan</th>
-                            <th className="text-left font-medium p-2">Fasilitas</th>
-                            <th className="text-left font-medium p-2">Tanggal</th>
-                            <th className="text-left font-medium p-2">Waktu</th>
-                            <th className="text-left font-medium p-2">Status</th>
-                            <th className="text-left font-medium p-2">Disetujui Oleh</th>
-                            <th className="text-center font-medium p-2">Aksi</th>
+                            <th className="py-3 px-4 text-left font-medium">ID</th>
+                            <th className="py-3 px-4 text-left font-medium">Kegiatan</th>
+                            <th className="py-3 px-4 text-left font-medium">Fasilitas</th>
+                            <th className="py-3 px-4 text-left font-medium">Tanggal</th>
+                            <th className="py-3 px-4 text-left font-medium">Waktu</th>
+                            <th className="py-3 px-4 text-center font-medium">Status</th>
+                            <th className="py-3 px-4 text-right font-medium">Disetujui Oleh</th>
                           </tr>
                         </thead>
                         <tbody>
                           {facilityRequests.map((request) => (
                             <tr key={request.id} className="border-b hover:bg-muted/50">
-                              <td className="p-2">{request.id}</td>
-                              <td className="p-2">{request.activity}</td>
-                              <td className="p-2">{request.facility}</td>
-                              <td className="p-2">{request.date}</td>
-                              <td className="p-2">{request.time}</td>
-                              <td className="p-2">
-                                <Badge variant={
-                                  request.status === 'Disetujui' ? 'default' :
-                                  request.status === 'Pending' ? 'outline' : 'destructive'
-                                }>
+                              <td className="py-3 px-4">{request.id}</td>
+                              <td className="py-3 px-4">{request.activity}</td>
+                              <td className="py-3 px-4">{request.facility}</td>
+                              <td className="py-3 px-4">{request.date}</td>
+                              <td className="py-3 px-4">{request.time}</td>
+                              <td className="py-3 px-4 text-center">
+                                <span className={`px-2 py-1 rounded text-xs ${getStatusColor(request.status)}`}>
                                   {request.status}
-                                </Badge>
+                                </span>
                               </td>
-                              <td className="p-2">{request.approved_by}</td>
-                              <td className="p-2 text-center">
-                                <Button variant="ghost" size="sm">Detail</Button>
-                              </td>
+                              <td className="py-3 px-4 text-right">{request.approved_by}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -299,60 +558,48 @@ const StudentActivitiesPage = () => {
               
               <TabsContent value="reports">
                 <Card>
-                  <CardHeader className="pb-3">
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                      <CardTitle>Laporan Kegiatan</CardTitle>
-                      <Button className="flex items-center gap-2">
-                        <FileText size={18} />
-                        Unggah Laporan
-                      </Button>
-                    </div>
+                  <CardHeader>
+                    <CardTitle>Laporan Kegiatan</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-4">
-                      {activityReports.map((report) => (
-                        <Card key={report.id} className="border shadow-sm">
-                          <CardContent className="p-4">
-                            <div className="flex flex-col md:flex-row justify-between mb-3">
-                              <div>
-                                <h3 className="font-semibold">{report.activity}</h3>
-                                <p className="text-muted-foreground text-sm">{report.id} • {report.date}</p>
-                              </div>
-                              <div className="mt-2 md:mt-0">
-                                <Badge variant={report.status === 'Submitted' ? 'outline' : 'default'}>
-                                  {report.status === 'Submitted' ? 'Terkirim' : 'Ditinjau'}
-                                </Badge>
-                              </div>
-                            </div>
-                            
-                            <p className="text-sm mb-3">
-                              <span className="font-medium">Penanggung Jawab:</span> {report.submitted_by}
-                            </p>
-                            
-                            <div className="border rounded-md p-3 bg-muted/50 mb-3">
-                              <p className="text-sm font-medium mb-2">Dokumen:</p>
-                              <div className="space-y-2">
-                                {report.documents.map((doc, idx) => (
-                                  <div key={idx} className="flex items-center gap-2 text-sm">
-                                    <FileImage className="h-4 w-4 text-primary" />
-                                    <span>{doc}</span>
-                                    <Button variant="link" size="sm" className="h-auto p-0 ml-auto">
-                                      Unduh
+                    <div className="overflow-x-auto">
+                      <table className="w-full border-collapse">
+                        <thead>
+                          <tr className="border-b">
+                            <th className="py-3 px-4 text-left font-medium">ID</th>
+                            <th className="py-3 px-4 text-left font-medium">Kegiatan</th>
+                            <th className="py-3 px-4 text-left font-medium">Tanggal</th>
+                            <th className="py-3 px-4 text-left font-medium">Diajukan Oleh</th>
+                            <th className="py-3 px-4 text-center font-medium">Status</th>
+                            <th className="py-3 px-4 text-right font-medium">Dokumen</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {activityReports.map((report) => (
+                            <tr key={report.id} className="border-b hover:bg-muted/50">
+                              <td className="py-3 px-4">{report.id}</td>
+                              <td className="py-3 px-4">{report.activity}</td>
+                              <td className="py-3 px-4">{report.date}</td>
+                              <td className="py-3 px-4">{report.submitted_by}</td>
+                              <td className="py-3 px-4 text-center">
+                                <span className={`px-2 py-1 rounded text-xs ${getStatusColor(report.status)}`}>
+                                  {report.status}
+                                </span>
+                              </td>
+                              <td className="py-3 px-4 text-right">
+                                <div className="flex justify-end gap-2">
+                                  {report.documents.map((doc, idx) => (
+                                    <Button key={idx} variant="ghost" size="sm" className="h-8 gap-1">
+                                      <FileText className="h-3 w-3" />
+                                      {doc.split('.')[1]}
                                     </Button>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                            
-                            <div className="flex justify-end gap-2">
-                              <Button variant="outline" size="sm">Detail</Button>
-                              {report.status === 'Submitted' && (
-                                <Button variant="outline" size="sm">Edit</Button>
-                              )}
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
+                                  ))}
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
                     </div>
                   </CardContent>
                 </Card>

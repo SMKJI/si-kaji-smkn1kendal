@@ -4,10 +4,9 @@ import { useParams, Link } from 'react-router-dom';
 import PageTransition from '@/components/layout/PageTransition';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ChevronLeft, Pencil, Mail, Phone, MapPin, Calendar, GraduationCap, Briefcase, Clock, BookOpen } from 'lucide-react';
+import { ChevronLeft, Pencil, Mail, Phone, MapPin, Calendar, GraduationCap, Briefcase, Clock } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const TeacherProfilePage = () => {
@@ -33,22 +32,7 @@ const TeacherProfilePage = () => {
     education: 'S1 Pendidikan Bahasa Indonesia, Universitas Negeri Semarang (2009)',
     joinDate: '1 Agustus 2010',
     status: 'PNS',
-    homeroom: 'XII RPL 1',
-    schedule: [
-      { day: 'Senin', classes: ['X RPL 1', 'X RPL 2', 'XII RPL 1'] },
-      { day: 'Selasa', classes: ['XI RPL 1', 'XI RPL 2'] },
-      { day: 'Rabu', classes: ['XII RPL 2', 'XII RPL 3'] },
-      { day: 'Kamis', classes: ['XI RPL 3', 'X RPL 3'] },
-      { day: 'Jumat', classes: ['XII RPL 1'] },
-    ],
-    courses: [
-      { name: 'Bahasa Indonesia', classes: ['X RPL 1', 'X RPL 2', 'XI RPL 1', 'XI RPL 2', 'XII RPL 1', 'XII RPL 2'] },
-    ],
-    achievements: [
-      { year: '2022', title: 'Guru Teladan Tingkat Kabupaten' },
-      { year: '2020', title: 'Pembimbing Lomba Debat Bahasa Indonesia Tingkat Provinsi' },
-      { year: '2018', title: 'Penulis Buku Ajar Bahasa Indonesia untuk SMK' },
-    ]
+    homeroom: 'XII RPL 1'
   };
 
   if (!teacherData) {
@@ -140,117 +124,6 @@ const TeacherProfilePage = () => {
                 </div>
               </CardContent>
             </Card>
-
-            <Tabs defaultValue="schedule" className="mt-6">
-              <TabsList className="mb-4 w-full justify-start">
-                <TabsTrigger value="schedule">Jadwal Mengajar</TabsTrigger>
-                <TabsTrigger value="classes">Mata Pelajaran</TabsTrigger>
-                <TabsTrigger value="achievements">Prestasi</TabsTrigger>
-                <TabsTrigger value="documents">Dokumen</TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="schedule" className="space-y-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Jadwal Mengajar</CardTitle>
-                    <CardDescription>Jadwal mengajar untuk {teacherData.name}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="overflow-x-auto">
-                      <table className="w-full border-collapse">
-                        <thead>
-                          <tr className="border-b">
-                            <th className="py-3 px-4 text-left font-medium">Hari</th>
-                            <th className="py-3 px-4 text-left font-medium">Kelas</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {teacherData.schedule.map((item, index) => (
-                            <tr key={index} className="border-b hover:bg-muted/50">
-                              <td className="py-3 px-4 font-medium">{item.day}</td>
-                              <td className="py-3 px-4">
-                                <div className="flex flex-wrap gap-1">
-                                  {item.classes.map((cls, idx) => (
-                                    <div key={idx} className="py-1 px-2 rounded bg-muted inline-block mr-2 mb-1">
-                                      {cls}
-                                    </div>
-                                  ))}
-                                </div>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-              
-              <TabsContent value="classes" className="space-y-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Mata Pelajaran yang Diampu</CardTitle>
-                    <CardDescription>Mata pelajaran yang diampu oleh {teacherData.name}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-6">
-                      {teacherData.courses.map((course, index) => (
-                        <div key={index} className="border-b pb-5 last:border-b-0">
-                          <div className="flex items-center gap-2 mb-3">
-                            <BookOpen className="h-5 w-5 text-primary" />
-                            <h3 className="font-semibold text-lg">{course.name}</h3>
-                          </div>
-                          <div className="pl-7">
-                            <p className="mb-2 text-sm text-muted-foreground">Kelas yang diajar:</p>
-                            <div className="flex flex-wrap gap-2">
-                              {course.classes.map((cls, idx) => (
-                                <div key={idx} className="py-1 px-3 rounded-full bg-primary/10 text-primary text-sm">
-                                  {cls}
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-              
-              <TabsContent value="achievements" className="space-y-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Prestasi</CardTitle>
-                    <CardDescription>Prestasi dan penghargaan yang diraih oleh {teacherData.name}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="relative border-l border-muted-foreground/20 pl-6 space-y-6 ml-2">
-                      {teacherData.achievements.map((achievement, index) => (
-                        <div key={index} className="relative pb-1">
-                          <div className="absolute -left-8 top-1 h-4 w-4 rounded-full bg-primary"></div>
-                          <div className="text-sm text-muted-foreground mb-1">{achievement.year}</div>
-                          <div className="font-medium">{achievement.title}</div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-              
-              <TabsContent value="documents" className="space-y-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Dokumen</CardTitle>
-                    <CardDescription>Dokumen dan sertifikat milik {teacherData.name}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-center py-8 text-muted-foreground">
-                      Dokumen dan sertifikat akan ditampilkan di sini.
-                    </p>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            </Tabs>
           </div>
         </main>
         <Footer />
