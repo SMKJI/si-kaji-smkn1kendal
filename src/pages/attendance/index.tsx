@@ -4,10 +4,21 @@ import DashboardLayout from '@/layouts/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, Search, Check, X, AlertTriangle } from 'lucide-react';
+import { Calendar, Search, Check, X, AlertTriangle, Filter, Download } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const AttendancePage = () => {
+  const [filterMonth, setFilterMonth] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  
   useEffect(() => {
     window.scrollTo(0, 0);
     document.title = 'Kehadiran - Si-Kaji';
@@ -24,6 +35,13 @@ const AttendancePage = () => {
     { date: '9 Agustus 2023', day: 'Selasa', status: 'permission', info: 'Izin Keluarga' },
     { date: '10 Agustus 2023', day: 'Rabu', status: 'present', info: 'Tepat Waktu' },
   ];
+
+  // Filtered data based on search and month filter
+  const filteredData = attendanceData.filter(record => 
+    record.date.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    record.day.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    record.info.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   // Summary data
   const summary = {
@@ -56,20 +74,65 @@ const AttendancePage = () => {
       description="Pantau rekap kehadiran siswa" 
       showBackButton
       backTo="/dashboard"
+      userRole="student"
+      userName="Ahmad Fauzi"
     >
       <Tabs defaultValue="history" className="w-full mt-4">
-        <TabsList className="grid w-full grid-cols-2 mb-6">
-          <TabsTrigger value="history">Riwayat Kehadiran</TabsTrigger>
-          <TabsTrigger value="summary">Ringkasan</TabsTrigger>
-        </TabsList>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+          <TabsList className="grid w-full sm:w-auto grid-cols-2 mb-0">
+            <TabsTrigger value="history">Riwayat Kehadiran</TabsTrigger>
+            <TabsTrigger value="summary">Ringkasan</TabsTrigger>
+          </TabsList>
+          
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
+            <Button variant="outline" size="sm" className="gap-1">
+              <Download size={14} />
+              <span className="hidden sm:inline">Unduh Laporan</span>
+            </Button>
+          </div>
+        </div>
         
         <TabsContent value="history">
           <Card>
-            <CardHeader className="pb-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-              <CardTitle>Riwayat Kehadiran</CardTitle>
-              <div className="relative w-full sm:w-64">
-                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input placeholder="Cari tanggal..." className="pl-8" />
+            <CardHeader className="pb-3">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <CardTitle>Riwayat Kehadiran</CardTitle>
+                <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                  <div className="relative w-full sm:w-64">
+                    <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input 
+                      placeholder="Cari tanggal..." 
+                      className="pl-8" 
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </div>
+                  <div className="w-full sm:w-auto">
+                    <Select 
+                      value={filterMonth} 
+                      onValueChange={setFilterMonth}
+                    >
+                      <SelectTrigger className="w-full sm:w-[120px]">
+                        <SelectValue placeholder="Filter" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">Semua Bulan</SelectItem>
+                        <SelectItem value="january">Januari</SelectItem>
+                        <SelectItem value="february">Februari</SelectItem>
+                        <SelectItem value="march">Maret</SelectItem>
+                        <SelectItem value="april">April</SelectItem>
+                        <SelectItem value="may">Mei</SelectItem>
+                        <SelectItem value="june">Juni</SelectItem>
+                        <SelectItem value="july">Juli</SelectItem>
+                        <SelectItem value="august">Agustus</SelectItem>
+                        <SelectItem value="september">September</SelectItem>
+                        <SelectItem value="october">Oktober</SelectItem>
+                        <SelectItem value="november">November</SelectItem>
+                        <SelectItem value="december">Desember</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
               </div>
             </CardHeader>
             <CardContent>
@@ -84,14 +147,22 @@ const AttendancePage = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {attendanceData.map((record, index) => (
-                      <tr key={index} className="border-b hover:bg-muted/50">
-                        <td className="py-3 px-4">{record.date}</td>
-                        <td className="py-3 px-4">{record.day}</td>
-                        <td className="py-3 px-4">{getStatusBadge(record.status)}</td>
-                        <td className="py-3 px-4">{record.info}</td>
+                    {filteredData.length > 0 ? (
+                      filteredData.map((record, index) => (
+                        <tr key={index} className="border-b hover:bg-muted/50">
+                          <td className="py-3 px-4">{record.date}</td>
+                          <td className="py-3 px-4">{record.day}</td>
+                          <td className="py-3 px-4">{getStatusBadge(record.status)}</td>
+                          <td className="py-3 px-4">{record.info}</td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan={4} className="py-6 text-center text-muted-foreground">
+                          Tidak ada data kehadiran yang sesuai dengan pencarian
+                        </td>
                       </tr>
-                    ))}
+                    )}
                   </tbody>
                 </table>
               </div>
