@@ -1,7 +1,9 @@
+
 import React, { useEffect } from 'react';
-import PageTransition from '@/components/layout/PageTransition';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
+import DashboardLayout from '@/layouts/DashboardLayout';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { MessageSquare, Plus } from 'lucide-react';
 
 const ParentComplaintPage = () => {
   useEffect(() => {
@@ -10,16 +12,34 @@ const ParentComplaintPage = () => {
   }, []);
 
   return (
-    <PageTransition>
-      <div className="min-h-screen flex flex-col">
-        <Navbar />
-        <main className="flex-grow container mx-auto px-4 pt-28 pb-6">
-          <h1 className="text-3xl font-bold mb-6">Pengaduan Orang Tua</h1>
-          {/* Parent complaint content */}
-        </main>
-        <Footer />
+    <DashboardLayout 
+      title="Pengaduan Orang Tua" 
+      description="Sampaikan pengaduan atau masukan kepada pihak sekolah" 
+      showBackButton
+      backTo="/dashboard"
+      userRole="parent"
+      userName="Budi Santoso"
+    >
+      <div className="flex justify-end mb-4">
+        <Button className="gap-1">
+          <Plus size={16} />
+          Buat Pengaduan Baru
+        </Button>
       </div>
-    </PageTransition>
+
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg flex items-center">
+            <MessageSquare className="mr-2 h-5 w-5 text-primary" />
+            Daftar Pengaduan
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground">Lihat dan kelola pengaduan yang telah diajukan</p>
+          {/* Parent complaint content will go here */}
+        </CardContent>
+      </Card>
+    </DashboardLayout>
   );
 };
 
