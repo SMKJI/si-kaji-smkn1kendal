@@ -2,7 +2,6 @@
 import React, { ReactNode } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import PageTransition from '@/components/layout/PageTransition';
-import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import Sidebar from '@/components/layout/Sidebar';
 import SidebarTrigger from '@/components/layout/SidebarTrigger';
@@ -64,8 +63,7 @@ const DashboardLayout = ({
     <SidebarProvider>
       <PageTransition>
         <div className="min-h-screen flex flex-col">
-          <Navbar />
-          <div className="flex-grow flex pt-16"> {/* Added pt-16 here to create space for the navbar */}
+          <div className="flex-grow flex">
             <Sidebar userRole={userRole} />
             <main className="flex-1 container mx-auto px-4 py-6">
               <div className="flex flex-col gap-6">
