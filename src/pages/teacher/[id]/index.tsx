@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import DashboardLayout from '@/layouts/DashboardLayout';
@@ -41,6 +40,7 @@ const TeacherProfilePage = () => {
         description="Guru yang Anda cari tidak ditemukan"
         showBackButton
         backTo="/teacher"
+        userRole="admin"
       >
         <div className="text-center py-12">
           <p>Guru dengan ID {id} tidak ditemukan</p>
