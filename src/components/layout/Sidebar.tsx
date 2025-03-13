@@ -34,7 +34,7 @@ const Sidebar = ({ userRole }: SidebarProps) => {
       {/* Sidebar */}
       <aside 
         className={cn(
-          "fixed md:sticky top-0 bottom-0 left-0 h-screen bg-sidebar-background border-r border-sidebar-border z-50 transition-all duration-300 flex flex-col",
+          "fixed md:sticky top-16 bottom-0 left-0 h-[calc(100vh-4rem)] bg-sidebar-background border-r border-sidebar-border z-40 transition-all duration-300 flex flex-col",
           isOpen ? "w-64" : "w-0 md:w-16",
         )}
       >
@@ -42,7 +42,7 @@ const Sidebar = ({ userRole }: SidebarProps) => {
         <Button 
           variant="ghost" 
           size="icon" 
-          className="absolute -right-4 top-16 h-8 w-8 rounded-full border shadow-md hidden md:flex"
+          className="absolute -right-4 top-4 h-8 w-8 rounded-full border shadow-md hidden md:flex"
           onClick={toggle}
         >
           {isOpen ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
@@ -50,7 +50,7 @@ const Sidebar = ({ userRole }: SidebarProps) => {
 
         {/* Logo & header */}
         <div className={cn(
-          "h-16 md:h-[73px] flex items-center px-4 border-b border-sidebar-border",
+          "h-16 flex items-center px-4 border-b border-sidebar-border",
           !isOpen && "md:justify-center"
         )}>
           <Link to="/dashboard" className="flex items-center gap-2">

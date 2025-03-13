@@ -65,9 +65,9 @@ const DashboardLayout = ({
       <PageTransition>
         <div className="min-h-screen flex flex-col">
           <Navbar />
-          <div className="flex-grow flex">
+          <div className="flex-grow flex pt-16"> {/* Added pt-16 here to create space for the navbar */}
             <Sidebar userRole={userRole} />
-            <main className="flex-1 container mx-auto px-4 pt-24 md:pt-28 pb-6">
+            <main className="flex-1 container mx-auto px-4 py-6">
               <div className="flex flex-col gap-6">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4">
                   <div className="flex items-center gap-2">
