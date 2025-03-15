@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -50,6 +49,7 @@ import ProposalPage from "@/pages/proposal";
 import ReportsPage from "@/pages/reports";
 import GamificationPage from "@/pages/gamification";
 import NotificationsPage from "@/pages/notifications";
+import ChildAttendancePage from "@/pages/attendance/child";
 
 const queryClient = new QueryClient();
 
@@ -86,6 +86,7 @@ const App = () => {
             
             {/* Attendance & Calendar */}
             <Route path="/attendance" element={<AttendancePage />} />
+            <Route path="/attendance/child" element={<ChildAttendancePage />} />
             <Route path="/calendar" element={<CalendarPage />} />
             <Route path="/calendar/create" element={<EventCreatePage />} />
             
