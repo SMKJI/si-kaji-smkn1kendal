@@ -1,48 +1,85 @@
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { APP_NAME, APP_SCHOOL } from '@/lib/constants';
 
 const Footer = () => {
-  useEffect(() => {
-    console.log("Footer component rendered");
-  }, []);
-
-  const currentYear = new Date().getFullYear();
-  
   return (
-    <footer className="bg-muted py-6 border-t">
+    <footer id="kontak" className="bg-secondary py-12 border-t">
       <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="mb-4 md:mb-0">
-            <Link to="/" className="flex items-center gap-2">
-              <img 
-                src="/lovable-uploads/0a3a3f77-6e29-472b-9596-b9b4a52df4b0.png" 
-                alt="Logo" 
-                className="h-8 w-8" 
-              />
-              <span className="font-semibold text-foreground">{APP_NAME}</span>
-            </Link>
-            <p className="text-sm text-muted-foreground mt-1">
-              {APP_SCHOOL}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="space-y-4">
+            <h2 className="text-xl font-bold text-foreground">Si-Kaji</h2>
+            <p className="text-muted-foreground text-sm">
+              Sistem Informasi Kesiswaan SMKJI <br />
+              SMKN 1 Kendal
             </p>
-          </div>
-          
-          <div className="text-center md:text-right">
-            <p className="text-sm text-muted-foreground">
-              &copy; {currentYear} {APP_NAME}. Hak Cipta Dilindungi.
-            </p>
-            <div className="flex gap-4 mt-2 justify-center md:justify-end">
-              <Link to="#" className="text-sm text-foreground hover:text-primary">
-                Ketentuan
-              </Link>
-              <Link to="#" className="text-sm text-foreground hover:text-primary">
-                Privasi
-              </Link>
-              <Link to="#" className="text-sm text-foreground hover:text-primary">
-                Kontak
-              </Link>
+            <div className="pt-2">
+              <p className="text-sm text-muted-foreground">
+                © {new Date().getFullYear()} SMKN 1 Kendal. <br/>
+                All rights reserved.
+              </p>
             </div>
+          </div>
+
+          <div>
+            <h3 className="font-medium text-foreground mb-4">Menu</h3>
+            <ul className="space-y-2">
+              <li>
+                <a 
+                  href="#" 
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Beranda
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="#informasi" 
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Informasi
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="#fitur" 
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Fitur
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="font-medium text-foreground mb-4">Akses</h3>
+            <ul className="space-y-2">
+              <li>
+                <Link 
+                  to="/login" 
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Masuk
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="font-medium text-foreground mb-4">Kontak</h3>
+            <address className="not-italic">
+              <p className="text-sm text-muted-foreground mb-2">
+                Jl. Soekarno-Hatta, Kendal
+                <br />
+                Jawa Tengah, Indonesia
+              </p>
+              <p className="text-sm text-muted-foreground mb-2">
+                Email: info@smkn1kendal.sch.id
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Telp: (0294) 381137
+              </p>
+            </address>
           </div>
         </div>
       </div>

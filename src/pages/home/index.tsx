@@ -9,9 +9,6 @@ import Footer from '@/components/layout/Footer';
 
 const HomePage = () => {
   useEffect(() => {
-    // Log untuk debugging
-    console.log("HomePage component rendered");
-    
     // Scroll to top on page load
     window.scrollTo(0, 0);
     

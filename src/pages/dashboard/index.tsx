@@ -3,12 +3,10 @@ import React, { useEffect, useState } from 'react';
 import DashboardLayout from '@/layouts/DashboardLayout';
 import { Button } from '@/components/ui/button';
 import DashboardTabs from '@/components/dashboard/DashboardTabs';
+import { USER_ROLES } from '@/lib/constants';
 
 const DashboardPage = () => {
-  console.log("DashboardPage rendering");
-  
   useEffect(() => {
-    console.log("DashboardPage component mounted");
     window.scrollTo(0, 0);
     document.title = 'Dashboard - Si-Kaji';
   }, []);

@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // Page imports
 import HomePage from "@/pages/home";
@@ -48,95 +48,91 @@ import ReportsPage from "@/pages/reports";
 
 const queryClient = new QueryClient();
 
-const App = () => {
-  console.log("App component rendered");
-  
-  return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
-            
-            {/* Student Management */}
-            <Route path="/student" element={<StudentManagementPage />} />
-            <Route path="/student/:id" element={<StudentProfilePage />} />
-            <Route path="/student-data" element={<StudentDataPage />} />
-            <Route path="/student-data/profile" element={<StudentProfileViewPage />} />
-            
-            {/* Class Management */}
-            <Route path="/class" element={<ClassManagementPage />} />
-            <Route path="/class/:id" element={<ClassDetailPage />} />
-            
-            {/* Teacher Management */}
-            <Route path="/teacher" element={<TeacherManagementPage />} />
-            <Route path="/teacher/:id" element={<TeacherProfilePage />} />
-            
-            {/* Complaints */}
-            <Route path="/complaint" element={<ComplaintPage />} />
-            <Route path="/complaint/ticket" element={<TicketStatusPage />} />
-            <Route path="/parent-complaint" element={<ParentComplaintPage />} />
-            
-            {/* Attendance & Calendar */}
-            <Route path="/attendance" element={<AttendancePage />} />
-            <Route path="/calendar" element={<CalendarPage />} />
-            <Route path="/calendar/create" element={<EventCreatePage />} />
-            
-            {/* Permissions */}
-            <Route path="/permission" element={<PermissionPage />} />
-            <Route path="/permission/create" element={<PermissionCreatePage />} />
-            
-            {/* Counseling */}
-            <Route path="/counseling" element={<CounselingPage />} />
-            <Route path="/counseling/manage" element={<CounselingManagePage />} />
-            <Route path="/counseling/session" element={<CounselingSessionPage />} />
-            <Route path="/counseling/session/:id" element={<CounselingSessionPage />} />
-            
-            {/* Extracurricular */}
-            <Route path="/extracurricular" element={<ExtracurricularPage />} />
-            <Route path="/extracurricular/manage" element={<ExtracurricularManagePage />} />
-            
-            {/* Proposal Approval */}
-            <Route path="/proposal" element={<ProposalPage />} />
-            
-            {/* Parent Portal */}
-            <Route path="/parent-portal" element={<ParentPortalPage />} />
-            <Route path="/parent-portal/dashboard" element={<ParentPortalDashboardPage />} />
-            
-            {/* Student Activities */}
-            <Route path="/student-activities" element={<StudentActivitiesPage />} />
-            <Route path="/announcement" element={<AnnouncementPage />} />
-            
-            {/* Class Journal */}
-            <Route path="/class-journal" element={<ClassJournalPage />} />
-            <Route path="/class-journal/create" element={<ClassJournalCreatePage />} />
-            
-            {/* Discipline */}
-            <Route path="/discipline" element={<DisciplinePage />} />
-            <Route path="/discipline/record" element={<DisciplineRecordPage />} />
-            <Route path="/discipline/manage" element={<DisciplineManagePage />} />
-            
-            {/* Achievement & Certificates */}
-            <Route path="/achievements" element={<AchievementsPage />} />
-            <Route path="/certificates" element={<CertificatesPage />} />
-            
-            {/* Reports & Statistics */}
-            <Route path="/reports" element={<ReportsPage />} />
-            
-            {/* Settings */}
-            <Route path="/settings" element={<SettingsPage />} />
-            
-            {/* Catch-all route */}
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-          <Toaster />
-          <Sonner />
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
-  );
-};
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
+          
+          {/* Student Management */}
+          <Route path="/student" element={<StudentManagementPage />} />
+          <Route path="/student/:id" element={<StudentProfilePage />} />
+          <Route path="/student-data" element={<StudentDataPage />} />
+          <Route path="/student-data/profile" element={<StudentProfileViewPage />} />
+          
+          {/* Class Management */}
+          <Route path="/class" element={<ClassManagementPage />} />
+          <Route path="/class/:id" element={<ClassDetailPage />} />
+          
+          {/* Teacher Management */}
+          <Route path="/teacher" element={<TeacherManagementPage />} />
+          <Route path="/teacher/:id" element={<TeacherProfilePage />} />
+          
+          {/* Complaints */}
+          <Route path="/complaint" element={<ComplaintPage />} />
+          <Route path="/complaint/ticket" element={<TicketStatusPage />} />
+          <Route path="/parent-complaint" element={<ParentComplaintPage />} />
+          
+          {/* Attendance & Calendar */}
+          <Route path="/attendance" element={<AttendancePage />} />
+          <Route path="/calendar" element={<CalendarPage />} />
+          <Route path="/calendar/create" element={<EventCreatePage />} />
+          
+          {/* Permissions */}
+          <Route path="/permission" element={<PermissionPage />} />
+          <Route path="/permission/create" element={<PermissionCreatePage />} />
+          
+          {/* Counseling */}
+          <Route path="/counseling" element={<CounselingPage />} />
+          <Route path="/counseling/manage" element={<CounselingManagePage />} />
+          <Route path="/counseling/session" element={<CounselingSessionPage />} />
+          <Route path="/counseling/session/:id" element={<CounselingSessionPage />} />
+          
+          {/* Extracurricular */}
+          <Route path="/extracurricular" element={<ExtracurricularPage />} />
+          <Route path="/extracurricular/manage" element={<ExtracurricularManagePage />} />
+          
+          {/* Proposal Approval */}
+          <Route path="/proposal" element={<ProposalPage />} />
+          
+          {/* Parent Portal */}
+          <Route path="/parent-portal" element={<ParentPortalPage />} />
+          <Route path="/parent-portal/dashboard" element={<ParentPortalDashboardPage />} />
+          
+          {/* Student Activities */}
+          <Route path="/student-activities" element={<StudentActivitiesPage />} />
+          <Route path="/announcement" element={<AnnouncementPage />} />
+          
+          {/* Class Journal */}
+          <Route path="/class-journal" element={<ClassJournalPage />} />
+          <Route path="/class-journal/create" element={<ClassJournalCreatePage />} />
+          
+          {/* Discipline */}
+          <Route path="/discipline" element={<DisciplinePage />} />
+          <Route path="/discipline/record" element={<DisciplineRecordPage />} />
+          <Route path="/discipline/manage" element={<DisciplineManagePage />} />
+          
+          {/* Achievement & Certificates */}
+          <Route path="/achievements" element={<AchievementsPage />} />
+          <Route path="/certificates" element={<CertificatesPage />} />
+          
+          {/* Reports & Statistics */}
+          <Route path="/reports" element={<ReportsPage />} />
+          
+          {/* Settings */}
+          <Route path="/settings" element={<SettingsPage />} />
+          
+          {/* Catch-all route */}
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </BrowserRouter>
+    </TooltipProvider>
+  </QueryClientProvider>
+);
 
 export default App;
