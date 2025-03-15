@@ -27,6 +27,12 @@ import PermissionPage from "@/pages/permission";
 import StudentDataPage from "@/pages/student-data";
 import StudentActivitiesPage from "@/pages/student-activities";
 import AnnouncementPage from "@/pages/announcement";
+import ClassJournalPage from "@/pages/class-journal";
+import DisciplinePage from "@/pages/discipline";
+import AchievementsPage from "@/pages/achievements";
+import CertificatesPage from "@/pages/certificates";
+import ExtracurricularPage from "@/pages/extracurricular";
+import SettingsPage from "@/pages/settings";
 
 const queryClient = new QueryClient();
 
@@ -57,6 +63,12 @@ const App = () => (
           <Route path="/permission" element={<PermissionPage />} />
           <Route path="/student-activities" element={<StudentActivitiesPage />} />
           <Route path="/announcement" element={<AnnouncementPage />} />
+          <Route path="/class-journal" element={<ClassJournalPage />} />
+          <Route path="/discipline" element={<DisciplinePage />} />
+          <Route path="/achievements" element={<AchievementsPage />} />
+          <Route path="/certificates" element={<CertificatesPage />} />
+          <Route path="/extracurricular" element={<ExtracurricularPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
