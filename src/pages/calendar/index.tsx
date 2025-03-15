@@ -1,5 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import DashboardLayout from '@/layouts/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -122,10 +123,12 @@ const CalendarPage = () => {
       backTo="/dashboard"
     >
       <div className="mb-4 flex justify-end">
-        <Button className="gap-2">
-          <Plus size={16} />
-          Tambah Kegiatan
-        </Button>
+        <Link to="/calendar/create">
+          <Button className="gap-2">
+            <Plus size={16} />
+            Tambah Kegiatan
+          </Button>
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
