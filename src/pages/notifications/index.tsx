@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Bell, Filter, Check, MessageSquare, Info, AlertTriangle, Clock } from 'lucide-react';
+import { Bell, Filter, Check, MessageSquare, Info, AlertTriangle, Clock, Settings, Users } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import PageTransition from '@/components/layout/PageTransition';
 
