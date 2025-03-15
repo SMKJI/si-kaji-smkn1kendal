@@ -1,5 +1,5 @@
 
-import { Home, CalendarCheck, MessageSquare, Bell, Settings, UserCheck, Trophy, Calendar, Shield, Users, BarChart3 } from 'lucide-react';
+import { Home, CalendarCheck, MessageSquare, Bell, Settings, Trophy, Calendar, Shield, Users, BarChart3 } from 'lucide-react';
 import { MenuItemType } from './types';
 
 export const parentMenu: MenuItemType[] = [
@@ -52,7 +52,7 @@ export const parentMenu: MenuItemType[] = [
     roles: ['parent'],
   },
   {
-    title: 'Kalender Akademik',
+    title: 'Kalender Kegiatan',
     path: '/calendar',
     icon: Calendar,
     roles: ['parent'],

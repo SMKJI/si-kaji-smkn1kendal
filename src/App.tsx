@@ -128,6 +128,8 @@ const App = () => {
             <Route path="/parent-portal/attendance" element={<ParentPortalAttendancePage />} />
             <Route path="/parent-portal/discipline" element={<ParentPortalDisciplinePage />} />
             <Route path="/parent-portal/notifications" element={<ParentPortalNotificationsPage />} />
+            <Route path="/parent-portal/reports" element={<ReportsPage />} />
+            <Route path="/parent-portal/child-profile" element={<StudentProfileViewPage />} />
             
             {/* Student Activities */}
             <Route path="/student-activities" element={<StudentActivitiesPage />} />
@@ -144,6 +146,7 @@ const App = () => {
             
             {/* Achievement & Certificates */}
             <Route path="/achievements" element={<AchievementsPage />} />
+            <Route path="/achievements/create" element={<AchievementsPage />} />
             <Route path="/certificates" element={<CertificatesPage />} />
             
             {/* Reports & Statistics */}
@@ -151,6 +154,9 @@ const App = () => {
             
             {/* Settings */}
             <Route path="/settings" element={<SettingsPage />} />
+            
+            {/* User Management */}
+            <Route path="/user-management" element={<StudentManagementPage />} />
             
             {/* Catch-all route */}
             <Route path="*" element={<NotFoundPage />} />
