@@ -1,6 +1,6 @@
 
 import { LayoutDashboard, Users, CalendarCheck, 
-  MessageSquare, FileText, Settings, Shield, ClipboardList, HelpCircle, Award, Trophy, FileEdit } from 'lucide-react';
+  MessageSquare, FileText, Settings, Shield, ClipboardList, HelpCircle, Award, Trophy, FileEdit, GraduationCap, BookOpen } from 'lucide-react';
 import { MenuItemType } from './types';
 
 export const teacherMenu: MenuItemType[] = [
@@ -14,6 +14,18 @@ export const teacherMenu: MenuItemType[] = [
     title: 'Manajemen Siswa',
     path: '/student',
     icon: Users,
+    roles: ['teacher'],
+  },
+  {
+    title: 'Data Akademik',
+    path: '/academic',
+    icon: GraduationCap,
+    roles: ['teacher'],
+  },
+  {
+    title: 'Kegiatan Belajar',
+    path: '/learning-activities',
+    icon: BookOpen,
     roles: ['teacher'],
   },
   {

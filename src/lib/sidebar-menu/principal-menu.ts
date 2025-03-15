@@ -1,6 +1,6 @@
 
 import { LayoutDashboard, Users, GraduationCap, CalendarCheck, 
-  MessageSquare, Bell, BarChart3, Settings, FileCheck, ClipboardList, BookText, Trophy, Shield } from 'lucide-react';
+  MessageSquare, Bell, BarChart3, Settings, FileCheck, ClipboardList, BookText, Trophy, Shield, FileEdit, LockKeyhole } from 'lucide-react';
 import { MenuItemType } from './types';
 
 export const principalMenu: MenuItemType[] = [
@@ -20,6 +20,12 @@ export const principalMenu: MenuItemType[] = [
     title: 'Persetujuan Proposal',
     path: '/proposal',
     icon: FileCheck,
+    roles: ['principal'],
+  },
+  {
+    title: 'Kebijakan Operasional',
+    path: '/policies',
+    icon: FileEdit,
     roles: ['principal'],
   },
   {
@@ -44,6 +50,12 @@ export const principalMenu: MenuItemType[] = [
     title: 'Manajemen Guru',
     path: '/teacher',
     icon: GraduationCap,
+    roles: ['principal'],
+  },
+  {
+    title: 'Keputusan Strategis',
+    path: '/strategic-decisions',
+    icon: LockKeyhole,
     roles: ['principal'],
   },
   {

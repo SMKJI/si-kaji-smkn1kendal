@@ -1,5 +1,5 @@
 
-import { LayoutDashboard, FileText, MessageSquare, Bell, Settings, Shield, BarChart3, Award } from 'lucide-react';
+import { LayoutDashboard, FileText, MessageSquare, Bell, Settings, Shield, BarChart3, Award, FileEdit, UserCheck, Eye, MailWarning } from 'lucide-react';
 import { MenuItemType } from './types';
 
 export const tppkMenu: MenuItemType[] = [
@@ -16,6 +16,12 @@ export const tppkMenu: MenuItemType[] = [
     roles: ['tppk'],
   },
   {
+    title: 'Pengaduan Anonim',
+    path: '/complaint/anonymous',
+    icon: Eye,
+    roles: ['tppk'],
+  },
+  {
     title: 'Tindak Lanjut Kasus',
     path: '/discipline/manage',
     icon: Shield,
@@ -28,8 +34,20 @@ export const tppkMenu: MenuItemType[] = [
     roles: ['tppk'],
   },
   {
+    title: 'Pencatatan Pelanggaran',
+    path: '/discipline/record',
+    icon: FileEdit,
+    roles: ['tppk'],
+  },
+  {
     title: 'Sistem Gamifikasi',
     path: '/gamification',
+    icon: Award,
+    roles: ['tppk'],
+  },
+  {
+    title: 'Manajemen Reward',
+    path: '/reward',
     icon: Award,
     roles: ['tppk'],
   },
@@ -43,6 +61,18 @@ export const tppkMenu: MenuItemType[] = [
     title: 'Kirim Notifikasi',
     path: '/notifications',
     icon: Bell,
+    roles: ['tppk'],
+  },
+  {
+    title: 'Notifikasi Pelanggaran',
+    path: '/notifications/violations',
+    icon: MailWarning,
+    roles: ['tppk'],
+  },
+  {
+    title: 'Verifikasi Wali Kelas',
+    path: '/verification/teacher',
+    icon: UserCheck,
     roles: ['tppk'],
   },
   {

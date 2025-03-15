@@ -1,6 +1,6 @@
 
 import { LayoutDashboard, CalendarCheck, MessageSquare, 
-  FileText, Award, Check, Users, FileEdit, PlusCircle, ClipboardList, HelpCircle, Settings, FileCheck } from 'lucide-react';
+  FileText, Award, Check, Users, FileEdit, PlusCircle, ClipboardList, HelpCircle, Settings, FileCheck, Bell, BookOpen } from 'lucide-react';
 import { MenuItemType } from './types';
 
 export const studentMenu: MenuItemType[] = [
@@ -47,6 +47,18 @@ export const studentMenu: MenuItemType[] = [
     roles: ['student'],
   },
   {
+    title: 'Pengaduan Anonim',
+    path: '/complaint/anonymous',
+    icon: MessageSquare,
+    roles: ['student'],
+  },
+  {
+    title: 'Notifikasi',
+    path: '/student/notifications',
+    icon: Bell,
+    roles: ['student'],
+  },
+  {
     title: 'Konseling',
     path: '/counseling',
     icon: HelpCircle,
@@ -68,6 +80,12 @@ export const studentMenu: MenuItemType[] = [
     title: 'Ekstrakurikuler',
     path: '/extracurricular',
     icon: Award,
+    roles: ['student'],
+  },
+  {
+    title: 'Jadwal Pelajaran',
+    path: '/schedule',
+    icon: BookOpen,
     roles: ['student'],
   },
   {

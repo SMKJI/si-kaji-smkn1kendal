@@ -1,7 +1,7 @@
 
 import { LayoutDashboard, Users, GraduationCap, BookOpen, 
   CalendarCheck, MessageSquare, Shield, BookText, Award, Bell, 
-  BarChart3, Settings, PlusCircle, ClipboardList, FileText, FileEdit, Trophy, FileCheck } from 'lucide-react';
+  BarChart3, Settings, PlusCircle, ClipboardList, FileText, FileEdit, Trophy, FileCheck, Database } from 'lucide-react';
 import { MenuItemType } from './types';
 
 export const wakaMenu: MenuItemType[] = [
@@ -15,6 +15,12 @@ export const wakaMenu: MenuItemType[] = [
     title: 'Manajemen Kesiswaan',
     path: '/student',
     icon: Users,
+    roles: ['waka'],
+  },
+  {
+    title: 'Data Terpusat',
+    path: '/centralized-data',
+    icon: Database,
     roles: ['waka'],
   },
   {
@@ -45,6 +51,12 @@ export const wakaMenu: MenuItemType[] = [
     title: 'Persetujuan Proposal',
     path: '/proposal',
     icon: FileCheck,
+    roles: ['waka'],
+  },
+  {
+    title: 'Rekomendasi Kebijakan',
+    path: '/policies/recommendations',
+    icon: FileEdit,
     roles: ['waka'],
   },
   {

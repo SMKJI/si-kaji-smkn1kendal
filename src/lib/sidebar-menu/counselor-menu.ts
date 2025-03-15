@@ -1,5 +1,5 @@
 
-import { LayoutDashboard, PlusCircle, Settings, Calendar, HelpCircle, FileText, Users, MessageSquare, Shield, BarChart3, FileCheck } from 'lucide-react';
+import { LayoutDashboard, PlusCircle, Settings, Calendar, HelpCircle, FileText, Users, MessageSquare, Shield, BarChart3, FileCheck, UserPlus, UserCog } from 'lucide-react';
 import { MenuItemType } from './types';
 
 export const counselorMenu: MenuItemType[] = [
@@ -19,6 +19,24 @@ export const counselorMenu: MenuItemType[] = [
     title: 'Buat Sesi Konseling',
     path: '/counseling/session',
     icon: PlusCircle,
+    roles: ['counselor'],
+  },
+  {
+    title: 'Konseling Individu',
+    path: '/counseling/individual',
+    icon: UserPlus,
+    roles: ['counselor'],
+  },
+  {
+    title: 'Konseling Kelompok',
+    path: '/counseling/group',
+    icon: Users,
+    roles: ['counselor'],
+  },
+  {
+    title: 'Mediasi & Advokasi',
+    path: '/counseling/mediation',
+    icon: UserCog,
     roles: ['counselor'],
   },
   {

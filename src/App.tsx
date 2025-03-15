@@ -82,18 +82,35 @@ const App = () => {
             <Route path="/class/:id" element={<ClassDetailPage />} />
             <Route path="/class/documents" element={<ClassManagementPage />} />
             <Route path="/class/transfer" element={<ClassManagementPage />} />
+            <Route path="/class/evaluation" element={<ClassManagementPage />} />
+            <Route path="/class/behavior" element={<ClassManagementPage />} />
             
             {/* Teacher Management */}
             <Route path="/teacher" element={<TeacherManagementPage />} />
             <Route path="/teacher/:id" element={<TeacherProfilePage />} />
             
-            {/* User Management */}
+            {/* Academic Data */}
+            <Route path="/academic" element={<StudentManagementPage />} />
+            <Route path="/learning-activities" element={<StudentManagementPage />} />
+            <Route path="/schedule" element={<CalendarPage />} />
+            
+            {/* System Management */}
             <Route path="/user-management" element={<StudentManagementPage />} />
             <Route path="/user-management/access" element={<StudentManagementPage />} />
+            <Route path="/system/security" element={<SettingsPage />} />
+            <Route path="/system/maintenance" element={<SettingsPage />} />
+            <Route path="/system/monitoring" element={<SettingsPage />} />
+            <Route path="/centralized-data" element={<StudentManagementPage />} />
+            
+            {/* Policies and Strategic Decisions */}
+            <Route path="/policies" element={<SettingsPage />} />
+            <Route path="/policies/recommendations" element={<SettingsPage />} />
+            <Route path="/strategic-decisions" element={<SettingsPage />} />
             
             {/* Complaints */}
             <Route path="/complaint" element={<ComplaintPage />} />
             <Route path="/complaint/ticket" element={<TicketStatusPage />} />
+            <Route path="/complaint/anonymous" element={<ComplaintPage />} />
             <Route path="/parent-complaint" element={<ParentComplaintPage />} />
             
             {/* Attendance & Calendar */}
@@ -116,6 +133,9 @@ const App = () => {
             <Route path="/counseling/students" element={<CounselingPage />} />
             <Route path="/counseling/reports" element={<ReportsPage />} />
             <Route path="/counseling/recommendation" element={<CertificatesPage />} />
+            <Route path="/counseling/individual" element={<CounselingPage />} />
+            <Route path="/counseling/group" element={<CounselingPage />} />
+            <Route path="/counseling/mediation" element={<CounselingPage />} />
             
             {/* Extracurricular */}
             <Route path="/extracurricular" element={<ExtracurricularPage />} />
@@ -123,6 +143,8 @@ const App = () => {
             <Route path="/extracurricular/journal" element={<ExtracurricularJournalPage />} />
             <Route path="/extracurricular/attendance" element={<ExtracurricularAttendancePage />} />
             <Route path="/extracurricular/training" element={<ExtracurricularTrainingPage />} />
+            <Route path="/extracurricular/my-attendance" element={<ExtracurricularAttendancePage />} />
+            <Route path="/extracurricular/schedule" element={<CalendarPage />} />
             
             {/* Proposal Approval */}
             <Route path="/proposal" element={<ProposalPage />} />
@@ -130,7 +152,11 @@ const App = () => {
             
             {/* TPPK Specific Routes */}
             <Route path="/gamification" element={<GamificationPage />} />
+            <Route path="/reward" element={<GamificationPage />} />
+            <Route path="/verification/teacher" element={<TeacherManagementPage />} />
             <Route path="/notifications" element={<NotificationsPage />} />
+            <Route path="/notifications/violations" element={<NotificationsPage />} />
+            <Route path="/student/notifications" element={<NotificationsPage />} />
             
             {/* Parent Portal */}
             <Route path="/parent-portal" element={<ParentPortalPage />} />
@@ -140,6 +166,9 @@ const App = () => {
             <Route path="/parent-portal/notifications" element={<ParentPortalNotificationsPage />} />
             <Route path="/parent-portal/reports" element={<ReportsPage />} />
             <Route path="/parent-portal/child-profile" element={<StudentProfileViewPage />} />
+            <Route path="/parent-portal/academic" element={<ParentPortalAttendancePage />} />
+            <Route path="/parent-portal/late-history" element={<ParentPortalAttendancePage />} />
+            <Route path="/parent-portal/messages" element={<ParentPortalNotificationsPage />} />
             
             {/* Student Activities */}
             <Route path="/student-activities" element={<StudentActivitiesPage />} />

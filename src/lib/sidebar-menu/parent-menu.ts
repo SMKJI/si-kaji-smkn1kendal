@@ -1,5 +1,5 @@
 
-import { Home, CalendarCheck, MessageSquare, Bell, Settings, Trophy, Calendar, Shield, Users, BarChart3 } from 'lucide-react';
+import { Home, CalendarCheck, MessageSquare, Bell, Settings, Trophy, Calendar, Shield, Users, BarChart3, Clock, Graduation, Mail } from 'lucide-react';
 import { MenuItemType } from './types';
 
 export const parentMenu: MenuItemType[] = [
@@ -28,9 +28,21 @@ export const parentMenu: MenuItemType[] = [
     roles: ['parent'],
   },
   {
-    title: 'Prestasi Anak',
+    title: 'Prestasi Akademik',
+    path: '/parent-portal/academic',
+    icon: Graduation,
+    roles: ['parent'],
+  },
+  {
+    title: 'Prestasi Non-Akademik',
     path: '/achievements',
     icon: Trophy,
+    roles: ['parent'],
+  },
+  {
+    title: 'Riwayat Keterlambatan',
+    path: '/parent-portal/late-history',
+    icon: Clock,
     roles: ['parent'],
   },
   {
@@ -43,6 +55,12 @@ export const parentMenu: MenuItemType[] = [
     title: 'Laporan Perkembangan',
     path: '/parent-portal/reports',
     icon: BarChart3,
+    roles: ['parent'],
+  },
+  {
+    title: 'Pesan dari Sekolah',
+    path: '/parent-portal/messages',
+    icon: Mail,
     roles: ['parent'],
   },
   {

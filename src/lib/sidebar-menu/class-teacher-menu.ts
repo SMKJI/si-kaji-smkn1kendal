@@ -1,6 +1,6 @@
 
 import { LayoutDashboard, Users, BookOpen, CalendarCheck, 
-  MessageSquare, FileText, Settings, Shield, BookText, FileEdit, Check, HelpCircle, Printer, FileOutput } from 'lucide-react';
+  MessageSquare, FileText, Settings, Shield, BookText, FileEdit, Check, HelpCircle, Printer, FileOutput, ClipboardList, PenSquare } from 'lucide-react';
 import { MenuItemType } from './types';
 
 export const classTeacherMenu: MenuItemType[] = [
@@ -41,6 +41,12 @@ export const classTeacherMenu: MenuItemType[] = [
     roles: ['class_teacher'],
   },
   {
+    title: 'Evaluasi Pembinaan',
+    path: '/class/evaluation',
+    icon: PenSquare,
+    roles: ['class_teacher'],
+  },
+  {
     title: 'Cetak Dokumen',
     path: '/class/documents',
     icon: Printer,
@@ -50,6 +56,12 @@ export const classTeacherMenu: MenuItemType[] = [
     title: 'Surat Mutasi',
     path: '/class/transfer',
     icon: FileOutput,
+    roles: ['class_teacher'],
+  },
+  {
+    title: 'Monitoring Perilaku',
+    path: '/class/behavior',
+    icon: ClipboardList,
     roles: ['class_teacher'],
   },
   {
