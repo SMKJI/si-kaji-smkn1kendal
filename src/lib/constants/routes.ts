@@ -53,10 +53,5 @@ export const ROUTES = {
   SETTINGS: "/settings",
   GAMIFICATION: "/gamification",
   NOTIFICATIONS: "/notifications",
-  NOT_FOUND: "*",
-  
-  // Role-specific Dashboards
-  STUDENT_DASHBOARD: "/student-dashboard",
-  TEACHER_DASHBOARD: "/teacher-dashboard",
-  PARENT_DASHBOARD: "/parent-dashboard"
+  NOT_FOUND: "*"
 };

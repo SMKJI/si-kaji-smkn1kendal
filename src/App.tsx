@@ -57,9 +57,6 @@ import GamificationPage from "@/pages/gamification";
 import NotificationsPage from "@/pages/notifications";
 import ChildAttendancePage from "@/pages/attendance/child";
 import StudentAttendancePage from "@/pages/attendance/me";
-import StudentDashboardPage from "@/pages/student-dashboard";
-import TeacherDashboardPage from "@/pages/teacher-dashboard";
-import ParentDashboardPage from "@/pages/parent-dashboard";
 
 const queryClient = new QueryClient();
 
@@ -203,11 +200,6 @@ const App = () => {
             
             {/* Settings */}
             <Route path="/settings" element={<SettingsPage />} />
-            
-            {/* Role-specific Dashboards */}
-            <Route path="/student-dashboard" element={<StudentDashboardPage />} />
-            <Route path="/teacher-dashboard" element={<TeacherDashboardPage />} />
-            <Route path="/parent-dashboard" element={<ParentDashboardPage />} />
             
             {/* Catch-all route */}
             <Route path="*" element={<NotFoundPage />} />
