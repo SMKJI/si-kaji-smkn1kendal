@@ -94,17 +94,22 @@ const CalendarPage = () => {
   };
 
   // Custom calendar day rendering - highlight days with events
+  // Modified to always return a React element instead of a number or element
   const dayWithEvents = (day: Date) => {
     const hasEvent = events.some(event => 
       event.date.toDateString() === day.toDateString()
     );
     
-    return hasEvent ? (
-      <div className="relative">
-        {day.getDate()}
-        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 rounded-full bg-primary"></div>
-      </div>
-    ) : day.getDate();
+    if (hasEvent) {
+      return (
+        <div className="relative">
+          {day.getDate()}
+          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 rounded-full bg-primary"></div>
+        </div>
+      );
+    } else {
+      return <div>{day.getDate()}</div>; // Return React element instead of just a number
+    }
   };
 
   return (
