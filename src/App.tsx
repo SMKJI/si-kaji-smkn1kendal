@@ -42,9 +42,14 @@ import AchievementsPage from "@/pages/achievements";
 import CertificatesPage from "@/pages/certificates";
 import ExtracurricularPage from "@/pages/extracurricular";
 import ExtracurricularManagePage from "@/pages/extracurricular/manage";
+import ExtracurricularJournalPage from "@/pages/extracurricular/journal";
+import ExtracurricularAttendancePage from "@/pages/extracurricular/attendance";
+import ExtracurricularTrainingPage from "@/pages/extracurricular/training";
 import SettingsPage from "@/pages/settings";
 import ProposalPage from "@/pages/proposal";
 import ReportsPage from "@/pages/reports";
+import GamificationPage from "@/pages/gamification";
+import NotificationsPage from "@/pages/notifications";
 
 const queryClient = new QueryClient();
 
@@ -97,9 +102,16 @@ const App = () => {
             {/* Extracurricular */}
             <Route path="/extracurricular" element={<ExtracurricularPage />} />
             <Route path="/extracurricular/manage" element={<ExtracurricularManagePage />} />
+            <Route path="/extracurricular/journal" element={<ExtracurricularJournalPage />} />
+            <Route path="/extracurricular/attendance" element={<ExtracurricularAttendancePage />} />
+            <Route path="/extracurricular/training" element={<ExtracurricularTrainingPage />} />
             
             {/* Proposal Approval */}
             <Route path="/proposal" element={<ProposalPage />} />
+            
+            {/* TPPK Specific Routes */}
+            <Route path="/gamification" element={<GamificationPage />} />
+            <Route path="/notifications" element={<NotificationsPage />} />
             
             {/* Parent Portal */}
             <Route path="/parent-portal" element={<ParentPortalPage />} />

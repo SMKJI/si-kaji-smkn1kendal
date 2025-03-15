@@ -1,5 +1,5 @@
 
-import { LayoutDashboard, ClipboardList, Award, Calendar, Settings } from 'lucide-react';
+import { LayoutDashboard, ClipboardList, Award, Calendar, Settings, FileEdit, Users, FileText } from 'lucide-react';
 import { MenuItemType } from './types';
 
 export const trainerMenu: MenuItemType[] = [
@@ -19,6 +19,24 @@ export const trainerMenu: MenuItemType[] = [
     title: 'Manajemen Ekstrakurikuler',
     path: '/extracurricular/manage',
     icon: Award,
+    roles: ['trainer'],
+  },
+  {
+    title: 'Jurnal Ekstrakurikuler',
+    path: '/extracurricular/journal',
+    icon: FileEdit,
+    roles: ['trainer'],
+  },
+  {
+    title: 'Presensi Peserta',
+    path: '/extracurricular/attendance',
+    icon: Users,
+    roles: ['trainer'],
+  },
+  {
+    title: 'Program Latihan',
+    path: '/extracurricular/training',
+    icon: FileText,
     roles: ['trainer'],
   },
   {
