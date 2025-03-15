@@ -22,6 +22,8 @@ const formSchema = z.object({
   important: z.boolean().default(false),
 });
 
+type FormValues = z.infer<typeof formSchema>;
+
 const AnnouncementCard = ({ 
   announcement, 
   onEdit, 
@@ -74,7 +76,7 @@ const AnnouncementManagePage = () => {
   const [announcementToDelete, setAnnouncementToDelete] = useState<number | null>(null);
   const { toast } = useToast();
   
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: '',
@@ -138,7 +140,7 @@ const AnnouncementManagePage = () => {
     }
   };
   
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = (values: FormValues) => {
     if (editingAnnouncement) {
       // Update existing announcement
       const result = updateAnnouncement(editingAnnouncement.id, values);
@@ -156,7 +158,13 @@ const AnnouncementManagePage = () => {
       }
     } else {
       // Create new announcement
-      const result = createAnnouncement(values);
+      const announcementData = {
+        title: values.title,
+        content: values.content,
+        important: values.important
+      };
+      
+      const result = createAnnouncement(announcementData);
       if (result) {
         toast({
           title: "Pengumuman berhasil dibuat",

@@ -3,43 +3,39 @@ import React, { useEffect, useState } from 'react';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Bell, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-
-// In a real app, this would come from an API
-const dummyAnnouncements = [
-  {
-    id: 1,
-    title: 'Pengumuman Pendaftaran Ekstrakurikuler',
-    content: 'Pendaftaran ekstrakurikuler untuk semester baru telah dibuka. Silakan mendaftar melalui sistem Si-Kaji sebelum tanggal 15 September 2023.',
-    date: '2023-09-01',
-    important: true,
-  },
-  {
-    id: 2,
-    title: 'Jadwal Ujian Tengah Semester',
-    content: 'Ujian Tengah Semester akan dilaksanakan pada tanggal 10-15 Oktober 2023. Siswa wajib hadir tepat waktu dan membawa perlengkapan yang diperlukan.',
-    date: '2023-09-15',
-    important: false,
-  },
-  {
-    id: 3,
-    title: 'Pemeliharaan Sistem',
-    content: 'Sistem Si-Kaji akan mengalami pemeliharaan pada tanggal 20 September 2023 dari pukul 22:00 - 02:00 WIB. Mohon maaf atas ketidaknyamanan ini.',
-    date: '2023-09-18',
-    important: true,
-  },
-];
-
-type Announcement = {
-  id: number;
-  title: string;
-  content: string;
-  date: string;
-  important: boolean;
-};
+import { Announcement } from '@/lib/types/announcement';
+import { getAnnouncements } from '@/services/announcementService';
 
 const Announcements = () => {
-  const [announcements, setAnnouncements] = useState<Announcement[]>(dummyAnnouncements);
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
+  
+  useEffect(() => {
+    // Fetch announcements from the service
+    const fetchAnnouncements = () => {
+      try {
+        const data = getAnnouncements();
+        setAnnouncements(data);
+      } catch (error) {
+        console.error("Error fetching announcements:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchAnnouncements();
+  }, []);
+  
+  if (loading) {
+    return <div className="py-4">
+      <div className="container mx-auto px-4">
+        <Alert className="border-blue-200 bg-blue-50 dark:bg-blue-950/20 dark:border-blue-900">
+          <div className="animate-pulse h-20"></div>
+        </Alert>
+      </div>
+    </div>;
+  }
   
   if (announcements.length === 0) {
     return null;
