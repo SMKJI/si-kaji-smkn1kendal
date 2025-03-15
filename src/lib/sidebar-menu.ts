@@ -1,4 +1,3 @@
-
 import { 
   LayoutDashboard, Users, BookOpen, CalendarCheck, 
   FileText, MessageSquare, GraduationCap, Award, 
@@ -8,6 +7,7 @@ import {
   PlusCircle, FileEdit, Send, Briefcase, BarChart3,
   ListChecks, Home
 } from 'lucide-react';
+import { USER_ROLES } from './constants';
 
 export type MenuItemType = {
   title: string;
