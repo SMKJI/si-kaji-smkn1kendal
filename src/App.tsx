@@ -44,6 +44,7 @@ import ExtracurricularPage from "@/pages/extracurricular";
 import ExtracurricularManagePage from "@/pages/extracurricular/manage";
 import SettingsPage from "@/pages/settings";
 import ProposalPage from "@/pages/proposal";
+import ReportsPage from "@/pages/reports";
 
 const queryClient = new QueryClient();
 
@@ -119,6 +120,9 @@ const App = () => (
           {/* Achievement & Certificates */}
           <Route path="/achievements" element={<AchievementsPage />} />
           <Route path="/certificates" element={<CertificatesPage />} />
+          
+          {/* Reports & Statistics */}
+          <Route path="/reports" element={<ReportsPage />} />
           
           {/* Settings */}
           <Route path="/settings" element={<SettingsPage />} />

@@ -1,4 +1,3 @@
-
 /**
  * Application constants
  */
@@ -168,6 +167,16 @@ export const API = {
     UPDATE: "/proposals/:id",
     APPROVE: "/proposals/:id/approve",
     REJECT: "/proposals/:id/reject"
+  },
+  REPORTS: {
+    GET_ATTENDANCE: "/reports/attendance",
+    GET_DISCIPLINE: "/reports/discipline",
+    GET_COUNSELING: "/reports/counseling",
+    GET_SUMMARY: "/reports/summary",
+    EXPORT_ATTENDANCE: "/reports/attendance/export",
+    EXPORT_DISCIPLINE: "/reports/discipline/export",
+    EXPORT_COUNSELING: "/reports/counseling/export",
+    EXPORT_SUMMARY: "/reports/summary/export"
   }
 };
 
@@ -189,7 +198,8 @@ export const NOTIFICATION_TYPES = {
   ANNOUNCEMENT: "announcement",
   COUNSELING: "counseling",
   JOURNAL: "journal",
-  PROPOSAL: "proposal"
+  PROPOSAL: "proposal",
+  REPORT: "report"
 };
 
 // Discipline points system
@@ -220,4 +230,29 @@ export const JOURNAL_TYPES = {
   PARENT_MEETING: "parentMeeting",
   SPECIAL_HANDLING: "special",
   OTHER: "other"
+};
+
+// Report periods
+export const REPORT_PERIODS = {
+  SEMESTER1: "semester1",
+  SEMESTER2: "semester2",
+  FULL_YEAR: "full-year",
+  MONTH: "month",
+  WEEK: "week"
+};
+
+// Report types
+export const REPORT_TYPES = {
+  ATTENDANCE: "attendance",
+  DISCIPLINE: "discipline",
+  COUNSELING: "counseling",
+  ACADEMIC: "academic",
+  SUMMARY: "summary"
+};
+
+// Export formats
+export const EXPORT_FORMATS = {
+  PDF: "pdf",
+  EXCEL: "excel",
+  CSV: "csv"
 };
