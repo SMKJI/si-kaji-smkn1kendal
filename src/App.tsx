@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -26,6 +27,7 @@ import ParentPortalDashboardPage from "@/pages/parent-portal/dashboard";
 import CounselingPage from "@/pages/counseling";
 import CounselingManagePage from "@/pages/counseling/manage";
 import CounselingSessionPage from "@/pages/counseling/session";
+import CounselingRequestPage from "@/pages/counseling/request"; // Add the new page
 import PermissionPage from "@/pages/permission";
 import PermissionCreatePage from "@/pages/permission/create";
 import StudentDataPage from "@/pages/student-data";
@@ -50,6 +52,7 @@ import ReportsPage from "@/pages/reports";
 import GamificationPage from "@/pages/gamification";
 import NotificationsPage from "@/pages/notifications";
 import ChildAttendancePage from "@/pages/attendance/child";
+import StudentAttendancePage from "@/pages/attendance/me";
 
 const queryClient = new QueryClient();
 
@@ -87,6 +90,7 @@ const App = () => {
             {/* Attendance & Calendar */}
             <Route path="/attendance" element={<AttendancePage />} />
             <Route path="/attendance/child" element={<ChildAttendancePage />} />
+            <Route path="/attendance/me" element={<StudentAttendancePage />} />
             <Route path="/calendar" element={<CalendarPage />} />
             <Route path="/calendar/create" element={<EventCreatePage />} />
             
@@ -99,6 +103,7 @@ const App = () => {
             <Route path="/counseling/manage" element={<CounselingManagePage />} />
             <Route path="/counseling/session" element={<CounselingSessionPage />} />
             <Route path="/counseling/session/:id" element={<CounselingSessionPage />} />
+            <Route path="/counseling/request" element={<CounselingRequestPage />} />
             
             {/* Extracurricular */}
             <Route path="/extracurricular" element={<ExtracurricularPage />} />
