@@ -1,7 +1,7 @@
 
 import { LayoutDashboard, Users, GraduationCap, BookOpen, 
   CalendarCheck, MessageSquare, Shield, BookText, Award, Bell, 
-  BarChart3, Settings, PlusCircle } from 'lucide-react';
+  BarChart3, Settings, PlusCircle, ClipboardList, FileText, FileEdit, Trophy, FileCheck } from 'lucide-react';
 import { MenuItemType } from './types';
 
 export const wakaMenu: MenuItemType[] = [

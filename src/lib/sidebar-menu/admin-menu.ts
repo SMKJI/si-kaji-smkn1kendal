@@ -1,6 +1,6 @@
 
 import { LayoutDashboard, Users, GraduationCap, BookOpen, MessageSquare, 
-  UserCheck, Bell, Settings, Award, BarChart3, Calendar, PlusCircle } from 'lucide-react';
+  UserCheck, Bell, Settings, Award, BarChart3, Calendar, PlusCircle, HelpCircle, FileEdit } from 'lucide-react';
 import { MenuItemType } from './types';
 
 export const adminMenu: MenuItemType[] = [

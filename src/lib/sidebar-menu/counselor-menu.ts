@@ -1,5 +1,5 @@
 
-import { LayoutDashboard, PlusCircle, Settings, Calendar } from 'lucide-react';
+import { LayoutDashboard, PlusCircle, Settings, Calendar, HelpCircle, FileText } from 'lucide-react';
 import { MenuItemType } from './types';
 
 export const counselorMenu: MenuItemType[] = [

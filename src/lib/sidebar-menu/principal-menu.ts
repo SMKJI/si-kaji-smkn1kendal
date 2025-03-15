@@ -1,6 +1,6 @@
 
 import { LayoutDashboard, Users, GraduationCap, CalendarCheck, 
-  MessageSquare, Bell, BarChart3, Settings, FileCheck } from 'lucide-react';
+  MessageSquare, Bell, BarChart3, Settings, FileCheck, ClipboardList, BookText, Trophy } from 'lucide-react';
 import { MenuItemType } from './types';
 
 export const principalMenu: MenuItemType[] = [

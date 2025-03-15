@@ -10,7 +10,7 @@ import { classTeacherMenu } from './class-teacher-menu';
 import { wakaMenu } from './waka-menu';
 import { tppkMenu } from './tppk-menu';
 import { trainerMenu } from './trainer-menu';
-import { HelpCircle, ClipboardList, Trophy, FileCheck, FileEdit, UserCheck } from 'lucide-react';
+import { HelpCircle, ClipboardList, Trophy, FileCheck, FileEdit, UserCheck, Calendar, Settings, FileText } from 'lucide-react';
 
 // Combine all menu items
 const allMenuItems: MenuItemType[] = [
