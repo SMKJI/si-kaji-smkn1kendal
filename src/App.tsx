@@ -107,6 +107,9 @@ const App = () => {
             <Route path="/counseling/session" element={<CounselingSessionPage />} />
             <Route path="/counseling/session/:id" element={<CounselingSessionPage />} />
             <Route path="/counseling/request" element={<CounselingRequestPage />} />
+            <Route path="/counseling/students" element={<CounselingPage />} />
+            <Route path="/counseling/reports" element={<ReportsPage />} />
+            <Route path="/counseling/recommendation" element={<CertificatesPage />} />
             
             {/* Extracurricular */}
             <Route path="/extracurricular" element={<ExtracurricularPage />} />
@@ -117,6 +120,7 @@ const App = () => {
             
             {/* Proposal Approval */}
             <Route path="/proposal" element={<ProposalPage />} />
+            <Route path="/student-activities/proposal" element={<ProposalPage />} />
             
             {/* TPPK Specific Routes */}
             <Route path="/gamification" element={<GamificationPage />} />
