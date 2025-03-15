@@ -4,7 +4,7 @@ import {
   FileText, MessageSquare, GraduationCap, Award, 
   UserCheck, ClipboardList, Bell, Settings,
   School, Shield, HelpCircle, Check, BookCheck,
-  ChartGantt, BookText, Trophy, Calendar
+  ChartGantt, BookText, Trophy, Calendar, FileCheck
 } from 'lucide-react';
 
 export type MenuItemType = {
@@ -73,7 +73,13 @@ export const mainMenu: MenuItemType[] = [
     title: 'Konseling',
     path: '/counseling',
     icon: HelpCircle,
-    roles: ['student', 'counselor', 'teacher', 'class_teacher'],
+    roles: ['student', 'teacher', 'class_teacher'],
+  },
+  {
+    title: 'Manajemen Konseling',
+    path: '/counseling/manage',
+    icon: HelpCircle,
+    roles: ['counselor', 'admin'],
   },
   {
     title: 'Perizinan',
@@ -115,7 +121,19 @@ export const mainMenu: MenuItemType[] = [
     title: 'Ekstrakurikuler',
     path: '/extracurricular',
     icon: Award,
-    roles: ['trainer', 'student', 'waka', 'admin'],
+    roles: ['student', 'waka', 'admin'],
+  },
+  {
+    title: 'Manajemen Ekstrakurikuler',
+    path: '/extracurricular/manage',
+    icon: Award,
+    roles: ['trainer', 'admin'],
+  },
+  {
+    title: 'Persetujuan Proposal',
+    path: '/proposal',
+    icon: FileCheck,
+    roles: ['principal', 'waka', 'admin'],
   },
   {
     title: 'Kalender Akademik',

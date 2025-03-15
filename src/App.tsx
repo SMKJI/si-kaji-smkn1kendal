@@ -23,6 +23,7 @@ import EventCreatePage from "@/pages/calendar/create";
 import ParentComplaintPage from "@/pages/parent-complaint";
 import ParentPortalPage from "@/pages/parent-portal";
 import CounselingPage from "@/pages/counseling";
+import CounselingManagePage from "@/pages/counseling/manage";
 import PermissionPage from "@/pages/permission";
 import PermissionCreatePage from "@/pages/permission/create";
 import StudentDataPage from "@/pages/student-data";
@@ -35,7 +36,9 @@ import DisciplineRecordPage from "@/pages/discipline/record";
 import AchievementsPage from "@/pages/achievements";
 import CertificatesPage from "@/pages/certificates";
 import ExtracurricularPage from "@/pages/extracurricular";
+import ExtracurricularManagePage from "@/pages/extracurricular/manage";
 import SettingsPage from "@/pages/settings";
+import ProposalPage from "@/pages/proposal";
 
 const queryClient = new QueryClient();
 
@@ -78,9 +81,19 @@ const App = () => (
           <Route path="/permission" element={<PermissionPage />} />
           <Route path="/permission/create" element={<PermissionCreatePage />} />
           
+          {/* Counseling */}
+          <Route path="/counseling" element={<CounselingPage />} />
+          <Route path="/counseling/manage" element={<CounselingManagePage />} />
+          
+          {/* Extracurricular */}
+          <Route path="/extracurricular" element={<ExtracurricularPage />} />
+          <Route path="/extracurricular/manage" element={<ExtracurricularManagePage />} />
+          
+          {/* Proposal Approval */}
+          <Route path="/proposal" element={<ProposalPage />} />
+          
           {/* Others */}
           <Route path="/parent-portal" element={<ParentPortalPage />} />
-          <Route path="/counseling" element={<CounselingPage />} />
           <Route path="/student-activities" element={<StudentActivitiesPage />} />
           <Route path="/announcement" element={<AnnouncementPage />} />
           <Route path="/class-journal" element={<ClassJournalPage />} />
@@ -92,7 +105,6 @@ const App = () => (
           {/* Achievement & Certificates */}
           <Route path="/achievements" element={<AchievementsPage />} />
           <Route path="/certificates" element={<CertificatesPage />} />
-          <Route path="/extracurricular" element={<ExtracurricularPage />} />
           
           {/* Settings */}
           <Route path="/settings" element={<SettingsPage />} />
