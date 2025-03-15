@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -22,8 +23,10 @@ import CalendarPage from "@/pages/calendar";
 import EventCreatePage from "@/pages/calendar/create";
 import ParentComplaintPage from "@/pages/parent-complaint";
 import ParentPortalPage from "@/pages/parent-portal";
+import ParentPortalDashboardPage from "@/pages/parent-portal/dashboard";
 import CounselingPage from "@/pages/counseling";
 import CounselingManagePage from "@/pages/counseling/manage";
+import CounselingSessionPage from "@/pages/counseling/session";
 import PermissionPage from "@/pages/permission";
 import PermissionCreatePage from "@/pages/permission/create";
 import StudentDataPage from "@/pages/student-data";
@@ -31,8 +34,10 @@ import StudentProfileViewPage from "@/pages/student-data/profile";
 import StudentActivitiesPage from "@/pages/student-activities";
 import AnnouncementPage from "@/pages/announcement";
 import ClassJournalPage from "@/pages/class-journal";
+import ClassJournalCreatePage from "@/pages/class-journal/create";
 import DisciplinePage from "@/pages/discipline";
 import DisciplineRecordPage from "@/pages/discipline/record";
+import DisciplineManagePage from "@/pages/discipline/manage";
 import AchievementsPage from "@/pages/achievements";
 import CertificatesPage from "@/pages/certificates";
 import ExtracurricularPage from "@/pages/extracurricular";
@@ -84,6 +89,8 @@ const App = () => (
           {/* Counseling */}
           <Route path="/counseling" element={<CounselingPage />} />
           <Route path="/counseling/manage" element={<CounselingManagePage />} />
+          <Route path="/counseling/session" element={<CounselingSessionPage />} />
+          <Route path="/counseling/session/:id" element={<CounselingSessionPage />} />
           
           {/* Extracurricular */}
           <Route path="/extracurricular" element={<ExtracurricularPage />} />
@@ -92,15 +99,22 @@ const App = () => (
           {/* Proposal Approval */}
           <Route path="/proposal" element={<ProposalPage />} />
           
-          {/* Others */}
+          {/* Parent Portal */}
           <Route path="/parent-portal" element={<ParentPortalPage />} />
+          <Route path="/parent-portal/dashboard" element={<ParentPortalDashboardPage />} />
+          
+          {/* Student Activities */}
           <Route path="/student-activities" element={<StudentActivitiesPage />} />
           <Route path="/announcement" element={<AnnouncementPage />} />
+          
+          {/* Class Journal */}
           <Route path="/class-journal" element={<ClassJournalPage />} />
+          <Route path="/class-journal/create" element={<ClassJournalCreatePage />} />
           
           {/* Discipline */}
           <Route path="/discipline" element={<DisciplinePage />} />
           <Route path="/discipline/record" element={<DisciplineRecordPage />} />
+          <Route path="/discipline/manage" element={<DisciplineManagePage />} />
           
           {/* Achievement & Certificates */}
           <Route path="/achievements" element={<AchievementsPage />} />

@@ -4,7 +4,9 @@ import {
   FileText, MessageSquare, GraduationCap, Award, 
   UserCheck, ClipboardList, Bell, Settings,
   School, Shield, HelpCircle, Check, BookCheck,
-  ChartGantt, BookText, Trophy, Calendar, FileCheck
+  ChartGantt, BookText, Trophy, Calendar, FileCheck,
+  PlusCircle, FileEdit, Send, Briefcase, BarChart3,
+  ListChecks, Home
 } from 'lucide-react';
 
 export type MenuItemType = {
@@ -19,7 +21,13 @@ export const mainMenu: MenuItemType[] = [
     title: 'Dashboard',
     path: '/dashboard',
     icon: LayoutDashboard,
-    roles: ['admin', 'teacher', 'student', 'parent', 'principal', 'counselor', 'class_teacher', 'waka', 'tppk', 'trainer'],
+    roles: ['admin', 'teacher', 'student', 'principal', 'counselor', 'class_teacher', 'waka', 'tppk', 'trainer'],
+  },
+  {
+    title: 'Dashboard Orang Tua',
+    path: '/parent-portal/dashboard',
+    icon: Home,
+    roles: ['parent'],
   },
   {
     title: 'Manajemen Siswa',
@@ -82,10 +90,22 @@ export const mainMenu: MenuItemType[] = [
     roles: ['counselor', 'admin'],
   },
   {
+    title: 'Buat Sesi Konseling',
+    path: '/counseling/session',
+    icon: PlusCircle,
+    roles: ['counselor', 'admin'],
+  },
+  {
     title: 'Perizinan',
     path: '/permission',
     icon: FileText,
     roles: ['student', 'admin', 'teacher', 'class_teacher', 'waka', 'counselor'],
+  },
+  {
+    title: 'Buat Perizinan',
+    path: '/permission/create',
+    icon: FileEdit,
+    roles: ['student'],
   },
   {
     title: 'Data Siswa',
@@ -100,10 +120,22 @@ export const mainMenu: MenuItemType[] = [
     roles: ['class_teacher', 'waka', 'principal'],
   },
   {
+    title: 'Buat Jurnal',
+    path: '/class-journal/create',
+    icon: FileEdit,
+    roles: ['class_teacher'],
+  },
+  {
     title: 'Pencatatan Pelanggaran',
     path: '/discipline',
     icon: Shield,
     roles: ['admin', 'teacher', 'class_teacher', 'tppk', 'waka'],
+  },
+  {
+    title: 'Catat Pelanggaran/Prestasi',
+    path: '/discipline/manage',
+    icon: FileEdit,
+    roles: ['admin', 'tppk', 'waka'],
   },
   {
     title: 'Prestasi Siswa',
@@ -142,10 +174,22 @@ export const mainMenu: MenuItemType[] = [
     roles: ['admin', 'teacher', 'student', 'parent', 'principal', 'counselor', 'class_teacher', 'waka', 'trainer'],
   },
   {
+    title: 'Buat Acara',
+    path: '/calendar/create',
+    icon: PlusCircle,
+    roles: ['admin', 'waka', 'principal'],
+  },
+  {
     title: 'Pengumuman',
     path: '/announcement',
     icon: Bell,
     roles: ['admin', 'teacher', 'student', 'parent', 'principal', 'waka'],
+  },
+  {
+    title: 'Laporan & Statistik',
+    path: '/reports',
+    icon: BarChart3,
+    roles: ['admin', 'principal', 'waka'],
   },
   {
     title: 'Pengaturan',
