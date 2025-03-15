@@ -20,7 +20,7 @@ interface DashboardLayoutProps {
   showBackButton?: boolean;
   backTo?: string;
   backLabel?: string;
-  userRole?: 'admin' | 'teacher' | 'student' | 'parent' | 'principal' | 'counselor' | 'trainer' | 'waka' | 'tppk' | 'class_teacher';
+  userRole?: 'admin' | 'teacher' | 'student' | 'parent' | 'principal' | 'counselor' | 'trainer' | 'waka' | 'tppk' | string;
   userName?: string;
   userAvatar?: string;
 }
