@@ -1,5 +1,5 @@
 
-import { Home, CalendarCheck, MessageSquare, Bell, Settings, Trophy, Calendar, Shield, Users, BarChart3, Clock, Graduation, Mail } from 'lucide-react';
+import { Home, CalendarCheck, MessageSquare, Bell, Settings, Trophy, Calendar, Shield, Users, BarChart3, Clock, GraduationCap, Mail } from 'lucide-react';
 import { MenuItemType } from './types';
 
 export const parentMenu: MenuItemType[] = [
@@ -30,7 +30,7 @@ export const parentMenu: MenuItemType[] = [
   {
     title: 'Prestasi Akademik',
     path: '/parent-portal/academic',
-    icon: Graduation,
+    icon: GraduationCap,
     roles: ['parent'],
   },
   {
