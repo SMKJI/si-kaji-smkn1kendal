@@ -2,16 +2,18 @@
 import React, { useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
 import PageTransition from '@/components/layout/PageTransition';
+import { Button } from '@/components/ui/button';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import { Button } from '@/components/ui/button';
 
 const NotFoundPage = () => {
   const location = useLocation();
 
   useEffect(() => {
+    console.log("NotFoundPage component rendered");
+    
     window.scrollTo(0, 0);
-    document.title = 'Page Not Found - Si-Kaji';
+    document.title = 'Halaman Tidak Ditemukan - Si-Kaji';
     
     console.error(
       "404 Error: User attempted to access non-existent route:",
