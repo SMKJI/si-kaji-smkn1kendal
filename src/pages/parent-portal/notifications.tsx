@@ -1,5 +1,6 @@
 
-import { DashboardLayout } from "@/layouts/DashboardLayout";
+import React from "react";
+import DashboardLayout from "@/layouts/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -102,7 +103,12 @@ const getNotificationIcon = (type: Notification["type"]) => {
 
 const ParentPortalNotificationsPage = () => {
   return (
-    <DashboardLayout>
+    <DashboardLayout 
+      title="Notifikasi"
+      description="Lihat semua notifikasi dan pemberitahuan untuk anak Anda"
+      userRole="parent"
+      userName="Orang Tua Siswa"
+    >
       <div className="container mx-auto py-6 space-y-6">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
