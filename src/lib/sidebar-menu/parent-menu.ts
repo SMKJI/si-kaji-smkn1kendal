@@ -1,5 +1,5 @@
 
-import { Home, CalendarCheck, MessageSquare, Bell, Settings, UserCheck, Trophy, Calendar } from 'lucide-react';
+import { Home, CalendarCheck, MessageSquare, Bell, Settings } from 'lucide-react';
 import { MenuItemType } from './types';
 
 export const parentMenu: MenuItemType[] = [

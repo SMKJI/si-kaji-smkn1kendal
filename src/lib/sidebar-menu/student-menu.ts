@@ -1,6 +1,6 @@
 
 import { LayoutDashboard, CalendarCheck, MessageSquare, 
-  FileText, Award, Check, Users, FileEdit, PlusCircle, ClipboardList, HelpCircle, Settings } from 'lucide-react';
+  FileText, Award, Check, Users, FileEdit, PlusCircle } from 'lucide-react';
 import { MenuItemType } from './types';
 
 export const studentMenu: MenuItemType[] = [

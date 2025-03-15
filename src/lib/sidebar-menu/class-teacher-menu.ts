@@ -1,8 +1,7 @@
 
 import { LayoutDashboard, Users, BookOpen, CalendarCheck, 
-  MessageSquare, FileText, Settings, Shield, BookText, FileEdit, Check } from 'lucide-react';
+  MessageSquare, FileText, Settings, Shield, BookText, FileEdit } from 'lucide-react';
 import { MenuItemType } from './types';
-import { HelpCircle } from 'lucide-react';
 
 export const classTeacherMenu: MenuItemType[] = [
   {
