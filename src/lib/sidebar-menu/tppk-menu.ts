@@ -1,17 +1,17 @@
 
 import { LayoutDashboard, MessageSquare, Shield, FileEdit, Settings, 
-  BarChart3, Bell, Trophy, Users, FileText } from 'lucide-react';
+  BarChart3, Bell, Trophy, Users, FileText, ClipboardList } from 'lucide-react';
 import { MenuItemType } from './types';
 
 export const tppkMenu: MenuItemType[] = [
   {
-    title: 'Dashboard',
+    title: 'Dashboard Utama',
     path: '/dashboard',
     icon: LayoutDashboard,
     roles: ['tppk'],
   },
   {
-    title: 'Pengaduan',
+    title: 'Monitoring Pengaduan',
     path: '/complaint',
     icon: MessageSquare,
     roles: ['tppk'],
@@ -23,13 +23,19 @@ export const tppkMenu: MenuItemType[] = [
     roles: ['tppk'],
   },
   {
-    title: 'Pencatatan Pelanggaran',
+    title: 'Tindak Lanjut Kasus',
+    path: '/tppk/cases',
+    icon: ClipboardList,
+    roles: ['tppk'],
+  },
+  {
+    title: 'Pelanggaran Tata Tertib',
     path: '/discipline',
     icon: Shield,
     roles: ['tppk'],
   },
   {
-    title: 'Catat Pelanggaran/Prestasi',
+    title: 'Catat Pelanggaran',
     path: '/discipline/manage',
     icon: FileEdit,
     roles: ['tppk'],
@@ -53,7 +59,7 @@ export const tppkMenu: MenuItemType[] = [
     roles: ['tppk'],
   },
   {
-    title: 'Laporan Evaluasi',
+    title: 'Evaluasi & Laporan',
     path: '/reports',
     icon: BarChart3,
     roles: ['tppk'],

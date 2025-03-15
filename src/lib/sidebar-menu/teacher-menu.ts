@@ -1,11 +1,11 @@
 
 import { LayoutDashboard, Users, BookOpen, CalendarCheck, 
-  MessageSquare, FileText, Settings, Shield, ClipboardList, HelpCircle } from 'lucide-react';
+  MessageSquare, FileText, Settings, Shield, ClipboardList, HelpCircle, Award } from 'lucide-react';
 import { MenuItemType } from './types';
 
 export const teacherMenu: MenuItemType[] = [
   {
-    title: 'Dashboard',
+    title: 'Dashboard Utama',
     path: '/dashboard',
     icon: LayoutDashboard,
     roles: ['teacher'],
@@ -23,9 +23,21 @@ export const teacherMenu: MenuItemType[] = [
     roles: ['teacher'],
   },
   {
-    title: 'Kehadiran',
+    title: 'Kehadiran Siswa',
     path: '/attendance',
     icon: CalendarCheck,
+    roles: ['teacher'],
+  },
+  {
+    title: 'Input Prestasi',
+    path: '/achievements/create',
+    icon: Award,
+    roles: ['teacher'],
+  },
+  {
+    title: 'Input Pelanggaran',
+    path: '/discipline/record',
+    icon: Shield,
     roles: ['teacher'],
   },
   {
@@ -35,7 +47,7 @@ export const teacherMenu: MenuItemType[] = [
     roles: ['teacher'],
   },
   {
-    title: 'Konseling',
+    title: 'Konseling & Pendampingan',
     path: '/counseling',
     icon: HelpCircle,
     roles: ['teacher'],
@@ -44,12 +56,6 @@ export const teacherMenu: MenuItemType[] = [
     title: 'Perizinan',
     path: '/permission',
     icon: FileText,
-    roles: ['teacher'],
-  },
-  {
-    title: 'Pencatatan Pelanggaran',
-    path: '/discipline',
-    icon: Shield,
     roles: ['teacher'],
   },
   {

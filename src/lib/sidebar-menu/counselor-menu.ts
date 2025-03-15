@@ -1,10 +1,10 @@
 
-import { LayoutDashboard, PlusCircle, Settings, Calendar, HelpCircle, FileText } from 'lucide-react';
+import { LayoutDashboard, PlusCircle, Settings, Calendar, HelpCircle, FileText, Users, MessageSquare, Shield, BarChart3, FileCheck } from 'lucide-react';
 import { MenuItemType } from './types';
 
 export const counselorMenu: MenuItemType[] = [
   {
-    title: 'Dashboard',
+    title: 'Dashboard Utama',
     path: '/dashboard',
     icon: LayoutDashboard,
     roles: ['counselor'],
@@ -22,13 +22,43 @@ export const counselorMenu: MenuItemType[] = [
     roles: ['counselor'],
   },
   {
+    title: 'Monitoring Pelanggaran',
+    path: '/discipline',
+    icon: Shield,
+    roles: ['counselor'],
+  },
+  {
+    title: 'Pendampingan Siswa',
+    path: '/counseling/students',
+    icon: Users,
+    roles: ['counselor'],
+  },
+  {
+    title: 'Pengaduan & Kasus',
+    path: '/complaint',
+    icon: MessageSquare,
+    roles: ['counselor'],
+  },
+  {
+    title: 'Laporan Evaluasi',
+    path: '/counseling/reports',
+    icon: BarChart3,
+    roles: ['counselor'],
+  },
+  {
+    title: 'Surat Rekomendasi',
+    path: '/counseling/recommendation',
+    icon: FileCheck,
+    roles: ['counselor'],
+  },
+  {
     title: 'Perizinan',
     path: '/permission',
     icon: FileText,
     roles: ['counselor'],
   },
   {
-    title: 'Kalender Akademik',
+    title: 'Kalender Konseling',
     path: '/calendar',
     icon: Calendar,
     roles: ['counselor'],

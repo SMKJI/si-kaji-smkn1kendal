@@ -6,43 +6,31 @@ import { MenuItemType } from './types';
 
 export const wakaMenu: MenuItemType[] = [
   {
-    title: 'Dashboard',
+    title: 'Dashboard Utama',
     path: '/dashboard',
     icon: LayoutDashboard,
     roles: ['waka'],
   },
   {
-    title: 'Manajemen Siswa',
+    title: 'Manajemen Kesiswaan',
     path: '/student',
     icon: Users,
     roles: ['waka'],
   },
   {
-    title: 'Manajemen Guru',
-    path: '/teacher',
-    icon: GraduationCap,
-    roles: ['waka'],
-  },
-  {
-    title: 'Manajemen Kelas',
-    path: '/class',
-    icon: BookOpen,
-    roles: ['waka'],
-  },
-  {
-    title: 'Kehadiran',
+    title: 'Presensi & Disiplin',
     path: '/attendance',
     icon: CalendarCheck,
     roles: ['waka'],
   },
   {
-    title: 'Kegiatan Siswa',
-    path: '/student-activities',
-    icon: ClipboardList,
+    title: 'Monitoring Pelanggaran',
+    path: '/discipline',
+    icon: Shield,
     roles: ['waka'],
   },
   {
-    title: 'Pengaduan',
+    title: 'Pengaduan & Kasus',
     path: '/complaint',
     icon: MessageSquare,
     roles: ['waka'],
@@ -54,27 +42,27 @@ export const wakaMenu: MenuItemType[] = [
     roles: ['waka'],
   },
   {
-    title: 'Perizinan',
+    title: 'Persetujuan Proposal',
+    path: '/proposal',
+    icon: FileCheck,
+    roles: ['waka'],
+  },
+  {
+    title: 'Managemen Ekstrakurikuler',
+    path: '/extracurricular',
+    icon: Award,
+    roles: ['waka'],
+  },
+  {
+    title: 'Kegiatan Siswa',
+    path: '/student-activities',
+    icon: ClipboardList,
+    roles: ['waka'],
+  },
+  {
+    title: 'Perizinan Siswa',
     path: '/permission',
     icon: FileText,
-    roles: ['waka'],
-  },
-  {
-    title: 'Jurnal Perwalian',
-    path: '/class-journal',
-    icon: BookText,
-    roles: ['waka'],
-  },
-  {
-    title: 'Pencatatan Pelanggaran',
-    path: '/discipline',
-    icon: Shield,
-    roles: ['waka'],
-  },
-  {
-    title: 'Catat Pelanggaran/Prestasi',
-    path: '/discipline/manage',
-    icon: FileEdit,
     roles: ['waka'],
   },
   {
@@ -84,27 +72,9 @@ export const wakaMenu: MenuItemType[] = [
     roles: ['waka'],
   },
   {
-    title: 'Ekstrakurikuler',
-    path: '/extracurricular',
-    icon: Award,
-    roles: ['waka'],
-  },
-  {
-    title: 'Persetujuan Proposal',
-    path: '/proposal',
-    icon: FileCheck,
-    roles: ['waka'],
-  },
-  {
-    title: 'Buat Acara',
-    path: '/calendar/create',
-    icon: PlusCircle,
-    roles: ['waka'],
-  },
-  {
-    title: 'Pengumuman',
-    path: '/announcement',
-    icon: Bell,
+    title: 'Jurnal Perwalian',
+    path: '/class-journal',
+    icon: BookText,
     roles: ['waka'],
   },
   {

@@ -1,5 +1,5 @@
 
-import { Home, CalendarCheck, MessageSquare, Bell, Settings, UserCheck, Trophy, Calendar, BookOpen, Shield, BookText } from 'lucide-react';
+import { Home, CalendarCheck, MessageSquare, Bell, Settings, UserCheck, Trophy, Calendar, BookOpen, Shield, BookText, Users, BarChart3 } from 'lucide-react';
 import { MenuItemType } from './types';
 
 export const parentMenu: MenuItemType[] = [
@@ -10,19 +10,25 @@ export const parentMenu: MenuItemType[] = [
     roles: ['parent'],
   },
   {
+    title: 'Profil Anak',
+    path: '/parent-portal/child-profile',
+    icon: Users,
+    roles: ['parent'],
+  },
+  {
     title: 'Akademik Anak',
     path: '/parent-portal/academic',
     icon: BookOpen,
     roles: ['parent'],
   },
   {
-    title: 'Kehadiran',
+    title: 'Monitoring Kehadiran',
     path: '/parent-portal/attendance',
     icon: CalendarCheck,
     roles: ['parent'],
   },
   {
-    title: 'Kedisiplinan',
+    title: 'Catatan Kedisiplinan',
     path: '/parent-portal/discipline',
     icon: Shield,
     roles: ['parent'],
@@ -34,27 +40,21 @@ export const parentMenu: MenuItemType[] = [
     roles: ['parent'],
   },
   {
+    title: 'Prestasi Anak',
+    path: '/achievements',
+    icon: Trophy,
+    roles: ['parent'],
+  },
+  {
     title: 'Pengaduan Orang Tua',
     path: '/parent-complaint',
     icon: MessageSquare,
     roles: ['parent'],
   },
   {
-    title: 'Portal Orang Tua',
-    path: '/parent-portal',
-    icon: UserCheck,
-    roles: ['parent'],
-  },
-  {
-    title: 'Prestasi Siswa',
-    path: '/achievements',
-    icon: Trophy,
-    roles: ['parent'],
-  },
-  {
-    title: 'Pengumuman',
-    path: '/announcement',
-    icon: Bell,
+    title: 'Laporan Perkembangan',
+    path: '/parent-portal/reports',
+    icon: BarChart3,
     roles: ['parent'],
   },
   {

@@ -1,18 +1,19 @@
 
 import { LayoutDashboard, Users, GraduationCap, BookOpen, MessageSquare, 
-  UserCheck, Bell, Settings, Award, BarChart3, Calendar, PlusCircle, HelpCircle, FileEdit } from 'lucide-react';
+  UserCheck, Bell, Settings, Award, BarChart3, Calendar, PlusCircle, HelpCircle, 
+  FileEdit, CalendarCheck, Shield, FileText, FileCheck } from 'lucide-react';
 import { MenuItemType } from './types';
 
 export const adminMenu: MenuItemType[] = [
   {
-    title: 'Dashboard',
+    title: 'Dashboard Utama',
     path: '/dashboard',
     icon: LayoutDashboard,
     roles: ['admin'],
   },
   {
-    title: 'Manajemen Siswa',
-    path: '/student',
+    title: 'Manajemen User',
+    path: '/user-management',
     icon: Users,
     roles: ['admin'],
   },
@@ -23,13 +24,25 @@ export const adminMenu: MenuItemType[] = [
     roles: ['admin'],
   },
   {
+    title: 'Manajemen Siswa',
+    path: '/student',
+    icon: Users,
+    roles: ['admin'],
+  },
+  {
     title: 'Manajemen Kelas',
     path: '/class',
     icon: BookOpen,
     roles: ['admin'],
   },
   {
-    title: 'Pengaduan',
+    title: 'Presensi & Disiplin',
+    path: '/attendance',
+    icon: CalendarCheck,
+    roles: ['admin'],
+  },
+  {
+    title: 'Pengaduan Siswa',
     path: '/complaint',
     icon: MessageSquare,
     roles: ['admin'],
@@ -47,21 +60,39 @@ export const adminMenu: MenuItemType[] = [
     roles: ['admin'],
   },
   {
+    title: 'Sistem Perizinan',
+    path: '/permission',
+    icon: FileText,
+    roles: ['admin'],
+  },
+  {
     title: 'Manajemen Konseling',
     path: '/counseling/manage',
     icon: HelpCircle,
     roles: ['admin'],
   },
   {
-    title: 'Buat Sesi Konseling',
-    path: '/counseling/session',
-    icon: PlusCircle,
+    title: 'Ekstrakurikuler',
+    path: '/extracurricular',
+    icon: Award,
     roles: ['admin'],
   },
   {
-    title: 'Catat Pelanggaran/Prestasi',
+    title: 'Pelanggaran & Prestasi',
     path: '/discipline/manage',
     icon: FileEdit,
+    roles: ['admin'],
+  },
+  {
+    title: 'Permohonan Surat',
+    path: '/certificates',
+    icon: FileCheck,
+    roles: ['admin'],
+  },
+  {
+    title: 'Proposal Kegiatan',
+    path: '/proposal',
+    icon: FileCheck,
     roles: ['admin'],
   },
   {
@@ -83,7 +114,7 @@ export const adminMenu: MenuItemType[] = [
     roles: ['admin'],
   },
   {
-    title: 'Pengaturan',
+    title: 'Pengaturan Sistem',
     path: '/settings',
     icon: Settings,
     roles: ['admin'],
