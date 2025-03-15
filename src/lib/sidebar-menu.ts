@@ -4,7 +4,7 @@ import {
   FileText, MessageSquare, GraduationCap, Award, 
   UserCheck, ClipboardList, Bell, Settings,
   School, Shield, HelpCircle, Check, BookCheck,
-  Gantt, BookText, Trophy, Calendar
+  ChartGantt, BookText, Trophy, Calendar
 } from 'lucide-react';
 
 export type MenuItemType = {
