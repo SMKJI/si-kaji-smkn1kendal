@@ -1,5 +1,5 @@
 
-import { Home, CalendarCheck, MessageSquare, Bell, Settings, UserCheck, Trophy, Calendar, BookOpen, Shield, BookText, Users, BarChart3 } from 'lucide-react';
+import { Home, CalendarCheck, MessageSquare, Bell, Settings, UserCheck, Trophy, Calendar, Shield, Users, BarChart3 } from 'lucide-react';
 import { MenuItemType } from './types';
 
 export const parentMenu: MenuItemType[] = [
@@ -16,12 +16,6 @@ export const parentMenu: MenuItemType[] = [
     roles: ['parent'],
   },
   {
-    title: 'Akademik Anak',
-    path: '/parent-portal/academic',
-    icon: BookOpen,
-    roles: ['parent'],
-  },
-  {
     title: 'Monitoring Kehadiran',
     path: '/parent-portal/attendance',
     icon: CalendarCheck,
@@ -31,12 +25,6 @@ export const parentMenu: MenuItemType[] = [
     title: 'Catatan Kedisiplinan',
     path: '/parent-portal/discipline',
     icon: Shield,
-    roles: ['parent'],
-  },
-  {
-    title: 'Tugas & PR',
-    path: '/parent-portal/assignments',
-    icon: BookText,
     roles: ['parent'],
   },
   {

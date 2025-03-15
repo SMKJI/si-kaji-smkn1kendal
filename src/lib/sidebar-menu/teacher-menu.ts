@@ -1,5 +1,5 @@
 
-import { LayoutDashboard, Users, BookOpen, CalendarCheck, 
+import { LayoutDashboard, Users, CalendarCheck, 
   MessageSquare, FileText, Settings, Shield, ClipboardList, HelpCircle, Award } from 'lucide-react';
 import { MenuItemType } from './types';
 
@@ -14,12 +14,6 @@ export const teacherMenu: MenuItemType[] = [
     title: 'Manajemen Siswa',
     path: '/student',
     icon: Users,
-    roles: ['teacher'],
-  },
-  {
-    title: 'Manajemen Kelas',
-    path: '/class',
-    icon: BookOpen,
     roles: ['teacher'],
   },
   {

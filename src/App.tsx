@@ -24,10 +24,8 @@ import EventCreatePage from "@/pages/calendar/create";
 import ParentComplaintPage from "@/pages/parent-complaint";
 import ParentPortalPage from "@/pages/parent-portal";
 import ParentPortalDashboardPage from "@/pages/parent-portal/dashboard";
-import ParentPortalAcademicPage from "@/pages/parent-portal/academic";
 import ParentPortalAttendancePage from "@/pages/parent-portal/attendance";
 import ParentPortalDisciplinePage from "@/pages/parent-portal/discipline";
-import ParentPortalAssignmentsPage from "@/pages/parent-portal/assignments";
 import ParentPortalNotificationsPage from "@/pages/parent-portal/notifications";
 import CounselingPage from "@/pages/counseling";
 import CounselingManagePage from "@/pages/counseling/manage";
@@ -127,10 +125,8 @@ const App = () => {
             {/* Parent Portal */}
             <Route path="/parent-portal" element={<ParentPortalPage />} />
             <Route path="/parent-portal/dashboard" element={<ParentPortalDashboardPage />} />
-            <Route path="/parent-portal/academic" element={<ParentPortalAcademicPage />} />
             <Route path="/parent-portal/attendance" element={<ParentPortalAttendancePage />} />
             <Route path="/parent-portal/discipline" element={<ParentPortalDisciplinePage />} />
-            <Route path="/parent-portal/assignments" element={<ParentPortalAssignmentsPage />} />
             <Route path="/parent-portal/notifications" element={<ParentPortalNotificationsPage />} />
             
             {/* Student Activities */}
