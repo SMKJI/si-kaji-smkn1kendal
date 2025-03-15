@@ -3,11 +3,14 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { APP_NAME, APP_SCHOOL } from '@/lib/constants';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const isMobile = useIsMobile();
 
   // Navigation links
   const navLinks = [
@@ -29,6 +32,11 @@ const Navbar = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    // Close mobile menu when changing routes
+    setIsMobileMenuOpen(false);
+  }, [location.pathname]);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -55,13 +63,13 @@ const Navbar = () => {
         <div className="flex items-center space-x-3">
           <img 
             src="/lovable-uploads/0a3a3f77-6e29-472b-9596-b9b4a52df4b0.png" 
-            alt="SMKN 1 Kendal Logo" 
-            className="h-10 w-10 md:h-12 md:w-12 object-contain" 
+            alt={`${APP_SCHOOL} Logo`} 
+            className="app-logo" 
           />
           <div className="flex flex-col">
-            <span className="text-primary font-semibold text-lg md:text-2xl leading-tight">Si-Kaji</span>
+            <span className="text-primary font-semibold text-lg md:text-2xl leading-tight">{APP_NAME}</span>
             <span className="text-muted-foreground text-xs md:text-sm">
-              SMKN 1 Kendal
+              {APP_SCHOOL}
             </span>
           </div>
         </div>
@@ -92,7 +100,7 @@ const Navbar = () => {
         {/* Mobile Menu Button */}
         <button
           onClick={toggleMobileMenu}
-          className="md:hidden text-foreground"
+          className="md:hidden mobile-touch-target text-foreground p-2 rounded-md"
           aria-label={isMobileMenuOpen ? 'Tutup menu' : 'Buka menu'}
         >
           {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -107,16 +115,16 @@ const Navbar = () => {
               <div className="flex items-center space-x-3">
                 <img 
                   src="/lovable-uploads/0a3a3f77-6e29-472b-9596-b9b4a52df4b0.png" 
-                  alt="SMKN 1 Kendal Logo" 
+                  alt={`${APP_SCHOOL} Logo`} 
                   className="h-10 w-10" 
                 />
                 <span className="text-primary font-semibold text-xl">
-                  Si-Kaji
+                  {APP_NAME}
                 </span>
               </div>
               <button
                 onClick={closeMobileMenu}
-                className="text-foreground"
+                className="text-foreground mobile-touch-target"
                 aria-label="Tutup menu"
               >
                 <X size={24} />
@@ -129,7 +137,7 @@ const Navbar = () => {
                   key={link.name}
                   to={link.path}
                   onClick={closeMobileMenu}
-                  className={`text-base font-medium py-2 transition-colors ${
+                  className={`text-base font-medium py-2 transition-colors mobile-touch-target ${
                     location.pathname === link.path
                       ? 'text-primary'
                       : 'text-foreground'
@@ -142,7 +150,7 @@ const Navbar = () => {
 
             <div className="mt-auto flex flex-col space-y-4 pt-6">
               <Link to="/login" onClick={closeMobileMenu}>
-                <Button className="w-full">Masuk</Button>
+                <Button className="w-full mobile-touch-target">Masuk</Button>
               </Link>
             </div>
           </div>

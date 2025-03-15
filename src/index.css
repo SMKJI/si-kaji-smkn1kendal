@@ -85,6 +85,23 @@
   .animation-delay-600 {
     animation-delay: 600ms;
   }
+  
+  /* Enhanced mobile friendliness */
+  .mobile-container {
+    @apply px-4 md:px-6 max-w-full mx-auto w-full;
+  }
+  
+  .mobile-touch-target {
+    @apply min-h-[44px] min-w-[44px]; /* Ensure touch targets are at least 44px */
+  }
+  
+  .mobile-card {
+    @apply rounded-xl shadow-sm hover:shadow-md transition-shadow;
+  }
+  
+  .app-logo {
+    @apply h-10 w-10 md:h-12 md:w-12 object-contain;
+  }
 }
 
 /* Page Transitions */
@@ -108,4 +125,29 @@
   opacity: 0;
   transform: translateY(-10px);
   transition: opacity 300ms, transform 300ms;
+}
+
+/* Improved typography for mobile */
+@media (max-width: 640px) {
+  html {
+    font-size: 14px;
+  }
+  
+  .mobile-text-sm {
+    font-size: 0.875rem;
+  }
+  
+  .mobile-text-lg {
+    font-size: 1.125rem;
+  }
+}
+
+/* Optimized touch areas for mobile */
+@media (max-width: 768px) {
+  button, 
+  a, 
+  input[type="button"], 
+  input[type="submit"] {
+    @apply py-2.5;
+  }
 }

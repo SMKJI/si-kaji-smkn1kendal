@@ -10,6 +10,8 @@ import { ChevronLeft, Home, Settings } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { SidebarProvider } from '@/contexts/SidebarContext';
+import { APP_NAME } from '@/lib/constants';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -18,7 +20,7 @@ interface DashboardLayoutProps {
   showBackButton?: boolean;
   backTo?: string;
   backLabel?: string;
-  userRole?: 'admin' | 'teacher' | 'student' | 'parent' | string;
+  userRole?: 'admin' | 'teacher' | 'student' | 'parent' | 'principal' | 'counselor' | 'trainer' | 'waka' | 'tppk' | string;
   userName?: string;
   userAvatar?: string;
 }
@@ -35,6 +37,7 @@ const DashboardLayout = ({
   userAvatar = "",
 }: DashboardLayoutProps) => {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
 
   const handleBack = () => {
     if (backTo) {
@@ -54,6 +57,16 @@ const DashboardLayout = ({
         return <Badge className="bg-green-500">Siswa</Badge>;
       case 'parent':
         return <Badge className="bg-orange-500">Wali Murid</Badge>;
+      case 'principal':
+        return <Badge className="bg-red-500">Kepala Sekolah</Badge>;
+      case 'counselor':
+        return <Badge className="bg-teal-500">Guru BK</Badge>;
+      case 'trainer':
+        return <Badge className="bg-indigo-500">Pelatih</Badge>;
+      case 'waka':
+        return <Badge className="bg-amber-500">Waka Kesiswaan</Badge>;
+      case 'tppk':
+        return <Badge className="bg-rose-500">Satgas TPPK</Badge>;
       default:
         return <Badge>{userRole}</Badge>;
     }
@@ -62,12 +75,12 @@ const DashboardLayout = ({
   return (
     <SidebarProvider>
       <PageTransition>
-        <div className="min-h-screen flex flex-col">
+        <div className="min-h-screen flex flex-col w-full">
           <div className="flex-grow flex">
             <Sidebar userRole={userRole} />
-            <main className="flex-1 px-4 py-6">
-              <div className="flex flex-col gap-6">
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4">
+            <main className="flex-1 px-3 md:px-4 py-4 md:py-6 overflow-x-hidden">
+              <div className="flex flex-col gap-4 md:gap-6">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-3 md:mb-4">
                   <div className="flex items-center gap-2">
                     <SidebarTrigger />
                     
@@ -75,17 +88,17 @@ const DashboardLayout = ({
                       <Button 
                         variant="ghost" 
                         size="sm" 
-                        className="gap-1 pl-1 h-9"
+                        className="gap-1 pl-1 h-9 mobile-touch-target"
                         onClick={handleBack}
                       >
                         <ChevronLeft size={16} />
-                        <span className="hidden sm:inline">{backLabel}</span>
+                        <span className={isMobile ? "sr-only" : ""}>{backLabel}</span>
                       </Button>
                     )}
                     
                     <div className="flex-shrink-0">
                       <Link to="/dashboard">
-                        <Button variant="outline" size="sm" className="gap-1 h-9">
+                        <Button variant="outline" size="sm" className="gap-1 h-9 mobile-touch-target">
                           <Home size={14} />
                           <span className="hidden sm:inline">Dashboard</span>
                         </Button>
@@ -105,7 +118,7 @@ const DashboardLayout = ({
                       </div>
                     </div>
                     <Link to="/settings">
-                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                      <Button variant="ghost" size="icon" className="h-8 w-8 mobile-touch-target">
                         <Settings size={16} />
                       </Button>
                     </Link>
@@ -113,13 +126,13 @@ const DashboardLayout = ({
                 </div>
                 
                 <div className="mb-2">
-                  <h1 className="text-2xl md:text-3xl font-bold">{title}</h1>
+                  <h1 className="text-xl sm:text-2xl md:text-3xl font-bold">{title}</h1>
                   {description && (
-                    <p className="text-muted-foreground mt-1">{description}</p>
+                    <p className="text-muted-foreground text-sm md:text-base mt-1">{description}</p>
                   )}
                 </div>
                 
-                <div className="container mx-auto">
+                <div className="mx-auto w-full">
                   {children}
                 </div>
               </div>

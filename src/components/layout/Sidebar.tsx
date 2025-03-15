@@ -7,14 +7,17 @@ import { useSidebar } from '@/contexts/SidebarContext';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { APP_NAME } from '@/lib/constants';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface SidebarProps {
-  userRole: 'admin' | 'teacher' | 'student' | 'parent' | string;
+  userRole: 'admin' | 'teacher' | 'student' | 'parent' | 'principal' | 'counselor' | 'trainer' | 'waka' | 'tppk' | string;
 }
 
 const Sidebar = ({ userRole }: SidebarProps) => {
   const location = useLocation();
   const { isOpen, toggle } = useSidebar();
+  const isMobile = useIsMobile();
   
   // Filter menu items for the current user role
   const filteredMenu = mainMenu.filter((item) => 
@@ -62,7 +65,7 @@ const Sidebar = ({ userRole }: SidebarProps) => {
             <span className={cn(
               "font-semibold text-lg text-sidebar-primary transition-opacity duration-200",
               !isOpen && "md:hidden"
-            )}>Si-Kaji</span>
+            )}>{APP_NAME}</span>
           </Link>
         </div>
 
@@ -74,7 +77,7 @@ const Sidebar = ({ userRole }: SidebarProps) => {
                 key={item.path}
                 to={item.path}
                 className={cn(
-                  "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors group",
+                  "flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors group mobile-touch-target",
                   location.pathname === item.path
                     ? "bg-sidebar-accent text-sidebar-primary"
                     : "text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-primary",
@@ -102,7 +105,7 @@ const Sidebar = ({ userRole }: SidebarProps) => {
         <div className="md:hidden border-t border-sidebar-border p-2">
           <Button 
             variant="ghost" 
-            className="w-full justify-start gap-2"
+            className="w-full justify-start gap-2 mobile-touch-target"
             onClick={toggle}
           >
             <ChevronLeft size={16} />
