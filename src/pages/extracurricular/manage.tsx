@@ -174,10 +174,14 @@ const ExtracurricularManagePage = () => {
   const handleAttendanceSubmit = (values: z.infer<typeof attendanceFormSchema>) => {
     console.log('Submitting attendance:', values);
     
-    // In a real app, this would be an API call
+    // Fix: ensure all required properties are explicitly provided
     const newAttendance = {
       id: `ATT${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`,
-      ...values
+      activityId: values.activityId,
+      date: values.date,
+      totalPresent: values.totalPresent,
+      totalAbsent: values.totalAbsent,
+      notes: values.notes || '' // Ensure notes is never undefined
     };
     
     setAttendance([newAttendance, ...attendance]);
