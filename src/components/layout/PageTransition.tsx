@@ -6,7 +6,6 @@ interface PageTransitionProps {
 }
 
 const PageTransition: React.FC<PageTransitionProps> = ({ children }) => {
-  // Log untuk memastikan komponen dirender
   useEffect(() => {
     console.log("PageTransition component rendered");
   }, []);
