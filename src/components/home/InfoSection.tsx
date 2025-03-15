@@ -2,6 +2,7 @@
 import React from 'react';
 import { CardTitle, Card, CardDescription, CardHeader, CardContent } from '@/components/ui/card';
 import { Users, Shield, GraduationCap } from 'lucide-react';
+import Announcements from './Announcements';
 
 const InfoSection = () => {
   const users = [
@@ -30,7 +31,10 @@ const InfoSection = () => {
       </div>
       
       <div className="container mx-auto px-4">
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        {/* Announcement Section */}
+        <Announcements />
+        
+        <div className="text-center max-w-3xl mx-auto mb-16 mt-8">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Tentang Si-Kaji</h2>
           <p className="text-muted-foreground text-lg">
             Si-Kaji adalah sistem informasi kesiswaan yang mengintegrasikan administrasi, pencatatan, dan pelaporan 

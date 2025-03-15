@@ -1,7 +1,7 @@
 
 import { LayoutDashboard, Users, GraduationCap, BookOpen, MessageSquare, 
   UserCheck, Bell, Settings, Award, BarChart3, Calendar, PlusCircle, HelpCircle, 
-  FileEdit, CalendarCheck, Shield, FileText, FileCheck, Lock, Database, Server, ShieldAlert } from 'lucide-react';
+  FileEdit, CalendarCheck, Shield, FileText, FileCheck, Lock, Database, Server, ShieldAlert, Megaphone } from 'lucide-react';
 import { MenuItemType } from './types';
 
 export const adminMenu: MenuItemType[] = [
@@ -129,6 +129,12 @@ export const adminMenu: MenuItemType[] = [
     title: 'Pengumuman',
     path: '/announcement',
     icon: Bell,
+    roles: ['admin'],
+  },
+  {
+    title: 'Kelola Pengumuman',
+    path: '/announcement/manage',
+    icon: Megaphone,
     roles: ['admin'],
   },
   {

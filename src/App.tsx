@@ -37,6 +37,7 @@ import StudentDataPage from "@/pages/student-data";
 import StudentProfileViewPage from "@/pages/student-data/profile";
 import StudentActivitiesPage from "@/pages/student-activities";
 import AnnouncementPage from "@/pages/announcement";
+import AnnouncementManagePage from "@/pages/announcement/manage";
 import ClassJournalPage from "@/pages/class-journal";
 import ClassJournalCreatePage from "@/pages/class-journal/create";
 import DisciplinePage from "@/pages/discipline";
@@ -172,7 +173,10 @@ const App = () => {
             
             {/* Student Activities */}
             <Route path="/student-activities" element={<StudentActivitiesPage />} />
+            
+            {/* Announcements */}
             <Route path="/announcement" element={<AnnouncementPage />} />
+            <Route path="/announcement/manage" element={<AnnouncementManagePage />} />
             
             {/* Class Journal */}
             <Route path="/class-journal" element={<ClassJournalPage />} />
