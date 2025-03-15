@@ -1,4 +1,3 @@
-
 /**
  * Application route constants
  */
@@ -47,6 +46,8 @@ export const ROUTES = {
   CALENDAR: "/calendar",
   CALENDAR_CREATE: "/calendar/create",
   ANNOUNCEMENT: "/announcement",
+  ANNOUNCEMENT_MANAGE: "/announcement/manage",
+  ANNOUNCEMENT_VIEW: "/announcement/view",
   PROPOSAL: "/proposal",
   REPORTS: "/reports",
   SETTINGS: "/settings",

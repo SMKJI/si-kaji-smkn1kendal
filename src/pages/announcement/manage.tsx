@@ -13,7 +13,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useToast } from '@/hooks/use-toast';
-import { Announcement } from '@/lib/types/announcement';
+import { Announcement, CreateAnnouncementRequest } from '@/lib/types/announcement';
 import { getAnnouncements, createAnnouncement, updateAnnouncement, deleteAnnouncement } from '@/services/announcementService';
 
 const formSchema = z.object({
@@ -157,8 +157,8 @@ const AnnouncementManagePage = () => {
         });
       }
     } else {
-      // Create new announcement
-      const announcementData = {
+      // Create new announcement with proper type
+      const announcementData: CreateAnnouncementRequest = {
         title: values.title,
         content: values.content,
         important: values.important

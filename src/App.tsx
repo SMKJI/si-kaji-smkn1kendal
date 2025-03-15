@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -38,6 +37,7 @@ import StudentProfileViewPage from "@/pages/student-data/profile";
 import StudentActivitiesPage from "@/pages/student-activities";
 import AnnouncementPage from "@/pages/announcement";
 import AnnouncementManagePage from "@/pages/announcement/manage";
+import AnnouncementViewPage from "@/pages/announcement/view";
 import ClassJournalPage from "@/pages/class-journal";
 import ClassJournalCreatePage from "@/pages/class-journal/create";
 import DisciplinePage from "@/pages/discipline";
@@ -177,6 +177,7 @@ const App = () => {
             {/* Announcements */}
             <Route path="/announcement" element={<AnnouncementPage />} />
             <Route path="/announcement/manage" element={<AnnouncementManagePage />} />
+            <Route path="/announcement/view" element={<AnnouncementViewPage />} />
             
             {/* Class Journal */}
             <Route path="/class-journal" element={<ClassJournalPage />} />
