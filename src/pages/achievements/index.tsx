@@ -1,312 +1,244 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DashboardLayout from '@/layouts/DashboardLayout';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Search, Filter, Trophy, Calendar, Clock, MapPin } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar as CalendarIcon, Search, Plus, Filter, Award, Medal, Trophy } from 'lucide-react';
-import { format } from 'date-fns';
-import { id } from 'date-fns/locale';
-
-// Types
-type Achievement = {
-  id: number;
-  studentName: string;
-  studentId: string;
-  class: string;
-  achievementType: string;
-  achievementName: string;
-  level: string;
-  position: string;
-  date: Date;
-  organizer: string;
-  coach: string;
-  description: string;
-};
 
 const AchievementsPage = () => {
-  const [achievements, setAchievements] = useState<Achievement[]>([
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    document.title = 'Prestasi Siswa - Si-Kaji';
+  }, []);
+
+  // Sample achievement data
+  const achievements = [
     {
       id: 1,
-      studentName: 'Budi Santoso',
-      studentId: 'S12345',
-      class: 'XI RPL 1',
-      achievementType: 'Akademik',
-      achievementName: 'Olimpiade Matematika',
-      level: 'Provinsi',
-      position: 'Juara 1',
-      date: new Date(2023, 3, 15),
-      organizer: 'Dinas Pendidikan Provinsi',
-      coach: 'Ibu Wati',
-      description: 'Juara 1 Olimpiade Matematika tingkat Provinsi tahun 2023'
+      student: 'Andi Saputra',
+      class: 'XII RPL 1',
+      title: 'Juara 1 Lomba Web Design Tingkat Kabupaten',
+      category: 'Akademik',
+      level: 'Kabupaten',
+      date: '15 April 2023',
+      venue: 'SMKN 1 Kendal',
+      coach: 'Budi Santoso, S.Pd.'
     },
     {
       id: 2,
-      studentName: 'Siti Nuraini',
-      studentId: 'S12346',
-      class: 'X TKJ 2',
-      achievementType: 'Non-Akademik',
-      achievementName: 'Lomba Desain Grafis',
-      level: 'Nasional',
-      position: 'Juara 2',
-      date: new Date(2023, 5, 22),
-      organizer: 'Kementerian Pendidikan dan Kebudayaan',
-      coach: 'Bapak Joko',
-      description: 'Juara 2 Lomba Desain Grafis tingkat Nasional tahun 2023'
+      student: 'Siti Nurhaliza',
+      class: 'XI RPL 3',
+      title: 'Juara 2 Olimpiade Matematika',
+      category: 'Akademik',
+      level: 'Provinsi',
+      date: '20 Mei 2023',
+      venue: 'Universitas Diponegoro',
+      coach: 'Ani Suryani, S.Pd.'
     },
     {
       id: 3,
-      studentName: 'Reni Puspita',
-      studentId: 'S12350',
-      class: 'XII MM 1',
-      achievementType: 'Non-Akademik',
-      achievementName: 'Festival Film Pendek',
-      level: 'Kabupaten',
-      position: 'Juara 1',
-      date: new Date(2023, 7, 10),
-      organizer: 'Dinas Pendidikan Kabupaten',
-      coach: 'Bapak Andi',
-      description: 'Juara 1 Festival Film Pendek tingkat Kabupaten tahun 2023'
+      student: 'Ahmad Fariz',
+      class: 'X TKJ 2',
+      title: 'Juara 1 Lomba Futsal Antar SMA/SMK',
+      category: 'Olahraga',
+      level: 'Kota',
+      date: '2 Juni 2023',
+      venue: 'GOR Kendal',
+      coach: 'Joko Susilo, S.Pd.'
+    },
+    {
+      id: 4,
+      student: 'Dewi Kartika',
+      class: 'XII AKL 1',
+      title: 'Juara 3 Lomba Karya Tulis Ilmiah',
+      category: 'Akademik',
+      level: 'Nasional',
+      date: '10 Juli 2023',
+      venue: 'Jakarta Convention Center',
+      coach: 'Siti Rahayu, S.Pd.'
+    },
+    {
+      id: 5,
+      student: 'Rizki Ramadhan',
+      class: 'XI MM 2',
+      title: 'Juara 1 Desain Poster',
+      category: 'Seni',
+      level: 'Provinsi',
+      date: '25 Agustus 2023',
+      venue: 'Gedung Semarang Creative Hub',
+      coach: 'Tono Wijaya, S.T.'
     }
-  ]);
+  ];
 
-  const [open, setOpen] = useState(false);
-  const [date, setDate] = useState<Date | undefined>(new Date());
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filter, setFilter] = useState('all');
-
-  // Filtered achievements based on search query and filter
-  const filteredAchievements = achievements.filter(achievement => {
-    const matchesSearch = achievement.studentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      achievement.achievementName.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    if (filter === 'all') return matchesSearch;
-    return matchesSearch && achievement.achievementType.toLowerCase() === filter.toLowerCase();
-  });
-
-  // Add new achievement
-  const handleAddAchievement = (e: React.FormEvent) => {
-    e.preventDefault();
-    // In a real application, you would handle the form submission here
-    setOpen(false);
+  const getLevelBadge = (level) => {
+    switch(level) {
+      case 'Kabupaten':
+        return <Badge className="bg-blue-500">Kabupaten</Badge>;
+      case 'Kota':
+        return <Badge className="bg-green-500">Kota</Badge>;
+      case 'Provinsi':
+        return <Badge className="bg-purple-500">Provinsi</Badge>;
+      case 'Nasional':
+        return <Badge className="bg-orange-500">Nasional</Badge>;
+      case 'Internasional':
+        return <Badge className="bg-red-500">Internasional</Badge>;
+      default:
+        return <Badge>{level}</Badge>;
+    }
   };
 
-  const getIconForAchievement = (position: string) => {
-    if (position.includes('1')) return <Trophy className="h-5 w-5 text-yellow-500" />;
-    if (position.includes('2')) return <Medal className="h-5 w-5 text-gray-400" />;
-    if (position.includes('3')) return <Award className="h-5 w-5 text-amber-600" />;
-    return <Award className="h-5 w-5 text-blue-500" />;
-  };
-
-  const getLevelBadgeColor = (level: string) => {
-    switch (level.toLowerCase()) {
-      case 'internasional': return 'bg-purple-500';
-      case 'nasional': return 'bg-red-500';
-      case 'provinsi': return 'bg-blue-500';
-      case 'kabupaten': return 'bg-green-500';
-      case 'kecamatan': return 'bg-yellow-500';
-      default: return 'bg-gray-500';
+  const getCategoryBadge = (category) => {
+    switch(category) {
+      case 'Akademik':
+        return <Badge variant="outline" className="border-blue-500 text-blue-500">Akademik</Badge>;
+      case 'Olahraga':
+        return <Badge variant="outline" className="border-green-500 text-green-500">Olahraga</Badge>;
+      case 'Seni':
+        return <Badge variant="outline" className="border-purple-500 text-purple-500">Seni</Badge>;
+      case 'Teknologi':
+        return <Badge variant="outline" className="border-amber-500 text-amber-500">Teknologi</Badge>;
+      default:
+        return <Badge variant="outline">{category}</Badge>;
     }
   };
 
   return (
     <DashboardLayout
       title="Prestasi Siswa"
-      description="Kelola dan pantau prestasi akademik dan non-akademik siswa"
+      description="Catatan prestasi siswa SMKN 1 Kendal"
+      userRole="admin"
+      userName="Administrator"
+      showBackButton
+      backTo="/dashboard"
     >
-      <div className="p-6">
-        <div className="mb-6 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-          <div>
-            <h1 className="text-3xl font-bold">Prestasi Siswa</h1>
-            <p className="text-muted-foreground">
-              Kelola dan pantau prestasi akademik dan non-akademik siswa
-            </p>
-          </div>
+      <div className="mb-4 flex justify-end">
+        <Button className="gap-2">
+          <Trophy size={16} />
+          Tambah Prestasi
+        </Button>
+      </div>
 
-          <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-              <Button className="gap-2">
-                <Plus className="h-4 w-4" />
-                Tambah Prestasi
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[525px]">
-              <DialogHeader>
-                <DialogTitle>Tambah Prestasi Siswa</DialogTitle>
-                <DialogDescription>
-                  Tambahkan data prestasi siswa. Klik simpan ketika selesai.
-                </DialogDescription>
-              </DialogHeader>
-              <form onSubmit={handleAddAchievement}>
-                <div className="grid gap-4 py-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="flex flex-col gap-2">
-                      <Label htmlFor="studentName">Nama Siswa</Label>
-                      <Input id="studentName" />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <Label htmlFor="class">Kelas</Label>
-                      <Input id="class" />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="flex flex-col gap-2">
-                      <Label htmlFor="achievementType">Jenis Prestasi</Label>
-                      <Select>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Pilih jenis" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="akademik">Akademik</SelectItem>
-                          <SelectItem value="non-akademik">Non-Akademik</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <Label htmlFor="achievementName">Nama Prestasi</Label>
-                      <Input id="achievementName" />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="flex flex-col gap-2">
-                      <Label htmlFor="level">Tingkat</Label>
-                      <Select>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Pilih tingkat" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="kecamatan">Kecamatan</SelectItem>
-                          <SelectItem value="kabupaten">Kabupaten</SelectItem>
-                          <SelectItem value="provinsi">Provinsi</SelectItem>
-                          <SelectItem value="nasional">Nasional</SelectItem>
-                          <SelectItem value="internasional">Internasional</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <Label htmlFor="position">Peringkat/Juara</Label>
-                      <Input id="position" placeholder="contoh: Juara 1" />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="flex flex-col gap-2">
-                      <Label>Tanggal</Label>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant="outline"
-                            className="justify-start text-left font-normal"
-                          >
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {date ? format(date, 'PPP', { locale: id }) : <span>Pilih tanggal</span>}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0">
-                          <Calendar
-                            mode="single"
-                            selected={date}
-                            onSelect={setDate}
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <Label htmlFor="organizer">Penyelenggara</Label>
-                      <Input id="organizer" />
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <Label htmlFor="description">Deskripsi</Label>
-                    <Input id="description" />
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button type="submit">Simpan</Button>
-                </DialogFooter>
-              </form>
-            </DialogContent>
-          </Dialog>
-        </div>
-
-        <Card>
-          <CardHeader className="pb-2">
-            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-              <div>
-                <CardTitle>Daftar Prestasi Siswa</CardTitle>
-                <CardDescription>
-                  Total {filteredAchievements.length} prestasi siswa
-                </CardDescription>
-              </div>
-              <div className="flex flex-col gap-2 md:flex-row md:items-center">
-                <div className="relative">
-                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+      <Tabs defaultValue="all" className="w-full">
+        <TabsList className="w-full sm:w-auto mb-6 grid grid-cols-3 sm:flex sm:flex-row">
+          <TabsTrigger value="all">Semua</TabsTrigger>
+          <TabsTrigger value="academic">Akademik</TabsTrigger>
+          <TabsTrigger value="sports">Olahraga</TabsTrigger>
+          <TabsTrigger value="arts">Seni</TabsTrigger>
+          <TabsTrigger value="technology">Teknologi</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="all">
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle>Daftar Prestasi</CardTitle>
+              <div className="flex flex-col md:flex-row justify-between gap-4 mt-4">
+                <div className="relative w-full md:w-96">
+                  <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
-                    type="search"
-                    placeholder="Cari prestasi atau siswa..."
-                    className="pl-8 md:w-[240px]"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Cari prestasi..."
+                    className="pl-10"
                   />
                 </div>
-                <Select value={filter} onValueChange={setFilter}>
-                  <SelectTrigger className="md:w-[180px]">
-                    <div className="flex items-center gap-2">
-                      <Filter className="h-4 w-4" />
-                      <SelectValue placeholder="Filter kategori" />
-                    </div>
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Semua Kategori</SelectItem>
-                    <SelectItem value="akademik">Akademik</SelectItem>
-                    <SelectItem value="non-akademik">Non-Akademik</SelectItem>
-                  </SelectContent>
-                </Select>
+                <div className="flex gap-2">
+                  <Button variant="outline" className="flex items-center gap-2">
+                    <Filter size={16} />
+                    Filter
+                  </Button>
+                </div>
               </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {filteredAchievements.map((achievement) => (
-                <Card key={achievement.id} className="overflow-hidden">
-                  <div className="p-6">
-                    <div className="flex items-start justify-between">
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                {achievements.map((achievement) => (
+                  <div key={achievement.id} className="p-4 border rounded-lg shadow-sm">
+                    <div className="flex flex-col md:flex-row justify-between gap-4">
                       <div>
-                        <h3 className="text-lg font-bold">{achievement.achievementName}</h3>
-                        <p className="text-sm text-muted-foreground">{achievement.studentName} • {achievement.class}</p>
+                        <h3 className="text-lg font-semibold">{achievement.title}</h3>
+                        <div className="flex items-center gap-2 mt-2">
+                          {getCategoryBadge(achievement.category)}
+                          {getLevelBadge(achievement.level)}
+                        </div>
+                        <p className="text-muted-foreground mt-2">
+                          Siswa: <span className="font-medium text-foreground">{achievement.student}</span> - {achievement.class}
+                        </p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-3">
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <Calendar size={14} />
+                            {achievement.date}
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <MapPin size={14} />
+                            {achievement.venue}
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground md:col-span-2">
+                            <Clock size={14} />
+                            Pembina: {achievement.coach}
+                          </div>
+                        </div>
                       </div>
-                      {getIconForAchievement(achievement.position)}
-                    </div>
-                    <div className="mt-4">
-                      <Badge variant="outline" className="mr-2">{achievement.achievementType}</Badge>
-                      <Badge 
-                        variant="secondary" 
-                        className={`${getLevelBadgeColor(achievement.level)} text-white`}
-                      >
-                        {achievement.level}
-                      </Badge>
-                    </div>
-                    <div className="mt-4">
-                      <p className="text-sm"><strong>Peringkat:</strong> {achievement.position}</p>
-                      <p className="text-sm"><strong>Penyelenggara:</strong> {achievement.organizer}</p>
-                      <p className="text-sm"><strong>Tanggal:</strong> {format(achievement.date, 'dd MMMM yyyy', { locale: id })}</p>
-                    </div>
-                    <div className="mt-4">
-                      <p className="text-sm text-muted-foreground line-clamp-2">{achievement.description}</p>
+                      <div className="flex md:flex-col gap-2 ml-auto md:ml-0 mt-4 md:mt-0">
+                        <Button variant="outline" size="sm">Detail</Button>
+                        <Button variant="outline" size="sm">Edit</Button>
+                      </div>
                     </div>
                   </div>
-                </Card>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="academic">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-center p-8">
+                <Trophy size={48} className="mx-auto text-muted-foreground mb-4" />
+                <h3 className="text-lg font-medium mb-2">Filter Prestasi Akademik</h3>
+                <p className="text-muted-foreground">Menampilkan prestasi bidang akademik: lomba mata pelajaran, olimpiade, karya tulis, dan lainnya.</p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="sports">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-center p-8">
+                <Trophy size={48} className="mx-auto text-muted-foreground mb-4" />
+                <h3 className="text-lg font-medium mb-2">Filter Prestasi Olahraga</h3>
+                <p className="text-muted-foreground">Menampilkan prestasi bidang olahraga: sepak bola, basket, voli, atletik, dan lainnya.</p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="arts">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-center p-8">
+                <Trophy size={48} className="mx-auto text-muted-foreground mb-4" />
+                <h3 className="text-lg font-medium mb-2">Filter Prestasi Seni</h3>
+                <p className="text-muted-foreground">Menampilkan prestasi bidang seni: musik, tari, lukis, teater, dan lainnya.</p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="technology">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-center p-8">
+                <Trophy size={48} className="mx-auto text-muted-foreground mb-4" />
+                <h3 className="text-lg font-medium mb-2">Filter Prestasi Teknologi</h3>
+                <p className="text-muted-foreground">Menampilkan prestasi bidang teknologi: pemrograman, robotik, IoT, dan lainnya.</p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </DashboardLayout>
   );
 };

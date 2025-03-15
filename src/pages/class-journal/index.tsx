@@ -1,299 +1,246 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DashboardLayout from '@/layouts/DashboardLayout';
-import { Calendar as CalendarIcon, Plus, Search, Filter, BookOpen, CheckCircle, Clock, AlertCircle } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Search, Edit, Calendar, Clock, User, PlusCircle } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar } from '@/components/ui/calendar';
-import { format } from 'date-fns';
-import { id } from 'date-fns/locale';
-
-// Types
-type JournalEntry = {
-  id: number;
-  date: Date;
-  classId: string;
-  activityType: string;
-  description: string;
-  followUp: string;
-  notes: string;
-  status: string;
-};
 
 const ClassJournalPage = () => {
-  const [journalEntries, setJournalEntries] = useState<JournalEntry[]>([
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    document.title = 'Jurnal Perwalian - Si-Kaji';
+  }, []);
+
+  // Sample journal data
+  const journals = [
     {
       id: 1,
-      date: new Date(2023, 7, 15),
-      classId: 'X RPL 1',
-      activityType: 'Perwalian Rutin',
-      description: 'Diskusi persiapan ujian tengah semester',
-      followUp: 'Memberikan jadwal dan materi ujian',
-      notes: 'Beberapa siswa menanyakan materi yang sulit',
-      status: 'completed'
+      date: '15 September 2023',
+      time: '09:00 - 09:45',
+      class: 'XII RPL 1',
+      title: 'Konsultasi Akademik',
+      type: 'Individu',
+      student: 'Andi Saputra',
+      description: 'Pembahasan penurunan nilai matematika dan strategi belajar untuk persiapan ujian.',
+      followUp: 'Akan diadakan monitoring mingguan dan pemberian tugas tambahan untuk latihan.'
     },
     {
       id: 2,
-      date: new Date(2023, 7, 22),
-      classId: 'X RPL 1',
-      activityType: 'Konseling Kelas',
-      description: 'Mediasi konflik antar siswa',
-      followUp: 'Melakukan monitoring harian',
-      notes: 'Kedua pihak telah berdamai',
-      status: 'completed'
+      date: '16 September 2023',
+      time: '10:00 - 10:45',
+      class: 'XII RPL 1',
+      title: 'Pertemuan Rutin Kelas',
+      type: 'Klasikal',
+      student: '-',
+      description: 'Pembahasan persiapan ujian semester dan pengarahan terkait tata tertib.',
+      followUp: 'Membuat jadwal belajar kelompok untuk persiapan ujian.'
     },
     {
       id: 3,
-      date: new Date(2023, 8, 5),
-      classId: 'X RPL 1',
-      activityType: 'Evaluasi Akademik',
-      description: 'Analisis hasil ujian tengah semester',
-      followUp: 'Merencanakan program remedial',
-      notes: 'Tiga mata pelajaran dengan nilai rendah',
-      status: 'in_progress'
+      date: '18 September 2023',
+      time: '13:00 - 13:30',
+      class: 'XII RPL 1',
+      title: 'Konsultasi Pelanggaran',
+      type: 'Individu',
+      student: 'Bayu Aditya',
+      description: 'Pembahasan pelanggaran keterlambatan yang sering terjadi.',
+      followUp: 'Siswa berjanji untuk lebih disiplin. Akan dilakukan pemantauan selama 2 minggu.'
+    },
+    {
+      id: 4,
+      date: '20 September 2023',
+      time: '14:00 - 14:45',
+      class: 'XII RPL 1',
+      title: 'Pertemuan dengan Orang Tua',
+      type: 'Keluarga',
+      student: 'Cindy Permata',
+      description: 'Diskusi dengan orang tua terkait persiapan kuliah dan rencana masa depan siswa.',
+      followUp: 'Akan diadakan bimbingan karir dan membantu siswa mencari informasi perguruan tinggi.'
+    },
+    {
+      id: 5,
+      date: '22 September 2023',
+      time: '09:00 - 10:30',
+      class: 'XII RPL 1',
+      title: 'Diskusi Masalah Kelas',
+      type: 'Klasikal',
+      student: '-',
+      description: 'Pembahasan permasalahan pembelajaran dan dinamika kelas.',
+      followUp: 'Pembentukan struktur kelas baru dan pembagian tugas untuk meningkatkan koordinasi.'
     }
-  ]);
+  ];
 
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
-  const [open, setOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
-
-  const filteredEntries = journalEntries.filter((entry) => {
-    const matchesSearch = 
-      entry.classId.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      entry.activityType.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      entry.description.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    if (activeTab === 'all') return matchesSearch;
-    return matchesSearch && entry.status === activeTab;
-  });
-
-  const handleAddEntry = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // In a real app, you would add form validation and API calls
-    // For now, just add a dummy entry to demonstrate the functionality
-    const newEntry: JournalEntry = {
-      id: journalEntries.length + 1,
-      date: selectedDate || new Date(),
-      classId: 'X RPL 1',
-      activityType: 'Perwalian Rutin',
-      description: 'Diskusi mingguan',
-      followUp: 'Monitoring kehadiran',
-      notes: 'Kehadiran siswa baik',
-      status: 'completed'
-    };
-    
-    setJournalEntries([...journalEntries, newEntry]);
-    setOpen(false);
-  };
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'completed':
-        return <Badge className="bg-green-500"><CheckCircle className="mr-1 h-3 w-3" /> Selesai</Badge>;
-      case 'in_progress':
-        return <Badge className="bg-blue-500"><Clock className="mr-1 h-3 w-3" /> Berlangsung</Badge>;
-      case 'pending':
-        return <Badge className="bg-yellow-500"><AlertCircle className="mr-1 h-3 w-3" /> Menunggu</Badge>;
+  const getTypeBadge = (type) => {
+    switch(type) {
+      case 'Individu':
+        return <Badge className="bg-blue-500">Individu</Badge>;
+      case 'Klasikal':
+        return <Badge className="bg-green-500">Klasikal</Badge>;
+      case 'Keluarga':
+        return <Badge className="bg-purple-500">Keluarga</Badge>;
       default:
-        return <Badge className="bg-gray-500">Unknown</Badge>;
+        return <Badge>{type}</Badge>;
     }
   };
 
   return (
     <DashboardLayout
       title="Jurnal Perwalian"
-      description="Pencatatan dan monitoring kegiatan perwalian kelas"
+      description="Pencatatan kegiatan perwalian dan bimbingan siswa"
+      userRole="class_teacher"
+      userName="Wali Kelas"
+      showBackButton
+      backTo="/dashboard"
     >
-      <div className="p-6">
-        <div className="mb-6 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-          <div>
-            <h1 className="text-3xl font-bold">Jurnal Perwalian</h1>
-            <p className="text-muted-foreground">
-              Pencatatan dan monitoring kegiatan perwalian kelas
-            </p>
-          </div>
-          
-          <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-              <Button className="gap-2">
-                <Plus className="h-4 w-4" />
-                Tambah Catatan
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[525px]">
-              <DialogHeader>
-                <DialogTitle>Tambah Catatan Jurnal</DialogTitle>
-                <DialogDescription>
-                  Tambahkan catatan kegiatan perwalian. Klik simpan ketika selesai.
-                </DialogDescription>
-              </DialogHeader>
-              <form onSubmit={handleAddEntry}>
-                <div className="grid gap-4 py-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="flex flex-col gap-2">
-                      <Label>Tanggal</Label>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant="outline"
-                            className="justify-start text-left font-normal"
-                          >
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {selectedDate ? format(selectedDate, 'PPP', { locale: id }) : <span>Pilih tanggal</span>}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0">
-                          <Calendar
-                            mode="single"
-                            selected={selectedDate}
-                            onSelect={setSelectedDate}
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <Label htmlFor="classId">Kelas</Label>
-                      <Select defaultValue="X RPL 1">
-                        <SelectTrigger>
-                          <SelectValue placeholder="Pilih kelas" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="X RPL 1">X RPL 1</SelectItem>
-                          <SelectItem value="X RPL 2">X RPL 2</SelectItem>
-                          <SelectItem value="XI RPL 1">XI RPL 1</SelectItem>
-                          <SelectItem value="XI RPL 2">XI RPL 2</SelectItem>
-                          <SelectItem value="XII RPL 1">XII RPL 1</SelectItem>
-                          <SelectItem value="XII RPL 2">XII RPL 2</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <Label htmlFor="activityType">Jenis Kegiatan</Label>
-                    <Select defaultValue="Perwalian Rutin">
-                      <SelectTrigger>
-                        <SelectValue placeholder="Pilih jenis kegiatan" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Perwalian Rutin">Perwalian Rutin</SelectItem>
-                        <SelectItem value="Konseling Kelas">Konseling Kelas</SelectItem>
-                        <SelectItem value="Evaluasi Akademik">Evaluasi Akademik</SelectItem>
-                        <SelectItem value="Pembinaan Karakter">Pembinaan Karakter</SelectItem>
-                        <SelectItem value="Rapat Orang Tua">Rapat Orang Tua</SelectItem>
-                        <SelectItem value="Lainnya">Lainnya</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <Label htmlFor="description">Deskripsi Kegiatan</Label>
-                    <Input id="description" />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <Label htmlFor="followUp">Tindak Lanjut</Label>
-                    <Input id="followUp" />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <Label htmlFor="notes">Catatan Tambahan</Label>
-                    <Input id="notes" />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <Label htmlFor="status">Status</Label>
-                    <Select defaultValue="completed">
-                      <SelectTrigger>
-                        <SelectValue placeholder="Pilih status" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="completed">Selesai</SelectItem>
-                        <SelectItem value="in_progress">Sedang Berlangsung</SelectItem>
-                        <SelectItem value="pending">Menunggu</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button type="submit">Simpan</Button>
-                </DialogFooter>
-              </form>
-            </DialogContent>
-          </Dialog>
-        </div>
-
-        <Card>
-          <CardHeader className="pb-2">
-            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div className="mb-6">
+        <Card className="border-dashed">
+          <CardContent className="pt-6">
+            <div className="text-center md:text-left md:flex justify-between items-center">
               <div>
-                <CardTitle>Catatan Jurnal Perwalian</CardTitle>
-                <CardDescription>
-                  Total {filteredEntries.length} catatan
-                </CardDescription>
+                <h3 className="text-lg font-medium">Kelas: XII RPL 1</h3>
+                <p className="text-muted-foreground">Tahun Ajaran 2023/2024</p>
               </div>
-              <div className="flex flex-col gap-2 md:flex-row md:items-center">
-                <div className="relative">
-                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    type="search"
-                    placeholder="Cari catatan..."
-                    className="pl-8 md:w-[240px]"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                </div>
-                <Tabs value={activeTab} onValueChange={setActiveTab} className="w-[400px]">
-                  <TabsList className="grid w-full grid-cols-3">
-                    <TabsTrigger value="all">Semua</TabsTrigger>
-                    <TabsTrigger value="completed">Selesai</TabsTrigger>
-                    <TabsTrigger value="in_progress">Berlangsung</TabsTrigger>
-                  </TabsList>
-                </Tabs>
+              <div className="mt-4 md:mt-0">
+                <Select defaultValue="all">
+                  <SelectTrigger className="w-full md:w-[180px]">
+                    <SelectValue placeholder="Pilih Semester" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Semua Semester</SelectItem>
+                    <SelectItem value="odd">Semester Ganjil</SelectItem>
+                    <SelectItem value="even">Semester Genap</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {filteredEntries.map((entry) => (
-                <Card key={entry.id}>
-                  <CardContent className="p-4">
-                    <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                      <div className="flex items-start gap-3">
-                        <div className="rounded-full bg-primary/10 p-2">
-                          <BookOpen className="h-5 w-5 text-primary" />
-                        </div>
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <h3 className="font-semibold">{entry.activityType}</h3>
-                            {getStatusBadge(entry.status)}
-                          </div>
-                          <p className="text-sm text-muted-foreground">{format(entry.date, 'PPP', { locale: id })} • {entry.classId}</p>
-                          <div className="mt-2">
-                            <p className="text-sm"><strong>Deskripsi:</strong> {entry.description}</p>
-                            <p className="text-sm"><strong>Tindak Lanjut:</strong> {entry.followUp}</p>
-                            {entry.notes && <p className="text-sm"><strong>Catatan:</strong> {entry.notes}</p>}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button variant="outline" size="sm">Edit</Button>
-                        <Button variant="outline" size="sm">Detail</Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
             </div>
           </CardContent>
         </Card>
       </div>
+
+      <div className="mb-4 flex justify-end">
+        <Button className="gap-2">
+          <PlusCircle size={16} />
+          Tambah Catatan
+        </Button>
+      </div>
+
+      <Tabs defaultValue="all" className="w-full">
+        <TabsList className="w-full sm:w-auto mb-6 grid grid-cols-3 sm:flex sm:flex-row">
+          <TabsTrigger value="all">Semua</TabsTrigger>
+          <TabsTrigger value="individual">Individu</TabsTrigger>
+          <TabsTrigger value="class">Klasikal</TabsTrigger>
+          <TabsTrigger value="family">Keluarga</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="all">
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle>Catatan Perwalian</CardTitle>
+              <div className="flex flex-col md:flex-row justify-between gap-4 mt-4">
+                <div className="relative w-full md:w-96">
+                  <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Cari catatan..."
+                    className="pl-10"
+                  />
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                {journals.map((journal) => (
+                  <div key={journal.id} className="p-4 border rounded-lg shadow-sm">
+                    <div className="flex flex-col md:flex-row justify-between gap-4">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <Edit size={16} className="text-primary" />
+                          <h3 className="text-lg font-semibold">{journal.title}</h3>
+                          {getTypeBadge(journal.type)}
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-3">
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <Calendar size={14} />
+                            {journal.date}
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <Clock size={14} />
+                            {journal.time}
+                          </div>
+                          {journal.student !== '-' && (
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground md:col-span-2">
+                              <User size={14} />
+                              Siswa: {journal.student}
+                            </div>
+                          )}
+                        </div>
+                        <div className="mt-3">
+                          <p className="text-sm font-medium">Catatan:</p>
+                          <p className="text-sm">{journal.description}</p>
+                        </div>
+                        <div className="mt-2">
+                          <p className="text-sm font-medium">Tindak Lanjut:</p>
+                          <p className="text-sm">{journal.followUp}</p>
+                        </div>
+                      </div>
+                      <div className="flex md:flex-col gap-2 ml-auto md:ml-0 mt-4 md:mt-0">
+                        <Button variant="outline" size="sm">Detail</Button>
+                        <Button variant="outline" size="sm">Edit</Button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="individual">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-center p-8">
+                <User size={48} className="mx-auto text-blue-500 mb-4" />
+                <h3 className="text-lg font-medium mb-2">Perwalian Individu</h3>
+                <p className="text-muted-foreground">Menampilkan catatan perwalian untuk siswa secara individual.</p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="class">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-center p-8">
+                <User size={48} className="mx-auto text-green-500 mb-4" />
+                <h3 className="text-lg font-medium mb-2">Perwalian Klasikal</h3>
+                <p className="text-muted-foreground">Menampilkan catatan perwalian untuk kelas secara keseluruhan.</p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="family">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-center p-8">
+                <User size={48} className="mx-auto text-purple-500 mb-4" />
+                <h3 className="text-lg font-medium mb-2">Perwalian Keluarga</h3>
+                <p className="text-muted-foreground">Menampilkan catatan perwalian yang melibatkan orang tua/wali siswa.</p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </DashboardLayout>
   );
 };
