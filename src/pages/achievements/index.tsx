@@ -116,7 +116,10 @@ const AchievementsPage = () => {
   };
 
   return (
-    <DashboardLayout>
+    <DashboardLayout
+      title="Prestasi Siswa"
+      description="Kelola dan pantau prestasi akademik dan non-akademik siswa"
+    >
       <div className="p-6">
         <div className="mb-6 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
           <div>

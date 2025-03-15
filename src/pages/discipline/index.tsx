@@ -4,199 +4,145 @@ import DashboardLayout from '@/layouts/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
-import { Search, Filter, Plus, AlertCircle, ThumbsUp, Calendar as CalendarIcon } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Badge } from '@/components/ui/badge';
+import { AlertTriangle, Calendar as CalendarIcon, Check, Filter, Plus, Search, Shield, X } from 'lucide-react';
 import { format } from 'date-fns';
 import { id } from 'date-fns/locale';
-import { DISCIPLINE_POINTS } from '@/lib/constants';
 
 // Types
-type DisciplineRecord = {
+type Violation = {
   id: number;
   studentName: string;
-  studentClass: string;
-  date: string;
-  recordType: string;
+  studentId: string;
+  class: string;
+  date: Date;
   category: string;
-  description: string;
   points: number;
-  status: string;
-  location: string;
-  witnessName: string;
-  notes: string;
+  description: string;
+  status: 'pending' | 'verified' | 'rejected';
+  reporter: string;
 };
 
 const DisciplinePage = () => {
-  const [records, setRecords] = useState<DisciplineRecord[]>([
+  const [activeTab, setActiveTab] = useState('violations');
+  const [violations, setViolations] = useState<Violation[]>([
     {
       id: 1,
-      studentName: 'Budi Santoso',
-      studentClass: 'XI RPL 1',
-      date: '15 Agustus 2023',
-      recordType: 'violation',
-      category: 'Terlambat',
-      description: 'Terlambat masuk sekolah 30 menit',
-      points: -5,
-      status: 'processed',
-      location: 'Gerbang Sekolah',
-      witnessName: 'Satpam Sekolah',
-      notes: 'Siswa mengaku kesiangan'
+      studentName: 'Ahmad Rizky',
+      studentId: 'S12345',
+      class: 'XI RPL 1',
+      date: new Date(2023, 8, 15),
+      category: 'Kehadiran',
+      points: 10,
+      description: 'Terlambat masuk sekolah lebih dari 30 menit tanpa keterangan',
+      status: 'verified',
+      reporter: 'Bpk. Joko'
     },
     {
       id: 2,
-      studentName: 'Siti Nuraini',
-      studentClass: 'X TKJ 2',
-      date: '18 Agustus 2023',
-      recordType: 'achievement',
-      category: 'Prestasi Akademik',
-      description: 'Juara 1 Olimpiade Matematika Tingkat Kabupaten',
-      points: 15,
-      status: 'processed',
-      location: 'SMAN 1 Kendal',
-      witnessName: 'Ibu Sari (Guru Matematika)',
-      notes: 'Menjadi perwakilan ke tingkat provinsi'
+      studentName: 'Rizki Pratama',
+      studentId: 'S12346',
+      class: 'X TKJ 2',
+      date: new Date(2023, 8, 16),
+      category: 'Seragam',
+      points: 5,
+      description: 'Tidak mengenakan atribut seragam lengkap (dasi)',
+      status: 'verified',
+      reporter: 'Ibu Siti'
     },
     {
       id: 3,
-      studentName: 'Ahmad Rizki',
-      studentClass: 'XII MM 1',
-      date: '20 Agustus 2023',
-      recordType: 'violation',
-      category: 'Atribut Tidak Lengkap',
-      description: 'Tidak memakai dasi dan ikat pinggang',
-      points: -5,
-      status: 'processed',
-      location: 'Ruang Kelas',
-      witnessName: 'Bapak Joko (Wali Kelas)',
-      notes: 'Sudah diperingatkan sebelumnya'
-    },
-    {
-      id: 4,
-      studentName: 'Dewi Anggraini',
-      studentClass: 'X AKL 1',
-      date: '22 Agustus 2023',
-      recordType: 'achievement',
-      category: 'Perilaku Baik',
-      description: 'Membantu teman yang sakit dan mengantarkan ke UKS',
-      points: 10,
-      status: 'processed',
-      location: 'Koridor Sekolah',
-      witnessName: 'Ibu Rina (Guru Piket)',
-      notes: 'Menunjukkan kepedulian yang tinggi'
+      studentName: 'Dian Lestari',
+      studentId: 'S12347',
+      class: 'XII MM 1',
+      date: new Date(2023, 8, 17),
+      category: 'Perilaku',
+      points: 20,
+      description: 'Menggunakan ponsel saat pelajaran berlangsung',
+      status: 'pending',
+      reporter: 'Bpk. Andi'
     }
   ]);
 
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [open, setOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('all');
-  const [recordType, setRecordType] = useState('violation');
+  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filter, setFilter] = useState('all');
 
-  // Filter records based on search query and tab selection
-  const filteredRecords = records.filter(record => {
+  // Filtered violations based on search query and filter
+  const filteredViolations = violations.filter(violation => {
     const matchesSearch = 
-      record.studentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      record.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      record.description.toLowerCase().includes(searchQuery.toLowerCase());
+      violation.studentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      violation.description.toLowerCase().includes(searchQuery.toLowerCase());
     
-    if (activeTab === 'all') return matchesSearch;
-    return matchesSearch && record.recordType === activeTab;
+    if (filter === 'all') return matchesSearch;
+    return matchesSearch && violation.category.toLowerCase() === filter.toLowerCase();
   });
 
-  // Add new discipline record
-  const handleAddRecord = (e: React.FormEvent) => {
+  // Handle add new violation
+  const handleAddViolation = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // In a real app, you would add form validation and API calls
-    // For now, just add a dummy record to demonstrate the functionality
-    const newRecord: DisciplineRecord = {
-      id: records.length + 1,
-      studentName: 'Nama Siswa',
-      studentClass: 'Kelas Siswa',
-      date: format(selectedDate || new Date(), 'dd MMMM yyyy', { locale: id }),
-      recordType: recordType,
-      category: recordType === 'violation' ? 'Terlambat' : 'Prestasi Akademik',
-      description: 'Deskripsi pelanggaran/prestasi',
-      points: recordType === 'violation' ? DISCIPLINE_POINTS.MINOR_VIOLATION : DISCIPLINE_POINTS.ACHIEVEMENT,
-      status: 'processed',
-      location: 'Lokasi',
-      witnessName: 'Nama Saksi',
-      notes: 'Catatan tambahan'
-    };
-    
-    setRecords([...records, newRecord]);
+    // In a real application, you would handle the form submission here
     setOpen(false);
   };
 
-  const getPointsBadge = (points: number) => {
-    if (points > 0) {
-      return <Badge className="bg-green-500">+{points} Poin</Badge>;
-    } else {
-      return <Badge className="bg-red-500">{points} Poin</Badge>;
-    }
-  };
-
-  const getRecordIcon = (recordType: string) => {
-    if (recordType === 'violation') {
-      return <AlertCircle className="h-5 w-5 text-red-500" />;
-    } else {
-      return <ThumbsUp className="h-5 w-5 text-green-500" />;
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'verified':
+        return <Badge className="bg-green-500"><Check className="mr-1 h-3 w-3" /> Terverifikasi</Badge>;
+      case 'pending':
+        return <Badge className="bg-yellow-500"><AlertTriangle className="mr-1 h-3 w-3" /> Menunggu</Badge>;
+      case 'rejected':
+        return <Badge className="bg-red-500"><X className="mr-1 h-3 w-3" /> Ditolak</Badge>;
+      default:
+        return <Badge className="bg-gray-500">Tidak diketahui</Badge>;
     }
   };
 
   return (
-    <DashboardLayout>
+    <DashboardLayout
+      title="Kedisiplinan"
+      description="Kelola dan pantau kedisiplinan siswa"
+    >
       <div className="p-6">
         <div className="mb-6 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-3xl font-bold">Kedisiplinan</h1>
+            <h1 className="text-3xl font-bold">Kedisiplinan Siswa</h1>
             <p className="text-muted-foreground">
-              Pencatatan pelanggaran dan prestasi siswa
+              Pengelolaan pelanggaran dan poin kedisiplinan siswa
             </p>
           </div>
-
+          
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button className="gap-2">
                 <Plus className="h-4 w-4" />
-                Tambah Catatan
+                Catat Pelanggaran
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[525px]">
               <DialogHeader>
-                <DialogTitle>Tambah Catatan Kedisiplinan</DialogTitle>
+                <DialogTitle>Catat Pelanggaran Siswa</DialogTitle>
                 <DialogDescription>
-                  Tambahkan catatan pelanggaran atau prestasi siswa. Klik simpan ketika selesai.
+                  Tambahkan catatan pelanggaran siswa. Klik simpan ketika selesai.
                 </DialogDescription>
               </DialogHeader>
-              <form onSubmit={handleAddRecord}>
+              <form onSubmit={handleAddViolation}>
                 <div className="grid gap-4 py-4">
-                  <div className="flex flex-col gap-2">
-                    <Label htmlFor="recordType">Jenis Catatan</Label>
-                    <Select value={recordType} onValueChange={setRecordType}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Pilih jenis catatan" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="violation">Pelanggaran</SelectItem>
-                        <SelectItem value="achievement">Prestasi</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="flex flex-col gap-2">
                       <Label htmlFor="studentName">Nama Siswa</Label>
                       <Input id="studentName" />
                     </div>
                     <div className="flex flex-col gap-2">
-                      <Label htmlFor="studentClass">Kelas</Label>
-                      <Input id="studentClass" />
+                      <Label htmlFor="class">Kelas</Label>
+                      <Input id="class" />
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
@@ -209,66 +155,48 @@ const DisciplinePage = () => {
                             className="justify-start text-left font-normal"
                           >
                             <CalendarIcon className="mr-2 h-4 w-4" />
-                            {selectedDate ? format(selectedDate, 'PPP', { locale: id }) : <span>Pilih tanggal</span>}
+                            {date ? format(date, 'PPP', { locale: id }) : <span>Pilih tanggal</span>}
                           </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0">
                           <Calendar
                             mode="single"
-                            selected={selectedDate}
-                            onSelect={setSelectedDate}
+                            selected={date}
+                            onSelect={setDate}
                             initialFocus
                           />
                         </PopoverContent>
                       </Popover>
                     </div>
                     <div className="flex flex-col gap-2">
-                      <Label htmlFor="category">Kategori</Label>
+                      <Label htmlFor="category">Kategori Pelanggaran</Label>
                       <Select>
                         <SelectTrigger>
                           <SelectValue placeholder="Pilih kategori" />
                         </SelectTrigger>
                         <SelectContent>
-                          {recordType === 'violation' ? (
-                            <>
-                              <SelectItem value="terlambat">Terlambat</SelectItem>
-                              <SelectItem value="atribut">Atribut Tidak Lengkap</SelectItem>
-                              <SelectItem value="kehadiran">Kehadiran</SelectItem>
-                              <SelectItem value="kerapian">Kerapian</SelectItem>
-                              <SelectItem value="perilaku">Perilaku Buruk</SelectItem>
-                              <SelectItem value="lainnya">Lainnya</SelectItem>
-                            </>
-                          ) : (
-                            <>
-                              <SelectItem value="akademik">Prestasi Akademik</SelectItem>
-                              <SelectItem value="non-akademik">Prestasi Non-Akademik</SelectItem>
-                              <SelectItem value="perilaku">Perilaku Baik</SelectItem>
-                              <SelectItem value="kreativitas">Kreativitas</SelectItem>
-                              <SelectItem value="kepemimpinan">Kepemimpinan</SelectItem>
-                              <SelectItem value="lainnya">Lainnya</SelectItem>
-                            </>
-                          )}
+                          <SelectItem value="kehadiran">Kehadiran</SelectItem>
+                          <SelectItem value="seragam">Seragam</SelectItem>
+                          <SelectItem value="perilaku">Perilaku</SelectItem>
+                          <SelectItem value="akademik">Akademik</SelectItem>
+                          <SelectItem value="lainnya">Lainnya</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                   </div>
                   <div className="flex flex-col gap-2">
-                    <Label htmlFor="description">Deskripsi</Label>
+                    <Label htmlFor="description">Deskripsi Pelanggaran</Label>
                     <Input id="description" />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="flex flex-col gap-2">
-                      <Label htmlFor="location">Lokasi</Label>
-                      <Input id="location" />
+                      <Label htmlFor="points">Poin</Label>
+                      <Input id="points" type="number" min="0" />
                     </div>
                     <div className="flex flex-col gap-2">
-                      <Label htmlFor="witnessName">Saksi/Pelapor</Label>
-                      <Input id="witnessName" />
+                      <Label htmlFor="reporter">Pelapor</Label>
+                      <Input id="reporter" />
                     </div>
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <Label htmlFor="notes">Catatan Tambahan</Label>
-                    <Input id="notes" />
                   </div>
                 </div>
                 <DialogFooter>
@@ -279,73 +207,106 @@ const DisciplinePage = () => {
           </Dialog>
         </div>
 
-        <Card>
-          <CardHeader className="pb-2">
-            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-              <div>
-                <CardTitle>Catatan Kedisiplinan</CardTitle>
-                <CardDescription>
-                  Total {filteredRecords.length} catatan
-                </CardDescription>
-              </div>
-              <div className="flex flex-col gap-2 md:flex-row md:items-center">
-                <div className="relative">
-                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    type="search"
-                    placeholder="Cari siswa atau catatan..."
-                    className="pl-8 md:w-[240px]"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                </div>
-                <Tabs value={activeTab} onValueChange={setActiveTab} className="w-[400px]">
-                  <TabsList className="grid w-full grid-cols-3">
-                    <TabsTrigger value="all">Semua</TabsTrigger>
-                    <TabsTrigger value="violation">Pelanggaran</TabsTrigger>
-                    <TabsTrigger value="achievement">Prestasi</TabsTrigger>
-                  </TabsList>
-                </Tabs>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {filteredRecords.map((record) => (
-                <Card key={record.id}>
-                  <CardContent className="p-4">
-                    <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                      <div className="flex items-start gap-3">
-                        <div className="rounded-full bg-primary/10 p-2">
-                          {getRecordIcon(record.recordType)}
-                        </div>
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <h3 className="font-semibold">{record.studentName}</h3>
-                            <span className="text-sm text-muted-foreground">•</span>
-                            <span className="text-sm text-muted-foreground">{record.studentClass}</span>
-                            {getPointsBadge(record.points)}
-                          </div>
-                          <p className="text-sm text-muted-foreground">{record.date} • {record.category}</p>
-                          <div className="mt-2">
-                            <p className="text-sm"><strong>Deskripsi:</strong> {record.description}</p>
-                            <p className="text-sm"><strong>Lokasi:</strong> {record.location}</p>
-                            <p className="text-sm"><strong>Saksi/Pelapor:</strong> {record.witnessName}</p>
-                            {record.notes && <p className="text-sm"><strong>Catatan:</strong> {record.notes}</p>}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button variant="outline" size="sm">Edit</Button>
-                        <Button variant="outline" size="sm">Detail</Button>
-                      </div>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="violations" className="flex items-center gap-2">
+              <AlertTriangle className="h-4 w-4" />
+              <span>Pelanggaran</span>
+            </TabsTrigger>
+            <TabsTrigger value="points" className="flex items-center gap-2">
+              <Shield className="h-4 w-4" />
+              <span>Rekapitulasi Poin</span>
+            </TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="violations">
+            <Card>
+              <CardHeader className="pb-2">
+                <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                  <div>
+                    <CardTitle>Daftar Pelanggaran</CardTitle>
+                    <CardDescription>
+                      Total {filteredViolations.length} pelanggaran tercatat
+                    </CardDescription>
+                  </div>
+                  <div className="flex flex-col gap-2 md:flex-row md:items-center">
+                    <div className="relative">
+                      <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        type="search"
+                        placeholder="Cari siswa atau pelanggaran..."
+                        className="pl-8 md:w-[240px]"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                      />
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+                    <Select value={filter} onValueChange={setFilter}>
+                      <SelectTrigger className="md:w-[180px]">
+                        <div className="flex items-center gap-2">
+                          <Filter className="h-4 w-4" />
+                          <SelectValue placeholder="Filter kategori" />
+                        </div>
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">Semua Kategori</SelectItem>
+                        <SelectItem value="kehadiran">Kehadiran</SelectItem>
+                        <SelectItem value="seragam">Seragam</SelectItem>
+                        <SelectItem value="perilaku">Perilaku</SelectItem>
+                        <SelectItem value="akademik">Akademik</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {filteredViolations.map((violation) => (
+                    <Card key={violation.id}>
+                      <CardContent className="p-4">
+                        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2">
+                              <h3 className="font-semibold">{violation.studentName}</h3>
+                              {getStatusBadge(violation.status)}
+                            </div>
+                            <p className="text-sm text-muted-foreground">{violation.class} • {violation.studentId}</p>
+                            <div className="mt-2">
+                              <p className="text-sm"><span className="font-medium">Kategori:</span> {violation.category}</p>
+                              <p className="text-sm"><span className="font-medium">Tanggal:</span> {format(violation.date, 'PPP', { locale: id })}</p>
+                              <p className="text-sm"><span className="font-medium">Pelanggaran:</span> {violation.description}</p>
+                              <p className="text-sm"><span className="font-medium">Pelapor:</span> {violation.reporter}</p>
+                            </div>
+                          </div>
+                          <div className="flex flex-col items-center gap-2">
+                            <Badge variant="outline" className="text-lg font-bold">{violation.points} Poin</Badge>
+                            <div className="flex gap-2 mt-2">
+                              <Button variant="outline" size="sm">Edit</Button>
+                              <Button variant="outline" size="sm">Detail</Button>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="points">
+            <Card>
+              <CardHeader>
+                <CardTitle>Rekapitulasi Poin Siswa</CardTitle>
+                <CardDescription>
+                  Ringkasan poin pelanggaran per siswa
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p>Konten rekapitulasi poin akan ditampilkan di sini...</p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </DashboardLayout>
   );

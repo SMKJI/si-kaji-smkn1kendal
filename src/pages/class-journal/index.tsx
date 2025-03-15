@@ -110,7 +110,10 @@ const ClassJournalPage = () => {
   };
 
   return (
-    <DashboardLayout>
+    <DashboardLayout
+      title="Jurnal Perwalian"
+      description="Pencatatan dan monitoring kegiatan perwalian kelas"
+    >
       <div className="p-6">
         <div className="mb-6 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
           <div>
