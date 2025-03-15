@@ -6,7 +6,7 @@ import Footer from '@/components/layout/Footer';
 import Sidebar from '@/components/layout/Sidebar';
 import SidebarTrigger from '@/components/layout/SidebarTrigger';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, Home, User, Settings } from 'lucide-react';
+import { ChevronLeft, Home, Settings } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { SidebarProvider } from '@/contexts/SidebarContext';
@@ -65,7 +65,7 @@ const DashboardLayout = ({
         <div className="min-h-screen flex flex-col">
           <div className="flex-grow flex">
             <Sidebar userRole={userRole} />
-            <main className="flex-1 container mx-auto px-4 py-6">
+            <main className="flex-1 px-4 py-6">
               <div className="flex flex-col gap-6">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4">
                   <div className="flex items-center gap-2">
@@ -119,7 +119,9 @@ const DashboardLayout = ({
                   )}
                 </div>
                 
-                {children}
+                <div className="container mx-auto">
+                  {children}
+                </div>
               </div>
             </main>
           </div>

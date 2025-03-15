@@ -34,7 +34,7 @@ const Sidebar = ({ userRole }: SidebarProps) => {
       {/* Sidebar */}
       <aside 
         className={cn(
-          "fixed md:sticky top-0 bottom-0 left-0 h-screen bg-sidebar-background border-r border-sidebar-border z-50 transition-all duration-300 flex flex-col",
+          "fixed md:sticky top-0 left-0 h-screen bg-sidebar-background border-r border-sidebar-border z-50 transition-all duration-300 flex flex-col",
           isOpen ? "w-64" : "w-0 md:w-16",
         )}
       >

@@ -129,6 +129,8 @@ const CalendarPage = () => {
       description="Jadwal penting dan agenda sekolah" 
       showBackButton
       backTo="/dashboard"
+      userRole="student"
+      userName="Ahmad Siswa"
     >
       <Tabs defaultValue="academic" className="w-full mt-4">
         <TabsList className="grid w-full grid-cols-3 mb-6">
