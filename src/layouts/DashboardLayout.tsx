@@ -1,5 +1,5 @@
 
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import PageTransition from '@/components/layout/PageTransition';
 import Footer from '@/components/layout/Footer';
@@ -38,6 +38,10 @@ const DashboardLayout = ({
 }: DashboardLayoutProps) => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+
+  useEffect(() => {
+    console.log("DashboardLayout component rendered", { title, userRole });
+  }, [title, userRole]);
 
   const handleBack = () => {
     if (backTo) {
