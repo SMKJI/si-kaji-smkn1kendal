@@ -98,7 +98,14 @@ const SettingsPage = () => {
   };
 
   return (
-    <DashboardLayout>
+    <DashboardLayout 
+      title="Pengaturan" 
+      description="Kelola pengaturan akun dan aplikasi"
+      showBackButton
+      backTo="/dashboard"
+      userRole="waka"
+      userName="Ahmad Fauzi"
+    >
       <div className="p-6">
         <div className="mb-6">
           <h1 className="text-3xl font-bold">Pengaturan</h1>
