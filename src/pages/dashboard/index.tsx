@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import DashboardLayout from '@/layouts/DashboardLayout';
@@ -8,7 +9,7 @@ import {
   Users, Book, CalendarCheck, FileText, MessageSquare, GraduationCap, 
   Award, UserCheck, ClipboardList, PieChart, Clock, Calendar,
   BarChart3, Shield, HelpCircle, Bell, Settings, Briefcase,
-  School, FileCheck
+  School, FileCheck, FileEdit
 } from 'lucide-react';
 import { USER_ROLES } from '@/lib/constants';
 
