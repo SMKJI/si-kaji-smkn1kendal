@@ -80,10 +80,16 @@ const App = () => {
             {/* Class Management */}
             <Route path="/class" element={<ClassManagementPage />} />
             <Route path="/class/:id" element={<ClassDetailPage />} />
+            <Route path="/class/documents" element={<ClassManagementPage />} />
+            <Route path="/class/transfer" element={<ClassManagementPage />} />
             
             {/* Teacher Management */}
             <Route path="/teacher" element={<TeacherManagementPage />} />
             <Route path="/teacher/:id" element={<TeacherProfilePage />} />
+            
+            {/* User Management */}
+            <Route path="/user-management" element={<StudentManagementPage />} />
+            <Route path="/user-management/access" element={<StudentManagementPage />} />
             
             {/* Complaints */}
             <Route path="/complaint" element={<ComplaintPage />} />
@@ -152,15 +158,14 @@ const App = () => {
             <Route path="/achievements" element={<AchievementsPage />} />
             <Route path="/achievements/create" element={<AchievementsPage />} />
             <Route path="/certificates" element={<CertificatesPage />} />
+            <Route path="/certificates/request" element={<CertificatesPage />} />
             
             {/* Reports & Statistics */}
             <Route path="/reports" element={<ReportsPage />} />
+            <Route path="/reports/activities" element={<ReportsPage />} />
             
             {/* Settings */}
             <Route path="/settings" element={<SettingsPage />} />
-            
-            {/* User Management */}
-            <Route path="/user-management" element={<StudentManagementPage />} />
             
             {/* Catch-all route */}
             <Route path="*" element={<NotFoundPage />} />

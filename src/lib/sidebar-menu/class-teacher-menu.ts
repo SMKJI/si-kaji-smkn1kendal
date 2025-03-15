@@ -1,6 +1,6 @@
 
 import { LayoutDashboard, Users, BookOpen, CalendarCheck, 
-  MessageSquare, FileText, Settings, Shield, BookText, FileEdit, Check, HelpCircle } from 'lucide-react';
+  MessageSquare, FileText, Settings, Shield, BookText, FileEdit, Check, HelpCircle, Printer, FileOutput } from 'lucide-react';
 import { MenuItemType } from './types';
 
 export const classTeacherMenu: MenuItemType[] = [
@@ -38,6 +38,18 @@ export const classTeacherMenu: MenuItemType[] = [
     title: 'Buat Jurnal',
     path: '/class-journal/create',
     icon: FileEdit,
+    roles: ['class_teacher'],
+  },
+  {
+    title: 'Cetak Dokumen',
+    path: '/class/documents',
+    icon: Printer,
+    roles: ['class_teacher'],
+  },
+  {
+    title: 'Surat Mutasi',
+    path: '/class/transfer',
+    icon: FileOutput,
     roles: ['class_teacher'],
   },
   {

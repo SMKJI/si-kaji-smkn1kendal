@@ -1,6 +1,6 @@
 
 import { LayoutDashboard, CalendarCheck, MessageSquare, 
-  FileText, Award, Check, Users, FileEdit, PlusCircle, ClipboardList, HelpCircle, Settings, BookOpen } from 'lucide-react';
+  FileText, Award, Check, Users, FileEdit, PlusCircle, ClipboardList, HelpCircle, Settings, FileCheck } from 'lucide-react';
 import { MenuItemType } from './types';
 
 export const studentMenu: MenuItemType[] = [
@@ -32,6 +32,12 @@ export const studentMenu: MenuItemType[] = [
     title: 'Perizinan Saya',
     path: '/permission',
     icon: FileText,
+    roles: ['student'],
+  },
+  {
+    title: 'Permohonan Surat',
+    path: '/certificates/request',
+    icon: FileCheck,
     roles: ['student'],
   },
   {

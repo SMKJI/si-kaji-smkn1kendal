@@ -1,7 +1,7 @@
 
 import { LayoutDashboard, Users, GraduationCap, BookOpen, MessageSquare, 
   UserCheck, Bell, Settings, Award, BarChart3, Calendar, PlusCircle, HelpCircle, 
-  FileEdit, CalendarCheck, Shield, FileText, FileCheck } from 'lucide-react';
+  FileEdit, CalendarCheck, Shield, FileText, FileCheck, Lock } from 'lucide-react';
 import { MenuItemType } from './types';
 
 export const adminMenu: MenuItemType[] = [
@@ -33,6 +33,12 @@ export const adminMenu: MenuItemType[] = [
     title: 'Manajemen Kelas',
     path: '/class',
     icon: BookOpen,
+    roles: ['admin'],
+  },
+  {
+    title: 'Manajemen Hak Akses',
+    path: '/user-management/access',
+    icon: Lock,
     roles: ['admin'],
   },
   {

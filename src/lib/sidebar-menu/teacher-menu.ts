@@ -1,6 +1,6 @@
 
 import { LayoutDashboard, Users, CalendarCheck, 
-  MessageSquare, FileText, Settings, Shield, ClipboardList, HelpCircle, Award } from 'lucide-react';
+  MessageSquare, FileText, Settings, Shield, ClipboardList, HelpCircle, Award, Trophy, FileEdit } from 'lucide-react';
 import { MenuItemType } from './types';
 
 export const teacherMenu: MenuItemType[] = [
@@ -25,7 +25,7 @@ export const teacherMenu: MenuItemType[] = [
   {
     title: 'Input Prestasi',
     path: '/achievements/create',
-    icon: Award,
+    icon: Trophy,
     roles: ['teacher'],
   },
   {
@@ -38,6 +38,12 @@ export const teacherMenu: MenuItemType[] = [
     title: 'Kegiatan Siswa',
     path: '/student-activities',
     icon: ClipboardList,
+    roles: ['teacher'],
+  },
+  {
+    title: 'Laporan Aktivitas',
+    path: '/reports/activities',
+    icon: FileEdit,
     roles: ['teacher'],
   },
   {
