@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -58,6 +59,13 @@ import NotificationsPage from "@/pages/notifications";
 import ChildAttendancePage from "@/pages/attendance/child";
 import StudentAttendancePage from "@/pages/attendance/me";
 
+// New pages
+import StudentMyProfilePage from "@/pages/student/profile";
+import StudentSchedulePage from "@/pages/student/schedule";
+import TeacherSchedulePage from "@/pages/teacher/schedule";
+import TeacherClassManagementPage from "@/pages/teacher/class-management";
+import ParentChildProgressPage from "@/pages/parent/child-progress";
+
 const queryClient = new QueryClient();
 
 const App = () => {
@@ -75,6 +83,8 @@ const App = () => {
             {/* Student Management */}
             <Route path="/student" element={<StudentManagementPage />} />
             <Route path="/student/:id" element={<StudentProfilePage />} />
+            <Route path="/student/profile" element={<StudentMyProfilePage />} />
+            <Route path="/student/schedule" element={<StudentSchedulePage />} />
             <Route path="/student-data" element={<StudentDataPage />} />
             <Route path="/student-data/profile" element={<StudentProfileViewPage />} />
             
@@ -89,6 +99,8 @@ const App = () => {
             {/* Teacher Management */}
             <Route path="/teacher" element={<TeacherManagementPage />} />
             <Route path="/teacher/:id" element={<TeacherProfilePage />} />
+            <Route path="/teacher/schedule" element={<TeacherSchedulePage />} />
+            <Route path="/teacher/class-management" element={<TeacherClassManagementPage />} />
             
             {/* Academic Data */}
             <Route path="/academic" element={<StudentManagementPage />} />
@@ -165,6 +177,7 @@ const App = () => {
             <Route path="/parent-portal/attendance" element={<ParentPortalAttendancePage />} />
             <Route path="/parent-portal/discipline" element={<ParentPortalDisciplinePage />} />
             <Route path="/parent-portal/notifications" element={<ParentPortalNotificationsPage />} />
+            <Route path="/parent-portal/child-progress" element={<ParentChildProgressPage />} />
             <Route path="/parent-portal/reports" element={<ReportsPage />} />
             <Route path="/parent-portal/child-profile" element={<StudentProfileViewPage />} />
             <Route path="/parent-portal/academic" element={<ParentPortalAttendancePage />} />

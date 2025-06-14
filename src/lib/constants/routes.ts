@@ -1,4 +1,5 @@
 
+
 /**
  * Application route constants
  */
@@ -23,6 +24,7 @@ export const ROUTES = {
   PARENT_DISCIPLINE: "/parent-portal/discipline",
   PARENT_ASSIGNMENTS: "/parent-portal/assignments",
   PARENT_NOTIFICATIONS: "/parent-portal/notifications",
+  PARENT_CHILD_PROGRESS: "/parent-portal/child-progress",
   COUNSELING: "/counseling",
   COUNSELING_MANAGE: "/counseling/manage",
   COUNSELING_SESSION: "/counseling/session",
@@ -31,9 +33,13 @@ export const ROUTES = {
   PERMISSION_CREATE: "/permission/create",
   STUDENT_DATA: "/student-data",
   STUDENT_PROFILE: "/student-data/profile",
+  STUDENT_MY_PROFILE: "/student/profile",
+  STUDENT_SCHEDULE: "/student/schedule",
   STUDENT_ACTIVITIES: "/student-activities",
   CLASS_JOURNAL: "/class-journal", 
   CLASS_JOURNAL_CREATE: "/class-journal/create",
+  TEACHER_SCHEDULE: "/teacher/schedule",
+  TEACHER_CLASS_MANAGEMENT: "/teacher/class-management",
   DISCIPLINE: "/discipline",
   DISCIPLINE_RECORD: "/discipline/record",
   DISCIPLINE_MANAGE: "/discipline/manage",
@@ -56,3 +62,4 @@ export const ROUTES = {
   NOTIFICATIONS: "/notifications",
   NOT_FOUND: "*"
 };
+

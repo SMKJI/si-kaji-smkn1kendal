@@ -9,6 +9,34 @@ import {
 const TeacherDashboard = () => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <Link to="/teacher/schedule" className="block">
+        <Card className="hover:shadow-md transition-shadow h-full">
+          <CardHeader className="pb-2">
+            <CardTitle className="flex items-center text-lg">
+              <Calendar className="mr-2 h-5 w-5 text-primary" />
+              Jadwal Mengajar
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">Kelola jadwal mengajar dan aktivitas harian</p>
+          </CardContent>
+        </Card>
+      </Link>
+      
+      <Link to="/teacher/class-management" className="block">
+        <Card className="hover:shadow-md transition-shadow h-full">
+          <CardHeader className="pb-2">
+            <CardTitle className="flex items-center text-lg">
+              <Users className="mr-2 h-5 w-5 text-primary" />
+              Manajemen Kelas
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">Kelola data siswa dan kehadiran kelas</p>
+          </CardContent>
+        </Card>
+      </Link>
+      
       <Link to="/attendance" className="block">
         <Card className="hover:shadow-md transition-shadow h-full">
           <CardHeader className="pb-2">
@@ -37,20 +65,6 @@ const TeacherDashboard = () => {
         </Card>
       </Link>
       
-      <Link to="/student" className="block">
-        <Card className="hover:shadow-md transition-shadow h-full">
-          <CardHeader className="pb-2">
-            <CardTitle className="flex items-center text-lg">
-              <Users className="mr-2 h-5 w-5 text-primary" />
-              Data Siswa
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground">Lihat profil dan data siswa yang Anda ajar</p>
-          </CardContent>
-        </Card>
-      </Link>
-      
       <Link to="/counseling" className="block">
         <Card className="hover:shadow-md transition-shadow h-full">
           <CardHeader className="pb-2">
@@ -75,20 +89,6 @@ const TeacherDashboard = () => {
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">Kelola dan validasi kegiatan siswa</p>
-          </CardContent>
-        </Card>
-      </Link>
-      
-      <Link to="/calendar" className="block">
-        <Card className="hover:shadow-md transition-shadow h-full">
-          <CardHeader className="pb-2">
-            <CardTitle className="flex items-center text-lg">
-              <Calendar className="mr-2 h-5 w-5 text-primary" />
-              Kalender
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground">Lihat jadwal dan agenda sekolah</p>
           </CardContent>
         </Card>
       </Link>
