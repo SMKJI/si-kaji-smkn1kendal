@@ -3,40 +3,99 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { GraduationCap, TrendingUp, TrendingDown, Calendar, FileText, Award, BarChart3 } from 'lucide-react';
+import { format } from 'date-fns';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import PageTransition from '@/components/layout/PageTransition';
 
-const academicData = [
-  { subject: "Matematika", score: 85, average: 75, highest: 95 },
-  { subject: "B. Indonesia", score: 82, average: 78, highest: 90 },
-  { subject: "B. Inggris", score: 78, average: 72, highest: 92 },
-  { subject: "IPA", score: 90, average: 76, highest: 94 },
-  { subject: "IPS", score: 75, average: 70, highest: 88 },
-  { subject: "PKN", score: 88, average: 80, highest: 95 },
-  { subject: "Agama", score: 92, average: 82, highest: 98 },
-];
+const academicData = {
+  semester: "Ganjil 2023/2024",
+  grades: [
+    { subject: "Matematika", score: 85, grade: "A", teacher: "Budi Santoso, S.Pd" },
+    { subject: "Bahasa Indonesia", score: 88, grade: "A", teacher: "Siti Aminah, S.Pd" },
+    { subject: "Bahasa Inggris", score: 82, grade: "A-", teacher: "John Smith, S.Pd" },
+    { subject: "Fisika", score: 79, grade: "B+", teacher: "Ahmad Rahman, S.Pd" },
+    { subject: "Kimia", score: 81, grade: "A-", teacher: "Dr. Maria Sari" },
+    { subject: "Biologi", score: 86, grade: "A", teacher: "Rina Wati, S.Pd" },
+    { subject: "Sejarah", score: 84, grade: "A", teacher: "Bambang Suko, S.Pd" },
+    { subject: "Geografi", score: 80, grade: "A-", teacher: "Dewi Lestari, S.Pd" }
+  ],
+  ranking: {
+    position: 5,
+    total: 32,
+    average: 83.1
+  },
+  attendance: {
+    present: 45,
+    sick: 2,
+    permit: 1,
+    absent: 0,
+    percentage: 93.7
+  }
+};
 
-const progressData = [
-  { month: "Juli", bahasa: 75, matematika: 68, ipa: 72, ips: 70 },
-  { month: "Agustus", bahasa: 78, matematika: 72, ipa: 75, ips: 73 },
-  { month: "September", bahasa: 80, matematika: 75, ipa: 78, ips: 76 },
-  { month: "Oktober", bahasa: 82, matematika: 80, ipa: 82, ips: 79 },
-  { month: "November", bahasa: 85, matematika: 82, ipa: 85, ips: 83 },
-  { month: "Desember", bahasa: 87, matematika: 85, ipa: 90, ips: 86 },
+const examHistory = [
+  {
+    id: "UTS001",
+    type: "Ujian Tengah Semester",
+    date: "2023-10-15",
+    subjects: [
+      { name: "Matematika", score: 88 },
+      { name: "Bahasa Indonesia", score: 85 },
+      { name: "Bahasa Inggris", score: 82 },
+      { name: "Fisika", score: 79 }
+    ],
+    average: 83.5
+  },
+  {
+    id: "UH001",
+    type: "Ulangan Harian",
+    date: "2023-09-20",
+    subjects: [
+      { name: "Matematika", score: 82 },
+      { name: "Fisika", score: 78 }
+    ],
+    average: 80.0
+  }
 ];
 
 const ParentPortalAcademicPage = () => {
-  const [selectedPeriod, setSelectedPeriod] = useState("mid-term");
-  const [selectedSemester, setSelectedSemester] = useState("semester1");
+  const [selectedSemester, setSelectedSemester] = useState("ganjil2023");
+  const [selectedSubject, setSelectedSubject] = useState("all");
+
+  const getGradeColor = (grade: string) => {
+    switch (grade) {
+      case 'A':
+        return 'bg-green-100 text-green-800';
+      case 'A-':
+        return 'bg-blue-100 text-blue-800';
+      case 'B+':
+        return 'bg-amber-100 text-amber-800';
+      case 'B':
+        return 'bg-orange-100 text-orange-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const calculateGPA = () => {
+    const total = academicData.grades.reduce((sum, grade) => sum + grade.score, 0);
+    return (total / academicData.grades.length).toFixed(2);
+  };
 
   return (
     <PageTransition>
       <div className="container mx-auto p-6">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Akademik Anak</h1>
+            <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
+              <GraduationCap className="h-6 w-6" />
+              Prestasi Akademik
+            </h1>
             <p className="text-muted-foreground">
-              Pantau perkembangan akademik anak Anda
+              Pantau nilai dan prestasi akademik anak
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-2 mt-4 md:mt-0">
@@ -45,163 +104,254 @@ const ParentPortalAcademicPage = () => {
                 <SelectValue placeholder="Pilih Semester" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="semester1">Semester 1</SelectItem>
-                <SelectItem value="semester2">Semester 2</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Pilih Periode" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="mid-term">Ujian Tengah Semester</SelectItem>
-                <SelectItem value="final">Ujian Akhir Semester</SelectItem>
-                <SelectItem value="daily">Nilai Harian</SelectItem>
+                <SelectItem value="ganjil2023">Ganjil 2023/2024</SelectItem>
+                <SelectItem value="genap2023">Genap 2022/2023</SelectItem>
+                <SelectItem value="ganjil2022">Ganjil 2022/2023</SelectItem>
               </SelectContent>
             </Select>
           </div>
         </div>
 
-        <div className="mb-6">
-          <Tabs defaultValue="scores" className="w-full">
-            <TabsList className="mb-4 w-full md:w-auto">
-              <TabsTrigger value="scores">Nilai Pelajaran</TabsTrigger>
-              <TabsTrigger value="progress">Perkembangan</TabsTrigger>
-              <TabsTrigger value="reports">Laporan Guru</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="scores" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Nilai Akademik</CardTitle>
-                  <CardDescription>
-                    {selectedPeriod === "mid-term" ? "Ujian Tengah Semester" : 
-                     selectedPeriod === "final" ? "Ujian Akhir Semester" : "Nilai Harian"} - {selectedSemester === "semester1" ? "Semester 1" : "Semester 2"}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-[400px] mt-2">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart
-                        data={academicData}
-                        margin={{ top: 20, right: 30, left: 20, bottom: 70 }}
-                      >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="subject" angle={-45} textAnchor="end" height={80} />
-                        <YAxis domain={[0, 100]} />
-                        <Tooltip />
-                        <Legend />
-                        <Bar dataKey="score" name="Nilai Anak" fill="#8884d8" />
-                        <Bar dataKey="average" name="Rata-rata Kelas" fill="#82ca9d" />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </div>
-                </CardContent>
-              </Card>
-              
-              <div className="grid md:grid-cols-3 gap-4">
-                {academicData.map((item, index) => (
-                  <Card key={index}>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-lg">{item.subject}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex justify-between mb-2">
-                        <span className="text-sm text-muted-foreground">Nilai Anak:</span>
-                        <span className="font-medium">{item.score}</span>
-                      </div>
-                      <div className="flex justify-between mb-2">
-                        <span className="text-sm text-muted-foreground">Rata-rata Kelas:</span>
-                        <span>{item.average}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm text-muted-foreground">Nilai Tertinggi:</span>
-                        <span>{item.highest}</span>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">Rata-rata Nilai</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-blue-600">{calculateGPA()}</div>
+              <p className="text-xs text-muted-foreground">dari 100</p>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">Ranking Kelas</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-green-600">
+                {academicData.ranking.position}/{academicData.ranking.total}
               </div>
-            </TabsContent>
-            
-            <TabsContent value="progress" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Perkembangan Nilai</CardTitle>
-                  <CardDescription>Tren nilai akademik per bulan</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-[400px] mt-2">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart
-                        data={progressData}
-                        margin={{ top: 20, right: 30, left: 20, bottom: 10 }}
-                      >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="month" />
-                        <YAxis domain={[60, 100]} />
-                        <Tooltip />
-                        <Legend />
-                        <Line type="monotone" dataKey="bahasa" name="Bahasa" stroke="#8884d8" activeDot={{ r: 8 }} />
-                        <Line type="monotone" dataKey="matematika" name="Matematika" stroke="#82ca9d" />
-                        <Line type="monotone" dataKey="ipa" name="IPA" stroke="#ffc658" />
-                        <Line type="monotone" dataKey="ips" name="IPS" stroke="#ff8042" />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            
-            <TabsContent value="reports" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Laporan Guru</CardTitle>
-                  <CardDescription>Komentar dan catatan dari guru mata pelajaran</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="font-medium">Matematika - Ibu Sri Wahyuni</h3>
-                        <span className="text-sm text-muted-foreground">12/10/2023</span>
-                      </div>
-                      <p className="text-sm">
-                        Anak Bapak/Ibu telah menunjukkan kemajuan yang baik dalam perhitungan dasar aljabar.
-                        Namun masih perlu latihan tambahan untuk soal-soal cerita yang lebih kompleks.
-                        Disarankan untuk melakukan latihan di rumah minimal 30 menit setiap hari.
-                      </p>
-                    </div>
-                    
-                    <div className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="font-medium">Bahasa Indonesia - Bpk. Ahmad Junaedi</h3>
-                        <span className="text-sm text-muted-foreground">10/10/2023</span>
-                      </div>
-                      <p className="text-sm">
-                        Kemampuan menulis dan memahami bacaan sudah sangat baik. 
-                        Anak Bapak/Ibu aktif berdiskusi dalam kelas dan mampu menyampaikan pendapat dengan terstruktur.
-                        Terus dorong untuk lebih banyak membaca buku fiksi dan non-fiksi untuk memperkaya kosakata.
-                      </p>
-                    </div>
-                    
-                    <div className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="font-medium">IPA - Ibu Dina Rahmawati</h3>
-                        <span className="text-sm text-muted-foreground">08/10/2023</span>
-                      </div>
-                      <p className="text-sm">
-                        Memiliki ketertarikan yang tinggi pada eksperimen sains. 
-                        Hasil ulangan terakhir menunjukkan pemahaman yang baik terhadap konsep dasar fisika.
-                        Disarankan untuk mengikuti program ekstrakurikuler KIR (Karya Ilmiah Remaja) untuk mengembangkan potensinya.
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
+              <p className="text-xs text-muted-foreground">posisi di kelas</p>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">Kehadiran</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-purple-600">{academicData.attendance.percentage}%</div>
+              <p className="text-xs text-muted-foreground">tingkat kehadiran</p>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">Total Mata Pelajaran</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-amber-600">{academicData.grades.length}</div>
+              <p className="text-xs text-muted-foreground">mata pelajaran</p>
+            </CardContent>
+          </Card>
         </div>
+
+        <Tabs defaultValue="grades" className="w-full">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="grades">Nilai Semester</TabsTrigger>
+            <TabsTrigger value="exams">Riwayat Ujian</TabsTrigger>
+            <TabsTrigger value="progress">Perkembangan</TabsTrigger>
+            <TabsTrigger value="report">Rapor</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="grades" className="space-y-4">
+            <div className="flex flex-col sm:flex-row gap-2 mb-4">
+              <Select value={selectedSubject} onValueChange={setSelectedSubject}>
+                <SelectTrigger className="w-[200px]">
+                  <SelectValue placeholder="Filter Mata Pelajaran" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Semua Mata Pelajaran</SelectItem>
+                  <SelectItem value="matematika">Matematika</SelectItem>
+                  <SelectItem value="bahasa">Bahasa</SelectItem>
+                  <SelectItem value="sains">Sains</SelectItem>
+                  <SelectItem value="sosial">Sosial</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Nilai Semester {academicData.semester}</CardTitle>
+                <CardDescription>
+                  Daftar nilai semua mata pelajaran semester ini
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Mata Pelajaran</TableHead>
+                      <TableHead>Guru</TableHead>
+                      <TableHead className="text-center">Nilai</TableHead>
+                      <TableHead className="text-center">Grade</TableHead>
+                      <TableHead className="text-center">Status</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {academicData.grades.map((grade, index) => (
+                      <TableRow key={index}>
+                        <TableCell className="font-medium">{grade.subject}</TableCell>
+                        <TableCell>{grade.teacher}</TableCell>
+                        <TableCell className="text-center font-semibold">{grade.score}</TableCell>
+                        <TableCell className="text-center">
+                          <Badge variant="outline" className={getGradeColor(grade.grade)}>
+                            {grade.grade}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {grade.score >= 75 ? (
+                            <Badge className="bg-green-100 text-green-800">Lulus</Badge>
+                          ) : (
+                            <Badge className="bg-red-100 text-red-800">Tidak Lulus</Badge>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="exams" className="space-y-4">
+            <div className="space-y-4">
+              {examHistory.map((exam) => (
+                <Card key={exam.id}>
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <CardTitle className="text-lg">{exam.type}</CardTitle>
+                        <CardDescription>
+                          {format(new Date(exam.date), 'dd MMMM yyyy')} • Rata-rata: {exam.average}
+                        </CardDescription>
+                      </div>
+                      <Badge variant="outline">#{exam.id}</Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      {exam.subjects.map((subject, index) => (
+                        <div key={index} className="p-3 border rounded-lg">
+                          <p className="font-medium text-sm">{subject.name}</p>
+                          <p className="text-2xl font-bold text-blue-600">{subject.score}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="progress" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Grafik Perkembangan Nilai</CardTitle>
+                <CardDescription>
+                  Tren perkembangan nilai anak selama semester ini
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="grid md:grid-cols-3 gap-4">
+                    <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                      <div className="flex items-center gap-2">
+                        <TrendingUp className="h-5 w-5 text-green-600" />
+                        <span className="font-medium text-green-800">Mata Pelajaran Terbaik</span>
+                      </div>
+                      <p className="text-lg font-bold text-green-600 mt-2">Bahasa Indonesia (88)</p>
+                    </div>
+                    <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                      <div className="flex items-center gap-2">
+                        <TrendingDown className="h-5 w-5 text-amber-600" />
+                        <span className="font-medium text-amber-800">Perlu Perbaikan</span>
+                      </div>
+                      <p className="text-lg font-bold text-amber-600 mt-2">Fisika (79)</p>
+                    </div>
+                    <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                      <div className="flex items-center gap-2">
+                        <BarChart3 className="h-5 w-5 text-blue-600" />
+                        <span className="font-medium text-blue-800">Rata-rata Kelas</span>
+                      </div>
+                      <p className="text-lg font-bold text-blue-600 mt-2">81.5</p>
+                    </div>
+                  </div>
+                  
+                  <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <h4 className="font-medium text-blue-800 mb-2">Analisis Perkembangan</h4>
+                    <p className="text-sm text-blue-700">
+                      Anak menunjukkan peningkatan yang konsisten dalam mata pelajaran bahasa, 
+                      namun perlu fokus lebih pada mata pelajaran eksak seperti Fisika. 
+                      Secara keseluruhan, prestasi anak berada di atas rata-rata kelas.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="report" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Rapor Semester</CardTitle>
+                <CardDescription>
+                  Download dan lihat rapor resmi semester
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="p-4 border rounded-lg">
+                      <div className="flex items-center gap-2 mb-2">
+                        <FileText className="h-5 w-5" />
+                        <span className="font-medium">Rapor Ganjil 2023/2024</span>
+                      </div>
+                      <p className="text-sm text-muted-foreground mb-3">
+                        Rapor resmi semester ganjil tahun ajaran 2023/2024
+                      </p>
+                      <Button size="sm" className="w-full">
+                        Download PDF
+                      </Button>
+                    </div>
+                    <div className="p-4 border rounded-lg">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Award className="h-5 w-5" />
+                        <span className="font-medium">Sertifikat Prestasi</span>
+                      </div>
+                      <p className="text-sm text-muted-foreground mb-3">
+                        Sertifikat prestasi akademik dan non-akademik
+                      </p>
+                      <Button size="sm" variant="outline" className="w-full">
+                        Lihat Sertifikat
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                    <h4 className="font-medium text-amber-800 mb-2">Catatan Wali Kelas</h4>
+                    <p className="text-sm text-amber-700">
+                      "Anak menunjukkan perkembangan yang baik dalam aspek akademik. 
+                      Disarankan untuk lebih fokus pada mata pelajaran Fisika dan 
+                      meningkatkan partisipasi dalam diskusi kelas."
+                    </p>
+                    <p className="text-xs text-amber-600 mt-2">- Ahmad Rahman, S.Pd (Wali Kelas)</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </PageTransition>
   );

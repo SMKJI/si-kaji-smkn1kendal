@@ -1,220 +1,266 @@
 
-import React, { useEffect, useState } from 'react';
-import DashboardLayout from '@/layouts/DashboardLayout';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Calendar, Clock, Users, Search, MessageSquare, Calendar as CalendarIcon, User, Plus, Loader2 } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import React, { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { HelpCircle, Calendar, User, Clock, MessageSquare, Plus, Phone } from 'lucide-react';
+import { format } from 'date-fns';
+import PageTransition from '@/components/layout/PageTransition';
+
+const counselingData = [
+  {
+    id: "KS001",
+    date: "2023-11-15",
+    time: "10:00",
+    type: "individual",
+    topic: "Masalah Akademik",
+    counselor: "Siti Nurhaliza, S.Pd",
+    status: "scheduled",
+    description: "Konsultasi mengenai kesulitan belajar matematika"
+  },
+  {
+    id: "KS002", 
+    date: "2023-11-10",
+    time: "14:00",
+    type: "individual",
+    topic: "Karier",
+    counselor: "Ahmad Rahman, S.Pd",
+    status: "completed",
+    description: "Diskusi mengenai pilihan jurusan kuliah"
+  },
+  {
+    id: "KS003",
+    date: "2023-11-08",
+    time: "09:00", 
+    type: "group",
+    topic: "Motivasi Belajar",
+    counselor: "Dr. Maria Sari",
+    status: "completed",
+    description: "Sesi kelompok untuk meningkatkan motivasi belajar"
+  }
+];
 
 const CounselingPage = () => {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    document.title = 'Konseling - Si-Kaji';
-  }, []);
+  const [selectedType, setSelectedType] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("");
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // Sample counseling sessions
-  const counselingSessions = [
-    { 
-      id: 1, 
-      date: '15 Agustus 2023', 
-      time: '09:00 - 10:00',
-      counselor: 'Ibu Dina, S.Pd.',
-      topic: 'Konseling Akademik',
-      status: 'scheduled',
-      notes: ''
-    },
-    { 
-      id: 2, 
-      date: '20 Agustus 2023', 
-      time: '13:00 - 14:00',
-      counselor: 'Bapak Rizal, M.Psi.',
-      topic: 'Konseling Karir',
-      status: 'scheduled',
-      notes: ''
-    },
-    { 
-      id: 3, 
-      date: '5 Agustus 2023', 
-      time: '10:00 - 11:00',
-      counselor: 'Ibu Dina, S.Pd.',
-      topic: 'Konseling Pribadi',
-      status: 'completed',
-      notes: 'Konseling berjalan dengan baik. Siswa menunjukkan perkembangan positif dalam mengatasi masalah pribadinya.'
-    },
-  ];
-
-  // Sample counselors
-  const counselors = [
-    { id: 1, name: 'Ibu Dina, S.Pd.', specialization: 'Konseling Akademik & Pribadi', available: true },
-    { id: 2, name: 'Bapak Rizal, M.Psi.', specialization: 'Konseling Karir & Sosial', available: true },
-    { id: 3, name: 'Bapak Hendra, S.Psi.', specialization: 'Konseling Pribadi & Keluarga', available: false },
-  ];
-
-  const handleSubmitRequest = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false);
-      // Reset form
-      const form = e.target as HTMLFormElement;
-      form.reset();
-      // Show success message
-      alert('Permintaan konseling berhasil dikirim! Menunggu konfirmasi dari konselor.');
-    }, 1500);
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'completed':
+        return 'bg-green-100 text-green-800 border-green-200';
+      case 'scheduled':
+        return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'cancelled':
+        return 'bg-red-100 text-red-800 border-red-200';
+      default:
+        return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
   };
 
-  const getStatusBadge = (status: string) => {
-    switch(status) {
-      case 'scheduled':
-        return <Badge className="bg-yellow-500">Terjadwal</Badge>;
+  const getStatusLabel = (status: string) => {
+    switch (status) {
       case 'completed':
-        return <Badge className="bg-green-500">Selesai</Badge>;
+        return 'Selesai';
+      case 'scheduled':
+        return 'Terjadwal';
       case 'cancelled':
-        return <Badge className="bg-red-500">Dibatalkan</Badge>;
+        return 'Dibatalkan';
       default:
-        return <Badge>Unknown</Badge>;
+        return status;
+    }
+  };
+
+  const getTypeLabel = (type: string) => {
+    switch (type) {
+      case 'individual':
+        return 'Individual';
+      case 'group':
+        return 'Kelompok';
+      default:
+        return type;
     }
   };
 
   return (
-    <DashboardLayout 
-      title="Konseling" 
-      description="Jadwalkan dan kelola sesi konseling" 
-      showBackButton
-      backTo="/dashboard"
-    >
-      <Tabs defaultValue="schedule" className="w-full mt-4">
-        <TabsList className="grid w-full grid-cols-3 mb-6">
-          <TabsTrigger value="schedule">Jadwal Konseling</TabsTrigger>
-          <TabsTrigger value="request">Ajukan Konseling</TabsTrigger>
-          <TabsTrigger value="counselors">Konselor</TabsTrigger>
-        </TabsList>
-        
-        {/* Schedule Tab */}
-        <TabsContent value="schedule">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-2">
-            <h2 className="text-xl font-semibold">Jadwal Konseling</h2>
-            <div className="relative w-full md:w-64">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input placeholder="Cari jadwal..." className="pl-8" />
-            </div>
+    <PageTransition>
+      <div className="container mx-auto p-6">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
+              <HelpCircle className="h-6 w-6" />
+              Layanan Konseling
+            </h1>
+            <p className="text-muted-foreground">
+              Konsultasi dan bimbingan untuk pengembangan diri
+            </p>
           </div>
+          <Button className="mt-4 md:mt-0">
+            <Plus className="h-4 w-4 mr-2" />
+            Ajukan Konseling
+          </Button>
+        </div>
+
+        <Tabs defaultValue="sessions" className="w-full">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="sessions">Riwayat Sesi</TabsTrigger>
+            <TabsTrigger value="request">Ajukan Konseling</TabsTrigger>
+            <TabsTrigger value="counselors">Daftar Konselor</TabsTrigger>
+          </TabsList>
           
-          <div className="space-y-4">
-            {counselingSessions.map((session) => (
-              <Card key={session.id}>
-                <CardContent className="p-6">
-                  <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 mb-4">
-                    <div>
-                      <h3 className="text-lg font-medium">{session.topic}</h3>
-                      <p className="text-muted-foreground">dengan {session.counselor}</p>
+          <TabsContent value="sessions" className="space-y-4">
+            <div className="flex flex-col sm:flex-row gap-2 mb-4">
+              <Select value={selectedType} onValueChange={setSelectedType}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Tipe Konseling" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Semua Tipe</SelectItem>
+                  <SelectItem value="individual">Individual</SelectItem>
+                  <SelectItem value="group">Kelompok</SelectItem>
+                </SelectContent>
+              </Select>
+              
+              <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Semua Status</SelectItem>
+                  <SelectItem value="scheduled">Terjadwal</SelectItem>
+                  <SelectItem value="completed">Selesai</SelectItem>
+                  <SelectItem value="cancelled">Dibatalkan</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-4">
+              {counselingData.map((session) => (
+                <Card key={session.id} className="overflow-hidden">
+                  <CardContent className="p-6">
+                    <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-3">
+                          <Badge variant="outline" className={getStatusColor(session.status)}>
+                            {getStatusLabel(session.status)}
+                          </Badge>
+                          <Badge variant="outline">
+                            {getTypeLabel(session.type)}
+                          </Badge>
+                          <span className="text-sm text-muted-foreground">#{session.id}</span>
+                        </div>
+                        
+                        <h3 className="font-semibold text-lg mb-2">{session.topic}</h3>
+                        <p className="text-muted-foreground mb-4">{session.description}</p>
+                        
+                        <div className="grid md:grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2 text-sm">
+                              <Calendar className="h-4 w-4" />
+                              <span>Tanggal: {format(new Date(session.date), 'dd MMM yyyy')}</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-sm">
+                              <Clock className="h-4 w-4" />
+                              <span>Waktu: {session.time}</span>
+                            </div>
+                          </div>
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2 text-sm">
+                              <User className="h-4 w-4" />
+                              <span>Konselor: {session.counselor}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex flex-col gap-2">
+                        {session.status === 'scheduled' && (
+                          <>
+                            <Button variant="outline" size="sm">
+                              Reschedule
+                            </Button>
+                            <Button variant="outline" size="sm">
+                              Cancel
+                            </Button>
+                          </>
+                        )}
+                        {session.status === 'completed' && (
+                          <Button variant="outline" size="sm">
+                            Lihat Hasil
+                          </Button>
+                        )}
+                      </div>
                     </div>
-                    {getStatusBadge(session.status)}
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div className="flex items-center text-sm">
-                      <Calendar className="mr-2 h-4 w-4 text-muted-foreground" />
-                      <span>{session.date}</span>
-                    </div>
-                    <div className="flex items-center text-sm">
-                      <Clock className="mr-2 h-4 w-4 text-muted-foreground" />
-                      <span>{session.time}</span>
-                    </div>
-                  </div>
-                  
-                  {session.notes && (
-                    <div className="mt-2 p-3 bg-muted/50 rounded-md">
-                      <p className="text-sm font-medium mb-1">Catatan:</p>
-                      <p className="text-sm">{session.notes}</p>
-                    </div>
-                  )}
-                  
-                  <div className="flex justify-end gap-2 mt-4">
-                    {session.status === 'scheduled' && (
-                      <>
-                        <Button variant="outline" size="sm">Batalkan</Button>
-                        <Button variant="outline" size="sm">Reschedule</Button>
-                      </>
-                    )}
-                    {session.status === 'completed' && (
-                      <Button size="sm">Lihat Detail</Button>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-        
-        {/* Request Tab */}
-        <TabsContent value="request">
-          <Card>
-            <CardHeader>
-              <CardTitle>Ajukan Sesi Konseling</CardTitle>
-              <CardDescription>
-                Lengkapi formulir berikut untuk menjadwalkan sesi konseling dengan guru BK.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmitRequest} className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="request" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Ajukan Konseling</CardTitle>
+                <CardDescription>
+                  Isi form di bawah ini untuk mengajukan sesi konseling
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="counseling-topic">Topik Konseling</Label>
-                    <Select required>
-                      <SelectTrigger id="counseling-topic">
-                        <SelectValue placeholder="Pilih topik konseling" />
+                    <label className="text-sm font-medium">Topik Konseling</label>
+                    <Select>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Pilih topik" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="academic">Akademik</SelectItem>
-                        <SelectItem value="career">Karir</SelectItem>
-                        <SelectItem value="personal">Pribadi</SelectItem>
+                        <SelectItem value="academic">Masalah Akademik</SelectItem>
+                        <SelectItem value="career">Karier</SelectItem>
                         <SelectItem value="social">Sosial</SelectItem>
-                        <SelectItem value="family">Keluarga</SelectItem>
+                        <SelectItem value="personal">Personal</SelectItem>
+                        <SelectItem value="other">Lainnya</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="counseling-counselor">Konselor</Label>
-                    <Select required>
-                      <SelectTrigger id="counseling-counselor">
-                        <SelectValue placeholder="Pilih konselor" />
+                    <label className="text-sm font-medium">Tipe Konseling</label>
+                    <Select>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Pilih tipe" />
                       </SelectTrigger>
                       <SelectContent>
-                        {counselors.filter(c => c.available).map(counselor => (
-                          <SelectItem key={counselor.id} value={counselor.id.toString()}>
-                            {counselor.name}
-                          </SelectItem>
-                        ))}
+                        <SelectItem value="individual">Individual</SelectItem>
+                        <SelectItem value="group">Kelompok</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Deskripsi Masalah</label>
+                  <Textarea 
+                    placeholder="Jelaskan masalah atau topik yang ingin didiskusikan..."
+                    rows={4}
+                  />
+                </div>
+                
+                <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="counseling-date">Tanggal yang Diinginkan</Label>
-                    <Input type="date" id="counseling-date" required />
+                    <label className="text-sm font-medium">Tanggal Preferensi</label>
+                    <Input type="date" />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="counseling-time">Waktu yang Diinginkan</Label>
-                    <Select required>
-                      <SelectTrigger id="counseling-time">
+                    <label className="text-sm font-medium">Waktu Preferensi</label>
+                    <Select>
+                      <SelectTrigger>
                         <SelectValue placeholder="Pilih waktu" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="09:00">09:00 - 10:00</SelectItem>
                         <SelectItem value="10:00">10:00 - 11:00</SelectItem>
-                        <SelectItem value="11:00">11:00 - 12:00</SelectItem>
                         <SelectItem value="13:00">13:00 - 14:00</SelectItem>
                         <SelectItem value="14:00">14:00 - 15:00</SelectItem>
                       </SelectContent>
@@ -222,92 +268,49 @@ const CounselingPage = () => {
                   </div>
                 </div>
                 
-                <div className="space-y-2">
-                  <Label htmlFor="counseling-reason">Alasan Konseling</Label>
-                  <Textarea 
-                    id="counseling-reason" 
-                    placeholder="Jelaskan alasan Anda membutuhkan konseling..." 
-                    rows={4} 
-                    required 
-                  />
+                <div className="flex gap-2 pt-4">
+                  <Button>
+                    Ajukan Konseling
+                  </Button>
+                  <Button variant="outline">
+                    Reset
+                  </Button>
                 </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="counseling-privacy">Preferensi Privasi</Label>
-                  <Select>
-                    <SelectTrigger id="counseling-privacy">
-                      <SelectValue placeholder="Pilih preferensi privasi" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="private">Pribadi (Hanya dengan konselor)</SelectItem>
-                      <SelectItem value="group">Grup (Dengan siswa lain yang memiliki masalah serupa)</SelectItem>
-                      <SelectItem value="parent">Dengan orang tua</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <Button type="submit" className="w-full" disabled={isSubmitting}>
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Memproses...
-                    </>
-                  ) : (
-                    <>
-                      <MessageSquare className="mr-2 h-4 w-4" />
-                      Ajukan Konseling
-                    </>
-                  )}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        {/* Counselors Tab */}
-        <TabsContent value="counselors">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {counselors.map((counselor) => (
-              <Card key={counselor.id} className="h-full">
-                <CardContent className="p-6">
-                  <div className="flex flex-col items-center mb-4">
-                    <div className="h-24 w-24 rounded-full bg-muted flex items-center justify-center mb-3">
-                      <User className="h-12 w-12 text-muted-foreground" />
-                    </div>
-                    <h3 className="text-xl font-medium text-center">{counselor.name}</h3>
-                    <Badge className={counselor.available ? "bg-green-500 mt-2" : "bg-red-500 mt-2"}>
-                      {counselor.available ? "Tersedia" : "Tidak Tersedia"}
-                    </Badge>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <p className="text-sm text-center text-muted-foreground mb-4">
-                      {counselor.specialization}
-                    </p>
-                    
-                    <div className="flex flex-col space-y-2">
-                      <Button 
-                        variant="outline" 
-                        className="w-full" 
-                        disabled={!counselor.available}
-                        onClick={() => document.getElementById('counseling-request-tab')?.click()}
-                      >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        Jadwalkan Konseling
-                      </Button>
-                      <Button variant="outline" className="w-full">
-                        <User className="mr-2 h-4 w-4" />
-                        Lihat Profil
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="counselors" className="space-y-4">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[
+                { name: "Siti Nurhaliza, S.Pd", speciality: "Bimbingan Akademik", phone: "081234567890" },
+                { name: "Ahmad Rahman, S.Pd", speciality: "Konseling Karier", phone: "081234567891" },
+                { name: "Dr. Maria Sari", speciality: "Psikologi Pendidikan", phone: "081234567892" }
+              ].map((counselor, index) => (
+                <Card key={index}>
+                  <CardHeader>
+                    <CardTitle className="text-lg">{counselor.name}</CardTitle>
+                    <CardDescription>{counselor.speciality}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-sm">
+                        <Phone className="h-4 w-4" />
+                        <span>{counselor.phone}</span>
+                      </div>
+                      <Button size="sm" className="w-full">
+                        <MessageSquare className="h-4 w-4 mr-2" />
+                        Hubungi
                       </Button>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-      </Tabs>
-    </DashboardLayout>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </PageTransition>
   );
 };
 

@@ -17,6 +17,10 @@ import ParentPortalAttendancePage from "./pages/parent-portal/attendance";
 import ParentPortalDisciplinePage from "./pages/parent-portal/discipline";
 import ParentPortalNotificationsPage from "./pages/parent-portal/notifications";
 import ParentChildProfilePage from "./pages/parent-portal/child-profile";
+import ComplaintPage from "./pages/complaint";
+import CounselingPage from "./pages/counseling";
+import PermissionPage from "./pages/permission";
+import ExtracurricularPage from "./pages/extracurricular";
 
 const queryClient = new QueryClient();
 
@@ -45,6 +49,12 @@ const App = () => (
           <Route path="/parent-portal/discipline" element={<ParentPortalDisciplinePage />} />
           <Route path="/parent-portal/notifications" element={<ParentPortalNotificationsPage />} />
           <Route path="/parent-portal/child-profile" element={<ParentChildProfilePage />} />
+          
+          {/* Common Routes */}
+          <Route path="/complaint" element={<ComplaintPage />} />
+          <Route path="/counseling" element={<CounselingPage />} />
+          <Route path="/permission" element={<PermissionPage />} />
+          <Route path="/extracurricular" element={<ExtracurricularPage />} />
           
           {/* Additional routes from navItems if needed */}
           {navItems.map((item) => (

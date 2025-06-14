@@ -1,258 +1,390 @@
 
-import React, { useEffect, useState } from 'react';
-import DashboardLayout from '@/layouts/DashboardLayout';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Search, Plus, Users, Calendar, Clock, MapPin, Award } from 'lucide-react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
+import React, { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { Award, Users, Calendar, Clock, MapPin, Star, Trophy, Target } from 'lucide-react';
+import { format } from 'date-fns';
+import PageTransition from '@/components/layout/PageTransition';
+
+const extracurricularData = [
+  {
+    id: "EKSKUL001",
+    name: "Pramuka",
+    category: "Kepanduan",
+    description: "Kegiatan kepanduan untuk membentuk karakter dan keterampilan hidup",
+    coach: "Budi Santoso, S.Pd",
+    schedule: "Jumat, 14:00-16:00",
+    location: "Lapangan Sekolah",
+    maxMembers: 50,
+    currentMembers: 35,
+    status: "active",
+    achievements: ["Juara 1 Lomba Pramuka Tingkat Kabupaten 2023"]
+  },
+  {
+    id: "EKSKUL002",
+    name: "Basket",
+    category: "Olahraga",
+    description: "Tim basket sekolah untuk kompetisi dan pengembangan bakat olahraga",
+    coach: "Ahmad Rahman, S.Pd",
+    schedule: "Senin & Rabu, 15:30-17:00",
+    location: "Lapangan Basket",
+    maxMembers: 20,
+    currentMembers: 18,
+    status: "active",
+    achievements: ["Juara 2 Kompetisi Basket Antar SMA 2023"]
+  },
+  {
+    id: "EKSKUL003",
+    name: "English Club",
+    category: "Akademik",
+    description: "Klub bahasa Inggris untuk meningkatkan kemampuan berbahasa Inggris",
+    coach: "Sarah Johnson, S.Pd",
+    schedule: "Selasa & Kamis, 14:00-15:30",
+    location: "Lab Bahasa",
+    maxMembers: 30,
+    currentMembers: 25,
+    status: "active",
+    achievements: ["Best Presentation Award - English Competition 2023"]
+  },
+  {
+    id: "EKSKUL004",
+    name: "Robotika",
+    category: "Teknologi",
+    description: "Pengembangan robot dan teknologi otomasi",
+    coach: "Dr. Bambang Sutrisno",
+    schedule: "Sabtu, 08:00-12:00",
+    location: "Lab Komputer",
+    maxMembers: 15,
+    currentMembers: 12,
+    status: "active",
+    achievements: ["Juara 3 Kompetisi Robot Nasional 2023"]
+  }
+];
+
+const myExtracurriculars = [
+  {
+    id: "EKSKUL002",
+    name: "Basket",
+    joinDate: "2023-08-01",
+    position: "Anggota",
+    attendance: 85,
+    achievements: ["Best Team Player 2023"]
+  },
+  {
+    id: "EKSKUL003", 
+    name: "English Club",
+    joinDate: "2023-07-15",
+    position: "Sekretaris",
+    attendance: 92,
+    achievements: ["Best Speaker Award"]
+  }
+];
 
 const ExtracurricularPage = () => {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    document.title = 'Ekstrakurikuler - Si-Kaji';
-  }, []);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
-  // Sample extracurricular data
-  const extracurriculars = [
-    {
-      id: 1,
-      name: 'Futsal',
-      category: 'Olahraga',
-      day: 'Senin',
-      time: '15:30 - 17:30',
-      location: 'Lapangan Futsal SMKN 1 Kendal',
-      coach: 'Joko Susilo, S.Pd.',
-      description: 'Kegiatan ekstrakurikuler futsal untuk meningkatkan kemampuan bermain sepak bola di lapangan indoor.',
-      members: 25,
-      image: ''
-    },
-    {
-      id: 2,
-      name: 'Paduan Suara',
-      category: 'Seni',
-      day: 'Selasa',
-      time: '15:30 - 17:00',
-      location: 'Ruang Musik SMKN 1 Kendal',
-      coach: 'Dewi Astuti, S.Pd.',
-      description: 'Kegiatan ekstrakurikuler paduan suara untuk mengembangkan bakat menyanyi dan harmonisasi vokal.',
-      members: 30,
-      image: ''
-    },
-    {
-      id: 3,
-      name: 'Robotik',
-      category: 'Teknologi',
-      day: 'Rabu',
-      time: '15:30 - 17:30',
-      location: 'Lab Robotik SMKN 1 Kendal',
-      coach: 'Tono Wijaya, S.T.',
-      description: 'Kegiatan ekstrakurikuler robotik untuk pengembangan kemampuan dalam merakit dan memprogram robot.',
-      members: 15,
-      image: ''
-    },
-    {
-      id: 4,
-      name: 'Pramuka',
-      category: 'Kepemimpinan',
-      day: 'Jumat',
-      time: '14:00 - 16:30',
-      location: 'Lapangan Utama SMKN 1 Kendal',
-      coach: 'Budi Santoso, S.Pd.',
-      description: 'Kegiatan ekstrakurikuler pramuka untuk membentuk karakter, kedisiplinan, dan kemandirian siswa.',
-      members: 50,
-      image: ''
-    },
-    {
-      id: 5,
-      name: 'Karya Ilmiah Remaja',
-      category: 'Akademik',
-      day: 'Kamis',
-      time: '15:30 - 17:00',
-      location: 'Ruang Diskusi SMKN 1 Kendal',
-      coach: 'Ani Suryani, S.Pd.',
-      description: 'Kegiatan ekstrakurikuler untuk mengembangkan kemampuan menulis dan meneliti dalam bentuk karya ilmiah.',
-      members: 20,
-      image: ''
-    }
-  ];
-
-  const getCategoryBadge = (category) => {
-    switch(category) {
+  const getCategoryColor = (category: string) => {
+    switch (category) {
       case 'Olahraga':
-        return <Badge className="bg-green-500">Olahraga</Badge>;
-      case 'Seni':
-        return <Badge className="bg-purple-500">Seni</Badge>;
-      case 'Teknologi':
-        return <Badge className="bg-blue-500">Teknologi</Badge>;
-      case 'Kepemimpinan':
-        return <Badge className="bg-amber-500">Kepemimpinan</Badge>;
+        return 'bg-green-100 text-green-800';
       case 'Akademik':
-        return <Badge className="bg-red-500">Akademik</Badge>;
+        return 'bg-blue-100 text-blue-800';
+      case 'Teknologi':
+        return 'bg-purple-100 text-purple-800';
+      case 'Kepanduan':
+        return 'bg-amber-100 text-amber-800';
       default:
-        return <Badge>{category}</Badge>;
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'active':
+        return 'bg-green-100 text-green-800';
+      case 'inactive':
+        return 'bg-red-100 text-red-800';
+      case 'full':
+        return 'bg-amber-100 text-amber-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
   return (
-    <DashboardLayout
-      title="Ekstrakurikuler"
-      description="Pengelolaan kegiatan ekstrakurikuler"
-      userRole="trainer"
-      userName="Pelatih"
-      showBackButton
-      backTo="/dashboard"
-    >
-      <div className="mb-4 flex justify-end">
-        <Button className="gap-2">
-          <Plus size={16} />
-          Tambah Ekstrakurikuler
-        </Button>
-      </div>
-
-      <Tabs defaultValue="all" className="w-full">
-        <TabsList className="w-full sm:w-auto mb-6 grid grid-cols-3 md:grid-cols-5 sm:flex sm:flex-row">
-          <TabsTrigger value="all">Semua</TabsTrigger>
-          <TabsTrigger value="sports">Olahraga</TabsTrigger>
-          <TabsTrigger value="arts">Seni</TabsTrigger>
-          <TabsTrigger value="tech">Teknologi</TabsTrigger>
-          <TabsTrigger value="leadership">Kepemimpinan</TabsTrigger>
-          <TabsTrigger value="academic">Akademik</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="all">
-          <div className="relative w-full mb-6">
-            <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Cari ekstrakurikuler..."
-              className="pl-10"
-            />
+    <PageTransition>
+      <div className="container mx-auto p-6">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
+              <Award className="h-6 w-6" />
+              Ekstrakurikuler
+            </h1>
+            <p className="text-muted-foreground">
+              Jelajahi dan ikuti kegiatan ekstrakurikuler sekolah
+            </p>
           </div>
+        </div>
+
+        <Tabs defaultValue="available" className="w-full">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="available">Daftar Ekstrakurikuler</TabsTrigger>
+            <TabsTrigger value="my">Ekstrakurikuler Saya</TabsTrigger>
+            <TabsTrigger value="achievements">Prestasi</TabsTrigger>
+          </TabsList>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {extracurriculars.map((extracurricular) => (
-              <Card key={extracurricular.id} className="overflow-hidden">
-                <div className="h-40 bg-muted flex items-center justify-center">
-                  {extracurricular.image ? (
-                    <img 
-                      src={extracurricular.image} 
-                      alt={extracurricular.name} 
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <Award size={48} className="text-muted-foreground opacity-50" />
-                  )}
-                </div>
-                <CardHeader className="pb-2">
-                  <div className="flex justify-between items-start">
-                    <CardTitle>{extracurricular.name}</CardTitle>
-                    {getCategoryBadge(extracurricular.category)}
-                  </div>
-                  <CardDescription className="line-clamp-2">{extracurricular.description}</CardDescription>
-                </CardHeader>
+          <TabsContent value="available" className="space-y-4">
+            <div className="flex flex-col sm:flex-row gap-2 mb-4">
+              <Input 
+                placeholder="Cari ekstrakurikuler..." 
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="max-w-sm"
+              />
+              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Kategori" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Semua Kategori</SelectItem>
+                  <SelectItem value="olahraga">Olahraga</SelectItem>
+                  <SelectItem value="akademik">Akademik</SelectItem>
+                  <SelectItem value="teknologi">Teknologi</SelectItem>
+                  <SelectItem value="kepanduan">Kepanduan</SelectItem>
+                  <SelectItem value="seni">Seni</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              {extracurricularData.map((ekskul) => (
+                <Card key={ekskul.id} className="overflow-hidden">
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <CardTitle className="text-lg">{ekskul.name}</CardTitle>
+                        <CardDescription>{ekskul.description}</CardDescription>
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <Badge variant="outline" className={getCategoryColor(ekskul.category)}>
+                          {ekskul.category}
+                        </Badge>
+                        <Badge variant="outline" className={getStatusColor(ekskul.status)}>
+                          Aktif
+                        </Badge>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-1 gap-2">
+                      <div className="flex items-center gap-2 text-sm">
+                        <Users className="h-4 w-4" />
+                        <span>Pelatih: {ekskul.coach}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm">
+                        <Clock className="h-4 w-4" />
+                        <span>Jadwal: {ekskul.schedule}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm">
+                        <MapPin className="h-4 w-4" />
+                        <span>Lokasi: {ekskul.location}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm">
+                        <Target className="h-4 w-4" />
+                        <span>Anggota: {ekskul.currentMembers}/{ekskul.maxMembers}</span>
+                      </div>
+                    </div>
+                    
+                    {ekskul.achievements.length > 0 && (
+                      <div className="space-y-2">
+                        <p className="text-sm font-medium flex items-center gap-1">
+                          <Trophy className="h-4 w-4" />
+                          Prestasi Terbaru:
+                        </p>
+                        {ekskul.achievements.map((achievement, index) => (
+                          <Badge key={index} variant="outline" className="bg-yellow-50 text-yellow-800">
+                            {achievement}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
+                    
+                    <div className="flex gap-2">
+                      <Button size="sm" className="flex-1">
+                        Daftar
+                      </Button>
+                      <Button size="sm" variant="outline">
+                        Detail
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="my" className="space-y-4">
+            <div className="grid md:grid-cols-2 gap-4">
+              {myExtracurriculars.map((ekskul) => {
+                const fullData = extracurricularData.find(e => e.id === ekskul.id);
+                return (
+                  <Card key={ekskul.id} className="overflow-hidden">
+                    <CardHeader>
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <CardTitle className="text-lg">{ekskul.name}</CardTitle>
+                          <CardDescription>
+                            Bergabung sejak {format(new Date(ekskul.joinDate), 'dd MMMM yyyy')}
+                          </CardDescription>
+                        </div>
+                        <Badge variant="outline" className="bg-blue-100 text-blue-800">
+                          {ekskul.position}
+                        </Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="text-center p-3 bg-green-50 border border-green-200 rounded-lg">
+                          <p className="text-2xl font-bold text-green-600">{ekskul.attendance}%</p>
+                          <p className="text-xs text-green-600">Kehadiran</p>
+                        </div>
+                        <div className="text-center p-3 bg-purple-50 border border-purple-200 rounded-lg">
+                          <p className="text-2xl font-bold text-purple-600">{ekskul.achievements.length}</p>
+                          <p className="text-xs text-purple-600">Prestasi</p>
+                        </div>
+                      </div>
+                      
+                      {fullData && (
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2 text-sm">
+                            <Clock className="h-4 w-4" />
+                            <span>Jadwal: {fullData.schedule}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm">
+                            <MapPin className="h-4 w-4" />
+                            <span>Lokasi: {fullData.location}</span>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {ekskul.achievements.length > 0 && (
+                        <div className="space-y-2">
+                          <p className="text-sm font-medium flex items-center gap-1">
+                            <Star className="h-4 w-4" />
+                            Prestasi Saya:
+                          </p>
+                          {ekskul.achievements.map((achievement, index) => (
+                            <Badge key={index} variant="outline" className="bg-yellow-50 text-yellow-800">
+                              {achievement}
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
+                      
+                      <div className="flex gap-2">
+                        <Button size="sm" variant="outline" className="flex-1">
+                          Lihat Jadwal
+                        </Button>
+                        <Button size="sm" variant="outline" className="flex-1">
+                          Presensi
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+            
+            {myExtracurriculars.length === 0 && (
+              <Card className="p-8 text-center">
                 <CardContent>
-                  <div className="space-y-2 mb-4">
-                    <div className="flex items-center gap-2 text-sm">
-                      <Calendar size={14} className="text-muted-foreground" />
-                      <span>{extracurricular.day}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm">
-                      <Clock size={14} className="text-muted-foreground" />
-                      <span>{extracurricular.time}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm">
-                      <MapPin size={14} className="text-muted-foreground" />
-                      <span>{extracurricular.location}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm">
-                      <Users size={14} className="text-muted-foreground" />
-                      <span>{extracurricular.members} Peserta</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2 mt-4 pt-4 border-t">
-                    <Avatar className="h-8 w-8">
-                      <AvatarFallback>
-                        {extracurricular.coach.split(' ').map(n => n[0]).join('').substring(0, 2)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="text-sm">
-                      <p className="font-medium">{extracurricular.coach}</p>
-                      <p className="text-muted-foreground">Pembina</p>
-                    </div>
-                  </div>
-                  <div className="flex justify-between gap-2 mt-4">
-                    <Button variant="outline" size="sm" className="flex-1">Presensi</Button>
-                    <Button size="sm" className="flex-1">Detail</Button>
-                  </div>
+                  <Award className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                  <p className="text-muted-foreground">
+                    Belum mengikuti ekstrakurikuler apapun
+                  </p>
+                  <Button className="mt-4">
+                    Jelajahi Ekstrakurikuler
+                  </Button>
                 </CardContent>
               </Card>
-            ))}
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="sports">
-          <Card>
-            <CardContent className="pt-6">
-              <div className="text-center p-8">
-                <Award size={48} className="mx-auto text-green-500 mb-4" />
-                <h3 className="text-lg font-medium mb-2">Ekstrakurikuler Olahraga</h3>
-                <p className="text-muted-foreground">Menampilkan kegiatan ekstrakurikuler bidang olahraga seperti futsal, basket, voli, dan lainnya.</p>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="arts">
-          <Card>
-            <CardContent className="pt-6">
-              <div className="text-center p-8">
-                <Award size={48} className="mx-auto text-purple-500 mb-4" />
-                <h3 className="text-lg font-medium mb-2">Ekstrakurikuler Seni</h3>
-                <p className="text-muted-foreground">Menampilkan kegiatan ekstrakurikuler bidang seni seperti paduan suara, tari, musik, dan lainnya.</p>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="tech">
-          <Card>
-            <CardContent className="pt-6">
-              <div className="text-center p-8">
-                <Award size={48} className="mx-auto text-blue-500 mb-4" />
-                <h3 className="text-lg font-medium mb-2">Ekstrakurikuler Teknologi</h3>
-                <p className="text-muted-foreground">Menampilkan kegiatan ekstrakurikuler bidang teknologi seperti robotik, pemrograman, dan lainnya.</p>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="leadership">
-          <Card>
-            <CardContent className="pt-6">
-              <div className="text-center p-8">
-                <Award size={48} className="mx-auto text-amber-500 mb-4" />
-                <h3 className="text-lg font-medium mb-2">Ekstrakurikuler Kepemimpinan</h3>
-                <p className="text-muted-foreground">Menampilkan kegiatan ekstrakurikuler bidang kepemimpinan seperti pramuka, PMR, dan lainnya.</p>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="academic">
-          <Card>
-            <CardContent className="pt-6">
-              <div className="text-center p-8">
-                <Award size={48} className="mx-auto text-red-500 mb-4" />
-                <h3 className="text-lg font-medium mb-2">Ekstrakurikuler Akademik</h3>
-                <p className="text-muted-foreground">Menampilkan kegiatan ekstrakurikuler bidang akademik seperti karya ilmiah, debat, dan lainnya.</p>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-    </DashboardLayout>
+            )}
+          </TabsContent>
+          
+          <TabsContent value="achievements" className="space-y-4">
+            <div className="grid md:grid-cols-3 gap-4 mb-6">
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium">Total Prestasi</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-yellow-600">8</div>
+                  <p className="text-xs text-muted-foreground">prestasi</p>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium">Ekstrakurikuler Aktif</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-blue-600">2</div>
+                  <p className="text-xs text-muted-foreground">kegiatan</p>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium">Rata-rata Kehadiran</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-green-600">88.5%</div>
+                  <p className="text-xs text-muted-foreground">kehadiran</p>
+                </CardContent>
+              </Card>
+            </div>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle>Riwayat Prestasi</CardTitle>
+                <CardDescription>
+                  Daftar semua prestasi yang telah diraih dalam kegiatan ekstrakurikuler
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {[
+                    { title: "Best Speaker Award", ekskul: "English Club", date: "2023-10-15", level: "Sekolah" },
+                    { title: "Best Team Player 2023", ekskul: "Basket", date: "2023-09-20", level: "Sekolah" },
+                    { title: "Juara 2 Kompetisi Basket", ekskul: "Basket", date: "2023-08-10", level: "Kabupaten" },
+                    { title: "Participant Certificate", ekskul: "English Club", date: "2023-07-25", level: "Provinsi" }
+                  ].map((achievement, index) => (
+                    <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                      <div className="flex items-center gap-3">
+                        <Trophy className="h-8 w-8 text-yellow-600" />
+                        <div>
+                          <h4 className="font-medium">{achievement.title}</h4>
+                          <p className="text-sm text-muted-foreground">
+                            {achievement.ekskul} • {format(new Date(achievement.date), 'dd MMMM yyyy')}
+                          </p>
+                        </div>
+                      </div>
+                      <Badge variant="outline" className="bg-blue-50 text-blue-800">
+                        {achievement.level}
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </PageTransition>
   );
 };
 
