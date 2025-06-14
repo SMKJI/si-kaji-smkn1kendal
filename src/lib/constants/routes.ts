@@ -1,5 +1,4 @@
 
-
 /**
  * Application route constants
  */
@@ -25,6 +24,7 @@ export const ROUTES = {
   PARENT_ASSIGNMENTS: "/parent-portal/assignments",
   PARENT_NOTIFICATIONS: "/parent-portal/notifications",
   PARENT_CHILD_PROGRESS: "/parent-portal/child-progress",
+  PARENT_CHILD_PROFILE: "/parent-portal/child-profile",
   COUNSELING: "/counseling",
   COUNSELING_MANAGE: "/counseling/manage",
   COUNSELING_SESSION: "/counseling/session",
@@ -62,4 +62,3 @@ export const ROUTES = {
   NOTIFICATIONS: "/notifications",
   NOT_FOUND: "*"
 };
-
